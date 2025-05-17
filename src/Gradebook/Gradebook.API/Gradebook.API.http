@@ -1,0 +1,6 @@
+@Gradebook.API_HostAddress = http://localhost:5071
+
+GET {{Gradebook.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
