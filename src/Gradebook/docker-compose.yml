@@ -1,0 +1,44 @@
+services:
+  gradebook.api:
+    container_name: gradebook.api
+    image: ${DOCKER_REGISTRY-}gradebookapi
+    build:
+      context: .
+      dockerfile: Gradebook.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "11501:443"
+      - "9301:80"
+
+  gradebook.web:
+    container_name: gradebook.web
+    image: ${DOCKER_REGISTRY-}gradebookweb
+    build:
+      context: .
+      dockerfile: Gradebook.Web/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "11502:443"
+      - "9302:80"
+    depends_on:
+      gradebook.api:
+        condition: service_started
+
+  gradebook.db:
+    container_name: gradebook.db
+    image: postgres:alpine
+    ports:
+      - "5642:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=Gradebook
+    volumes:
+      - gradebook.db-data:/var/lib/postgresql/data
+
+volumes:
+  gradebook.db-data:
