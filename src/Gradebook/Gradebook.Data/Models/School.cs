@@ -18,4 +18,6 @@ public class School
     public ICollection<Teacher> Teachers { get; set; } = [];
 
     public ICollection<Student> Students { get; set; } = [];
+
+    public ICollection<SchoolYear> SchoolYears { get; set; } = [];
 }

@@ -2,5 +2,5 @@
 
 public class Parent : Profile
 {
-    // ParentStudents
+    public ICollection<Student> Students { get; set; } = [];
 }

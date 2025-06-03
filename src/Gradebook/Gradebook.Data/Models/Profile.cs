@@ -1,7 +1,7 @@
 ﻿namespace Gradebook.Data.Models;
 
 [Index(nameof(UserId), IsUnique = false)]
-public class Profile
+public abstract class Profile
 {
     public Guid Id { get; set; }
 
