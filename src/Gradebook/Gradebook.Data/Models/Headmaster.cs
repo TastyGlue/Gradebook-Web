@@ -7,7 +7,7 @@ public class Headmaster : Profile
     public string BusinessPhoneNumber { get; set; } = default!;
 
     [ForeignKey(nameof(School))]
-    public Guid SchoolId { get; set; }
+    public Guid? SchoolId { get; set; }
 
     public School School { get; set; } = default!;
 }

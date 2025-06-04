@@ -14,7 +14,6 @@ public class Class
 
     public School School { get; set; } = default!;
 
-    [ForeignKey(nameof(ClassTeacher))]
     public Guid? ClassTeacherId { get; set; }
 
     public Teacher? ClassTeacher { get; set; }

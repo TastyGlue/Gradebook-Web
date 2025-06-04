@@ -3,7 +3,7 @@
 public class Student : Profile
 {
     [ForeignKey(nameof(School))]
-    public Guid SchoolId { get; set; }
+    public Guid? SchoolId { get; set; }
 
     public School School { get; set; } = default!;
 

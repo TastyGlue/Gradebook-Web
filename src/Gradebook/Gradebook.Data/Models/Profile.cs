@@ -12,7 +12,5 @@ public abstract class Profile
 
     public RoleType RoleType { get; set; }
 
-    public string FullName { get; set; } = default!;
-
     public bool IsActive { get; set; }
 }

@@ -1,1 +1,12 @@
-﻿
+﻿global using Gradebook.Data;
+global using Gradebook.Data.Models;
+global using Microsoft.AspNetCore.Identity;
+global using Gradebook.Data.Seeders;
+global using Microsoft.EntityFrameworkCore;
+global using Gradebook.Shared.Enums;
+global using Gradebook.Shared.Constants;
+global using Gradebook.Shared.Models;
+global using Gradebook.Shared;
+global using Gradebook.API.Extensions;
+global using System.Data;
+global using System.Data.Common;

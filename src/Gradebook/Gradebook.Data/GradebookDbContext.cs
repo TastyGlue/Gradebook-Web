@@ -30,5 +30,12 @@ public class GradebookDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gu
         modelBuilder.ConfigureProfilesTable();
 
         modelBuilder.ConfigureManyToManyRelationships();
+
+        modelBuilder.ConfigureRestrictDeleteBehavior();
+
+        // Write the enum as a string in the database
+        modelBuilder.Entity<Timetable>()
+            .Property(x => x.DayOfWeek)
+            .HasConversion<string>();
     }
 }

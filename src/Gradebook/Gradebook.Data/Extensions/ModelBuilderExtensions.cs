@@ -25,6 +25,16 @@ public static class ModelBuilderExtensions
             .HasValue<Student>(RoleType.Student)
             .HasValue<Parent>(RoleType.Parent);
 
+        modelBuilder.Entity<Teacher>()
+            .HasOne(t => t.Class)
+            .WithOne(c => c.ClassTeacher);
+
+        modelBuilder.Entity<Class>()
+            .HasOne(c => c.ClassTeacher)
+            .WithOne(t => t.Class)
+            .HasForeignKey<Class>(c => c.ClassTeacherId)
+            .IsRequired(false);
+
         modelBuilder.ConfigureProfileRepeatingColumns();
 
         modelBuilder.ConfigureProfileNullableColumns();
@@ -44,16 +54,12 @@ public static class ModelBuilderExtensions
         modelBuilder.Entity<Student>()
             .HasMany(s => s.Parents)
             .WithMany(p => p.Students)
-            .UsingEntity<StudentParent>(
-                j => j.HasOne<Parent>().WithMany().HasForeignKey(sp => sp.ParentId),
-                j => j.HasOne<Student>().WithMany().HasForeignKey(sp => sp.StudentId));
+            .UsingEntity<StudentParent>();
 
         modelBuilder.Entity<Teacher>()
             .HasMany(s => s.Subjects)
             .WithMany(p => p.Teachers)
-            .UsingEntity<TeacherSubject>(
-                j => j.HasOne<Subject>().WithMany().HasForeignKey(ts => ts.SubjectId),
-                j => j.HasOne<Teacher>().WithMany().HasForeignKey(sp => sp.TeacherId));
+            .UsingEntity<TeacherSubject>();
     }
 
     /// <summary>
@@ -159,6 +165,25 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
+    /// Configures the delete behavior for all foreign key relationships in the model to use <see
+    /// cref="DeleteBehavior.Restrict"/>.
+    /// </summary>
+    /// <remarks>This method iterates through all foreign key relationships in the model and sets their delete
+    /// behavior to  <see cref="DeleteBehavior.Restrict"/>, ensuring that dependent entities are not automatically
+    /// deleted when  their principal entities are removed. Use this method to enforce referential integrity constraints
+    /// in the database.</remarks>
+    /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the entity model.</param>
+    public static void ConfigureRestrictDeleteBehavior(this ModelBuilder modelBuilder)
+    {
+        foreach (var foreignKey in modelBuilder.Model
+            .GetEntityTypes()
+            .SelectMany(e => e.GetForeignKeys()))
+        {
+            foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+        }
+    }
+
+    /// <summary>
     /// Determines whether the specified property represents a scalar value.
     /// </summary>
     /// <remarks>A scalar property is one that holds a single value, as opposed to a collection or complex
@@ -170,15 +195,8 @@ public static class ModelBuilderExtensions
         var type = prop.PropertyType;
 
         // Accept string, primitives, enums, DateTime, Guid, decimal, etc.
-        if (type.IsPrimitive || type.IsEnum ||
+        return (type.IsPrimitive || type.IsEnum ||
             type == typeof(string) || type == typeof(decimal) ||
-            type == typeof(DateTime) || type == typeof(DateTimeOffset) || type == typeof(Guid))
-            return true;
-
-        // Exclude collections
-        if (typeof(System.Collections.IEnumerable).IsAssignableFrom(type) && type != typeof(string))
-            return false;
-
-        return false;
+            type == typeof(DateTime) || type == typeof(DateTimeOffset));
     }
 }
