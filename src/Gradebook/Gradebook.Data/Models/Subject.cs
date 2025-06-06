@@ -13,4 +13,6 @@ public class Subject
     public School School { get; set; } = default!;
 
     public ICollection<Teacher> Teachers { get; set; } = [];
+
+    public ICollection<Timetable> Timetables { get; set; } = [];
 }

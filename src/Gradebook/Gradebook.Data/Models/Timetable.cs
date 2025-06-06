@@ -4,6 +4,11 @@ public class Timetable
 {
     public Guid Id { get; set; }
 
+    [ForeignKey(nameof(SchoolYear))]
+    public Guid SchoolYearId { get; set; }
+
+    public SchoolYear SchoolYear { get; set; } = default!;
+
     public DateTime TimeOfDay { get; set; }
 
     public DayOfWeek DayOfWeek { get; set; }

@@ -8,6 +8,11 @@ public class Absence
 
     public bool Excused { get; set; }
 
+    [ForeignKey(nameof(SchoolYear))]
+    public Guid SchoolYearId { get; set; }
+
+    public SchoolYear SchoolYear { get; set; } = default!;
+
     [ForeignKey(nameof(Student))]
     public Guid StudentId { get; set; }
 

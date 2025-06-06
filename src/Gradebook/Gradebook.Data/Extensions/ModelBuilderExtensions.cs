@@ -194,7 +194,7 @@ public static class ModelBuilderExtensions
     {
         var type = prop.PropertyType;
 
-        // Accept string, primitives, enums, DateTime, Guid, decimal, etc.
+        // Accept string, primitives, enums, DateTime, decimal, etc.
         return (type.IsPrimitive || type.IsEnum ||
             type == typeof(string) || type == typeof(decimal) ||
             type == typeof(DateTime) || type == typeof(DateTimeOffset));

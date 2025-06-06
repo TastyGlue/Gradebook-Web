@@ -17,4 +17,8 @@ public class Class
     public Guid? ClassTeacherId { get; set; }
 
     public Teacher? ClassTeacher { get; set; }
+
+    public ICollection<Student> Students { get; set; } = [];
+
+    public ICollection<Timetable> Timetables { get; set; } = [];
 }

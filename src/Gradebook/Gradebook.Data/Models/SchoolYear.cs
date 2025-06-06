@@ -17,4 +17,10 @@ public class SchoolYear
     public DateTime? Start { get; set; }
 
     public DateTime? End { get; set; }
+
+    public ICollection<Grade> Grades { get; set; } = [];
+
+    public ICollection<Absence> Absences { get; set; } = [];
+
+    public ICollection<Timetable> Timetables { get; set; } = [];
 }

@@ -6,6 +6,12 @@ public class Grade
 
     public decimal Value { get; set; }
 
+
+    [ForeignKey(nameof(SchoolYear))]
+    public Guid SchoolYearId { get; set; }
+
+    public SchoolYear SchoolYear { get; set; } = default!;
+
     public DateTime Date { get; set; }
 
     [ForeignKey(nameof(Subject))]
