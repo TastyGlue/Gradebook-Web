@@ -1,11 +1,15 @@
 ﻿namespace Gradebook.Data.Models;
 
-public class Student : Profile
+public class Student : Profile, ISchoolMember
 {
     [ForeignKey(nameof(School))]
     public Guid? SchoolId { get; set; }
 
     public School School { get; set; } = default!;
+
+    [NotMapped]
+    [JsonIgnore]
+    public string SchoolName => School?.Name ?? string.Empty;
 
     [ForeignKey(nameof(Class))]
     public Guid? ClassId { get; set; }

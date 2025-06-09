@@ -2,8 +2,55 @@
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterGradebookServices(this IServiceCollection services)
+    public static IServiceCollection RegisterGradebookServices(this IServiceCollection services, WebApplicationBuilder builder)
     {
+        builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.SignIn.RequireConfirmedEmail = false;
+            options.Lockout.MaxFailedAccessAttempts = 0;
+            options.Password.RequiredLength = 8;
+            options.Password.RequireNonAlphanumeric = false;
+            options.User.RequireUniqueEmail = true;
+        })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<GradebookDbContext>()
+            .AddDefaultTokenProviders();
+
+        builder.Services.AddDbContext<GradebookDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
+
+        services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+        JwtSettings jwtSettings = new();
+        builder.Configuration.GetRequiredSection("JwtSettings").Bind(jwtSettings);
+
+        builder.Services.AddAuthentication()
+            .AddJwtBearer(AUTH_SCHEME, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.AuthSecurityKey))
+                };
+            })
+            .AddJwtBearer(ACCESS_SCHEME, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.AccessSecurityKey))
+                };
+            });
+
         services.AddDataSeeders();
 
         return services;
