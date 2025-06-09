@@ -25,6 +25,15 @@ public static class ModelBuilderExtensions
             .HasValue<Student>(RoleType.Student)
             .HasValue<Parent>(RoleType.Parent);
 
+        modelBuilder.Entity<Headmaster>()
+            .Ignore(x => x.SchoolName);
+
+        modelBuilder.Entity<Teacher>()
+            .Ignore(x => x.SchoolName);
+
+        modelBuilder.Entity<Student>()
+            .Ignore(x => x.SchoolName);
+
         modelBuilder.Entity<Teacher>()
             .HasOne(t => t.Class)
             .WithOne(c => c.ClassTeacher);
