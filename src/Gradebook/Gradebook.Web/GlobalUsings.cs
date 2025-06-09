@@ -1,1 +1,10 @@
-﻿
+﻿global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+global using MudBlazor;
+global using MudBlazor.Services;
+global using Gradebook.Shared.Constants;
+global using Gradebook.Web.Components;
+global using Gradebook.Web.Extensions;
+global using Gradebook.Web.Services;
+global using Gradebook.Shared.Enums;
+global using Microsoft.JSInterop;

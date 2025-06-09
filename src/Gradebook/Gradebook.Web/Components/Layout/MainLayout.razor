@@ -1,9 +1,66 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+        <MudAppBar Elevation="4">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => isDrawerOpen = !isDrawerOpen)" />
+            <MudSpacer />
+            @* <UserProfile /> *@
+        </MudAppBar>
+        <MudDrawer @bind-Open="isDrawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
+            @* <NavMenu /> *@
+        </MudDrawer>
+        <MudMainContent>
+            <MudOverlay Visible="IsLoading" ZIndex="1010" LightBackground Absolute="true">
+                <MudProgressCircular Size="@Size.Large" Indeterminate="true" Color="@Color.Primary" />
+            </MudOverlay>
+            @Body
+        </MudMainContent>
+    </MudLayout>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    bool isDrawerOpen = true;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
+    [Inject] public UserStateContainer UserStateContainer { get; set; } = default!;
+
+    [Inject] public LoaderService LoaderService { get; set; } = default!;
+
+    public ClaimsPrincipal User { get; set; } = default!;
+
+    public bool IsAuthenticated { get; set; } = false;
+
+    private bool IsLoading { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.Register(state =>
+        {
+            InvokeAsync(() =>
+            {
+                IsLoading = state;
+                StateHasChanged();
+            });
+        });
+
+        // User = (await authenticationStateTask).User;
+
+        CreateUserStateContainer();
+    }
+
+    void CreateUserStateContainer()
+    {
+        // TODO
+    }
+}
