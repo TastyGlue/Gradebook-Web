@@ -6,25 +6,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
-        {
-            options.SignIn.RequireConfirmedAccount = false;
-            options.SignIn.RequireConfirmedEmail = false;
-            options.Lockout.MaxFailedAccessAttempts = 0;
-            options.Password.RequiredLength = 8;
-            options.Password.RequireNonAlphanumeric = false;
-            options.User.RequireUniqueEmail = true;
-        })
-            .AddRoles<IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<GradebookDbContext>()
-            .AddDefaultTokenProviders();
-
-        builder.Services.AddDbContext<GradebookDbContext>(options =>
-        {
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
-
-        builder.Services.RegisterGradebookServices();
+        builder.Services.RegisterGradebookServices(builder);
 
         builder.Services.AddHttpContextAccessor();
 

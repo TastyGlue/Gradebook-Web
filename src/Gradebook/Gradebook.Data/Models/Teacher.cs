@@ -1,6 +1,6 @@
 ﻿namespace Gradebook.Data.Models;
 
-public class Teacher : Profile
+public class Teacher : Profile, IBusinessEmail, ISchoolMember
 {
     public string BusinessEmail { get; set; } = default!;
 
@@ -10,6 +10,10 @@ public class Teacher : Profile
     public Guid? SchoolId { get; set; }
 
     public School School { get; set; } = default!;
+
+    [NotMapped]
+    [JsonIgnore]
+    public string SchoolName => School?.Name ?? string.Empty;
 
     public Guid? ClassId { get; set; }
 
