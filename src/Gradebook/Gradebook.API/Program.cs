@@ -20,6 +20,11 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        builder.Services.AddSingleton<MapsterMapper.IMapper, MapsterMapper.Mapper>();   
+
+        // Option B: With custom config
+     
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
