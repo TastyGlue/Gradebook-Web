@@ -23,4 +23,6 @@ global using System.Text.Json;
 global using Gradebook.Shared.Exceptions;
 global using Gradebook.API.Services;
 global using Gradebook.API.Factories;
+global using Microsoft.AspNetCore.Authorization;
+global using Gradebook.API.Utils;
 global using static Gradebook.Shared.Constants.AuthSchemes;

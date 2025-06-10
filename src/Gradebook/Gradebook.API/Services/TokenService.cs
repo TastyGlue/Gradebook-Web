@@ -15,8 +15,7 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new(Claims.TOKEN_TYPE, Claims.AUTH_TOKEN_TYPE),
-            new(Claims.USER_ID, user.Id.ToString())
+            new(Claims.USER_ID, user.Id.ToString()),
         };
 
         // Prevent users without profiles from generating an auth token
@@ -69,7 +68,8 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>()
         {
-            new(Claims.TOKEN_TYPE, Claims.ACCESS_TOKEN_TYPE)
+            new(Claims.PROFILE_ID, profile.Id.ToString()),
+            new(Claims.ROLE, profile.RoleType.ToString())
         };
 
         // Add profile-specific claims

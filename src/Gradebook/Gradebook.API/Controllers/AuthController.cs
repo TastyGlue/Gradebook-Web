@@ -21,4 +21,15 @@ public class AuthController : ControllerBase
 
         return ApiResponseFactory.CreateResponse<string>(result);
     }
+
+    [HttpPost("login/profile")]
+    [Authorize(AuthenticationSchemes = AUTH_SCHEME)]
+    public async Task<IActionResult> LoginProfile([FromBody] LoginProfile request)
+    {
+        var userId = HttpUtils.GetUserIdFromHttpContext(HttpContext);
+
+        var result = await _authService.LoginProfile(request, userId!.Value);
+
+        return ApiResponseFactory.CreateResponse<string>(result);
+    }
 }
