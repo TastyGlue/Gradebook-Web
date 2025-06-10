@@ -13,4 +13,8 @@ public static class Claims
     public const string SCHOOL_ID = "school_id";
     public const string CLASS_ID = "class_id";
     public const string STUDENT_IDS = "student_ids";
+
+    public const string TOKEN_TYPE = "token_type";
+    public const string AUTH_TOKEN_TYPE = "auth_token";
+    public const string ACCESS_TOKEN_TYPE = "access_token";
 }

@@ -20,4 +20,7 @@ global using System.Security.Claims;
 global using System.Security.Cryptography;
 global using Gradebook.Shared.Interfaces;
 global using System.Text.Json;
+global using Gradebook.Shared.Exceptions;
+global using Gradebook.API.Services;
+global using Gradebook.API.Factories;
 global using static Gradebook.Shared.Constants.AuthSchemes;

@@ -7,9 +7,18 @@ namespace Gradebook.API.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
+    {
+        _authService = authService;
+    }
+
     [HttpPost("login/credentials")]
     public async Task<IActionResult> LoginWithCredentials([FromBody] LoginCredentials request)
     {
-        return Ok();
+        var result = await _authService.LoginWithCredentials(request);
+
+        return ApiResponseFactory.CreateResponse<string>(result);
     }
 }
