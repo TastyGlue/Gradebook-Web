@@ -53,6 +53,10 @@ public static class ServiceCollectionExtensions
 
         services.AddDataSeeders();
 
+        services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IProfileContexService, ProfileContextService>();
+
         return services;
     }
 
