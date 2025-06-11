@@ -113,9 +113,6 @@ public class TokenService : ITokenService
         return new(token);
     }
 
-    public string GenerateRefreshToken()
-        => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-
     /// <summary>
     /// Generates a JSON Web Token (JWT) based on the provided claims and expiration time.
     /// </summary>

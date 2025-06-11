@@ -18,14 +18,43 @@ public static class ApiResponseFactory
     {
         if (result.Succeeded)
         {
-            var value = (result as CustomResult<T>)!.Value;
+            var value = ((CustomResult<T>)result).Value;
             return new OkObjectResult(value);
         }
         else
         {
             var statusCode = GetHttpStatusCode(result.Error!.ErrorCode);
 
-            return new ObjectResult(result) { StatusCode = statusCode};
+            return new ObjectResult(result.Error) { StatusCode = statusCode };
+        }
+    }
+
+
+    /// <summary>
+    /// Adapts the result value to a specified type and creates an appropriate HTTP response.
+    /// </summary>
+    /// <remarks>This method uses a mapping function to adapt the result value to the specified type
+    /// <typeparamref name="TAdapt"/>.</remarks>
+    /// <typeparam name="T">The type of the original result value.</typeparam>
+    /// <typeparam name="TAdapt">The type to which the result value will be adapted.</typeparam>
+    /// <param name="result">The <see cref="CustomResult"/> containing the operation result and any associated data or errors.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the HTTP response: <list type="bullet"> <item><description>An <see
+    /// cref="OkObjectResult"/> containing the adapted value if the operation succeeded.</description></item>
+    /// <item><description>An <see cref="ObjectResult"/> with the error details and appropriate HTTP status code if the
+    /// operation failed.</description></item> </list></returns>
+    public static IActionResult AdaptAndCreateResponse<T, TAdapt>(CustomResult result)
+    {
+        if (result.Succeeded)
+        {
+            var value = ((CustomResult<T>)result).Value;
+            var adaptedValue = value.Adapt<TAdapt>();
+            return new OkObjectResult(adaptedValue);
+        }
+        else
+        {
+            var statusCode = GetHttpStatusCode(result.Error!.ErrorCode);
+
+            return new ObjectResult(result.Error) { StatusCode = statusCode };
         }
     }
 

@@ -2,17 +2,19 @@
 
 public class AuthService : IAuthService
 {
-    private readonly UserManager<User> _userManager;
-    private readonly ITokenService _tokenService;
     private readonly GradebookDbContext _context;
+    private readonly UserManager<User> _userManager;
+    private readonly JwtSettings _jwtSettings;
+    private readonly ITokenService _tokenService;
     private readonly IProfileContexService _profileContexService;
 
-    public AuthService(UserManager<User> userManager, ITokenService tokenService, GradebookDbContext context, IProfileContexService profileContexService)
+    public AuthService(UserManager<User> userManager, ITokenService tokenService, GradebookDbContext context, IProfileContexService profileContexService, IOptions<JwtSettings> jwtSettings)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _context = context;
         _profileContexService = profileContexService;
+        _jwtSettings = jwtSettings.Value;
     }
 
     public async Task<CustomResult> LoginWithCredentials(LoginCredentials credentials)

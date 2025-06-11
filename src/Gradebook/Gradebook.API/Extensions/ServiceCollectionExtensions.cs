@@ -22,6 +22,19 @@ public static class ServiceCollectionExtensions
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
+        services.AddAuthenticationSchemes(builder);
+
+        services.AddDataSeeders();
+
+        services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IProfileContexService, ProfileContextService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAuthenticationSchemes(this IServiceCollection services, WebApplicationBuilder builder)
+    {
         services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
         JwtSettings jwtSettings = new();
@@ -49,13 +62,18 @@ public static class ServiceCollectionExtensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.AccessSecurityKey))
                 };
+            })
+            .AddJwtBearer(PROFILE_TOKEN_SCHEME, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.AccessSecurityKey))
+                };
             });
-
-        services.AddDataSeeders();
-
-        services.AddTransient<ITokenService, TokenService>();
-        services.AddTransient<IAuthService, AuthService>();
-        services.AddTransient<IProfileContexService, ProfileContextService>();
 
         return services;
     }

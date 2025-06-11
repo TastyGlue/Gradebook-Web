@@ -24,11 +24,4 @@ public interface ITokenService
     /// <returns>A <see cref="CustomResult{string}"/> containing the generated access token. The token is unique to the provided profile and may be used
     /// for authorization purposes.</returns>
     CustomResult<string> GenerateAccessToken(Profile profile);
-
-    /// <summary>
-    /// Generates a new refresh token.
-    /// </summary>
-    /// <returns>A string representing the newly generated refresh token. The token is typically used for authentication or
-    /// session management.</returns>
-    string GenerateRefreshToken();
 }
