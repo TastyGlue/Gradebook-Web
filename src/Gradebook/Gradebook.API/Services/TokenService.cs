@@ -9,21 +9,35 @@ public class TokenService : ITokenService
         _jwtSettings = options.Value;
     }
 
-    public string GenerateAuthToken(User user, IList<Profile> profiles)
+    public CustomResult<string> GenerateAuthToken(User user)
     {
+        var profiles = user.Profiles.ToList();
+
         var claims = new List<Claim>
         {
-            new(Claims.USER_ID, user.Id.ToString())
+            new(Claims.USER_ID, user.Id.ToString()),
         };
 
         // Prevent users without profiles from generating an auth token
         if (profiles.Count == 0)
-            throw new ArgumentException("User must have at least one profile.");
+        {
+            var error = new ErrorResult("Cannot generate a token for a User with no profiles", ErrorCodes.LOGIN_NO_PROFILES);
+            return new(error);
+        }
+
+        var activeProfiles = profiles.Where(p => p.IsActive).ToList();
+
+        // Prevent users with no active profiles from generating an auth token
+        if (activeProfiles.Count == 0)
+        {
+            var error = new ErrorResult("Cannot generate a token for a User with no active profiles", ErrorCodes.LOGIN_NO_ACTIVE_PROFILES);
+            return new(error);
+        }
 
         var profileClaims = new List<ProfileClaim>();
 
         // Add profile claims
-        foreach (var profile in profiles)
+        foreach (var profile in activeProfiles)
         {
             if (profile is ISchoolMember schoolMember)
                 profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, schoolMember.SchoolName));
@@ -35,16 +49,28 @@ public class TokenService : ITokenService
 
         claims.Add(new Claim(Claims.PROFILES, profileClaimsJson));
 
-        return WriteToken(
+        string token = WriteToken(
             claims: claims,
             expirationMinutes: _jwtSettings.AuthTokenExpirationMinutes,
             securityKey: _jwtSettings.AuthSecurityKey
         );
+
+        return new(token);
     }
 
-    public string GenerateAccessToken(Profile profile)
+    public CustomResult<string> GenerateAccessToken(Profile profile)
     {
-        var claims = new List<Claim>();
+        if (!profile.IsActive)
+        {
+            var error = new ErrorResult("Cannot generate an access token for a deactivated profile", ErrorCodes.LOGIN_PROFILE_NOT_ACTIVE);
+            return new(error);
+        }
+
+        var claims = new List<Claim>()
+        {
+            new(Claims.PROFILE_ID, profile.Id.ToString()),
+            new(Claims.ROLE, profile.RoleType.ToString())
+        };
 
         // Add profile-specific claims
         if (profile is IBusinessEmail profileWithBusinessEmail)
@@ -78,15 +104,14 @@ public class TokenService : ITokenService
 
         claims.AddRange(userClaims);
 
-        return WriteToken(
+        string token = WriteToken(
             claims: claims, 
             expirationMinutes: _jwtSettings.AccessTokenExpirationMinutes,
             securityKey: _jwtSettings.AccessSecurityKey
         );
-    }
 
-    public string GenerateRefreshToken()
-        => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        return new(token);
+    }
 
     /// <summary>
     /// Generates a JSON Web Token (JWT) based on the provided claims and expiration time.
