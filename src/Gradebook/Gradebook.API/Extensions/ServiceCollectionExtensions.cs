@@ -1,4 +1,7 @@
-﻿namespace Gradebook.API.Extensions;
+﻿using Gradebook.API.Handlers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+namespace Gradebook.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -43,6 +46,8 @@ public static class ServiceCollectionExtensions
         builder.Services.AddAuthentication()
             .AddJwtBearer(AUTH_SCHEME, options =>
             {
+                options.Events = CustomAuthFailureEvent;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -54,6 +59,8 @@ public static class ServiceCollectionExtensions
             })
             .AddJwtBearer(ACCESS_SCHEME, options =>
             {
+                options.Events = CustomAuthFailureEvent;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -65,6 +72,8 @@ public static class ServiceCollectionExtensions
             })
             .AddJwtBearer(PROFILE_TOKEN_SCHEME, options =>
             {
+                options.Events = CustomAuthFailureEvent;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -74,6 +83,8 @@ public static class ServiceCollectionExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.AccessSecurityKey))
                 };
             });
+
+        builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
         return services;
     }
@@ -98,4 +109,19 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    private static readonly JwtBearerEvents CustomAuthFailureEvent = new()
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+
+            var response = new ErrorResult("Request is not authenticated", ErrorCodes.ACCESS_NOT_AUTHENTICATED);
+
+            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+        }
+    };
 }
