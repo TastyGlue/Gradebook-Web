@@ -5,15 +5,17 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
+    <MudLayout>
         <MudAppBar Elevation="4">
+        @if (!IsLoginPage) {
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => isDrawerOpen = !isDrawerOpen)" />
             <MudSpacer />
             @* <UserProfile /> *@
+            <MudDrawer @bind-Open="isDrawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
+                @* <NavMenu /> *@
+            </MudDrawer>
+        }
         </MudAppBar>
-        <MudDrawer @bind-Open="isDrawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
-            @* <NavMenu /> *@
-        </MudDrawer>
         <MudMainContent>
             <MudOverlay Visible="IsLoading" ZIndex="1010" LightBackground Absolute="true">
                 <MudProgressCircular Size="@Size.Large" Indeterminate="true" Color="@Color.Primary" />
@@ -42,6 +44,8 @@
     public bool IsAuthenticated { get; set; } = false;
 
     private bool IsLoading { get; set; } = false;
+
+    protected bool IsLoginPage => NavigationManager.Uri.Contains("/login");
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,0 +1,42 @@
+﻿@page "/dashboard"
+@using MudBlazor
+
+<MudPaper Class="pa-4">
+
+    <MudTable T="object">
+        <HeaderContent>
+            <MudTh>Subject ID</MudTh>
+            <MudTh>Subject</MudTh>
+            <MudTh>Grades</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd>123e4567-e89b-12d3-a456-426614174000</MudTd>
+            <MudTd>Mathematics</MudTd>
+            <MudTd>
+                <MudChip T="string" Color="Color.Error" Class="ma-1">2</MudChip>
+                <MudChip T="string" Color="Color.Warning" Class="ma-1">3</MudChip>
+                <MudChip T="string" Color="Color.Info" Class="ma-1">4</MudChip>
+                <MudChip T="string" Color="Color.Primary" Class="ma-1">5</MudChip>
+                <MudChip T="string" Color="Color.Success" Class="ma-1">6</MudChip>
+            </MudTd>
+        </RowTemplate>
+
+        <RowTemplate>
+            <MudTd>456e7890-e89b-12d3-a456-426614174111</MudTd>
+            <MudTd>History</MudTd>
+            <MudTd>
+                <MudChip T="string" Color="Color.Warning" Class="ma-1">3</MudChip>
+                <MudChip T="string" Color="Color.Info" Class="ma-1">4</MudChip>
+                <MudChip T="string" Color="Color.Success" Class="ma-1">6</MudChip>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+    <div class="mt-4">
+        <MudText Typo="Typo.subtitle1">
+            Average Grade: <b>4.33</b>
+        </MudText>
+    </div>
+
+</MudPaper>
