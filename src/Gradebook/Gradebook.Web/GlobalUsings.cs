@@ -7,4 +7,7 @@ global using Gradebook.Web.Components;
 global using Gradebook.Web.Extensions;
 global using Gradebook.Web.Services;
 global using Gradebook.Shared.Enums;
+global using Gradebook.Shared.Models;
+global using Gradebook.Shared.Models.DTOs;
+global using Gradebook.Web.Components.Abstract;
 global using Microsoft.JSInterop;
