@@ -10,7 +10,6 @@ global using Gradebook.Shared;
 global using Gradebook.API.Extensions;
 global using System.Data;
 global using System.Data.Common;
-global using Gradebook.API.Models;
 global using Gradebook.API.Interfaces;
 global using Microsoft.Extensions.Options;
 global using System.Text;

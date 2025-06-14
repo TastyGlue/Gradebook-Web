@@ -18,23 +18,9 @@ public class TokenService : ITokenService
             new(Claims.USER_ID, user.Id.ToString()),
         };
 
-        // Prevent users without profiles from generating an auth token
-        if (profiles.Count == 0)
-        {
-            var error = new ErrorResult("Cannot generate a token for a User with no profiles", ErrorCodes.LOGIN_NO_PROFILES);
-            return new(error);
-        }
+        var profileClaims = new List<ProfileClaim>();
 
         var activeProfiles = profiles.Where(p => p.IsActive).ToList();
-
-        // Prevent users with no active profiles from generating an auth token
-        if (activeProfiles.Count == 0)
-        {
-            var error = new ErrorResult("Cannot generate a token for a User with no active profiles", ErrorCodes.LOGIN_NO_ACTIVE_PROFILES);
-            return new(error);
-        }
-
-        var profileClaims = new List<ProfileClaim>();
 
         // Add profile claims
         foreach (var profile in activeProfiles)
