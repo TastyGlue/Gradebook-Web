@@ -1,0 +1,46 @@
+﻿@page "/login"
+@using MudBlazor
+
+<MudPaper Class="d-flex flex-column align-items-center mx-auto mt-12" Style="max-width: 400px; padding: 2rem;">
+    <MudText Typo="Typo.h5" Class="mb-4">Вход</MudText>
+
+    <MudTextField @bind-Value="_email"
+                  Label="Имейл"
+                  Required="true"
+                  InputType="InputType.Email"
+                  Immediate="true"
+                  Validation="@(string.IsNullOrWhiteSpace(_email) ? "Не сте въвели имейл" : null)" />
+
+    <MudTextField @bind-Value="_password"
+                  Label="Парола"
+                  InputType="@(_showPassword? InputType.Text: InputType.Password)"
+                  Adornment="Adornment.End"
+                  AdornmentIcon="@(!_showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                  OnAdornmentClick="@TogglePasswordVisibility"
+                  Immediate="true"
+                  Required="true"
+                  Validation="@(string.IsNullOrWhiteSpace(_password) ? "Не сте въвели парола" : null)" />
+
+    <MudCheckBox T="bool" @bind-Checked="_rememberMe" Label="Запомни ме" Class="mt-2" />
+
+    <MudButton OnClick="Login"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               Class="mt-4"
+               Disabled="_isLoading">
+        @if (_isLoading)
+        {
+            <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Inherit" Class="mr-2" />
+            <span>Влизане...</span>
+        }
+        else
+        {
+            <span>Влизане</span>
+        }
+    </MudButton>
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <MudText Color="Color.Error" Class="mt-2">@_errorMessage</MudText>
+    }
+</MudPaper>
