@@ -1,0 +1,20 @@
+﻿@page "/admin/manage-schools/create"
+@inherits CreateSchoolBase
+
+<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:500px">
+    <MudText Typo="Typo.h5" Class="mb-4">Create School</MudText>
+
+    <MudForm @ref="_form">
+        <MudTextField @bind-Value="School.Name" Label="Name" Required="true" />
+        <MudTextField @bind-Value="School.Address" Label="Address" Required="true" />
+        <MudTextField @bind-Value="School.Website" Label="Website" Required="true" />
+        <MudTextField @bind-Value="School.Headmasters" Label="Headmasters" Required="true" />
+
+        <MudButton OnClick="SubmitAsync" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+            Submit
+        </MudButton>
+        <MudButton OnClick="GoBack" Variant="Variant.Text" Class="mt-4 ml-2">
+            Cancel
+        </MudButton>
+    </MudForm>
+</MudPaper>
