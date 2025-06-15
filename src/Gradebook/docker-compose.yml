@@ -27,6 +27,8 @@ services:
     depends_on:
       gradebook.api:
         condition: service_started
+    volumes:
+      - ./dataprotection-keys:/keys
 
   gradebook.db:
     container_name: gradebook.db
@@ -42,3 +44,4 @@ services:
 
 volumes:
   gradebook.db-data:
+  dataprotection-keys:  

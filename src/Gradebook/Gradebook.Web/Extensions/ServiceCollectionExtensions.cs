@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
             config.SnackbarConfiguration.ShowTransitionDuration = 500;
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
         });
+        builder.Services.AddMudLocalization();
 
         // Add Authentication and Authorization
         builder.Services.AddAuthorization();
@@ -25,7 +26,7 @@ public static class ServiceCollectionExtensions
             client.BaseAddress = new Uri(builder.Configuration.GetSection("ApiAddress").Value!);
         });
 
-        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("MySettings"));
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
         builder.Services.AddTransient<HttpClientService>();
         builder.Services.AddTransient<TokenService>();
@@ -34,6 +35,8 @@ public static class ServiceCollectionExtensions
 
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();
+
+        builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
         return builder;
     }

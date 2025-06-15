@@ -33,7 +33,7 @@ public partial class ProfilePicker : ExtendedComponentBase
             // Store the access token in local storage
             await LocalStorage.SetAsync(Constants.ACCESS_TOKEN_KEY, result.Value!);
 
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/", true);
         }
         else
         {

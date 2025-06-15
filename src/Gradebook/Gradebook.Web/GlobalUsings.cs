@@ -18,5 +18,6 @@ global using Gradebook.Web.Models.ViewModels;
 global using Microsoft.Extensions.Options;
 global using System.ComponentModel.DataAnnotations;
 global using Microsoft.JSInterop;
+global using Microsoft.AspNetCore.Components.Authorization;
 global using Mapster;
 global using System.Text.Json;
