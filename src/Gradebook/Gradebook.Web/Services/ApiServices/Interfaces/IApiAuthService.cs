@@ -4,7 +4,7 @@ public interface IApiAuthService
 {
     Task<CustomResult<string>> LoginWithCredentials(LoginCredentials request);
 
-    Task LoginProfile(LoginProfile request);
+    Task<CustomResult<string>> LoginProfile(LoginProfile loginProfile, string token);
 
     Task LoginWithProfileToken(LoginProfile request);
 }

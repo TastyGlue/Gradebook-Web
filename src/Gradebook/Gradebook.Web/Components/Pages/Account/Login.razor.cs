@@ -6,7 +6,7 @@ public partial class Login : ExtendedComponentBase
 
     protected LoginViewModel ViewModel { get; set; } = new();
 
-    protected List<ProfileClaim> UserProfiles { get; set; } = [];
+    protected string AuthToken { get; set; } = default!;
 
     public string ErrorMessage { get; set; } = string.Empty;
 
@@ -26,7 +26,7 @@ public partial class Login : ExtendedComponentBase
 
         if (result.Succeeded)
         {
-            UserProfiles = ParseProfilesClaim(result.Value!);
+            AuthToken = result.Value!;
             IsLoginComplete = true;
         }
         else
@@ -49,19 +49,5 @@ public partial class Login : ExtendedComponentBase
         }
 
         IsPasswordVisible = !IsPasswordVisible;
-    }
-
-    protected List<ProfileClaim> ParseProfilesClaim(string token)
-    {
-        var claims = TokenUtils.ParseClaimsFromToken(token);
-
-        var profilesClaimValue = claims.Where(c => c.Type == Claims.PROFILES).Select(c => c.Value).First();
-
-        var profiles = JsonSerializer.Deserialize<List<ProfileClaim>>(profilesClaimValue, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
-
-        return profiles!;
     }
 }

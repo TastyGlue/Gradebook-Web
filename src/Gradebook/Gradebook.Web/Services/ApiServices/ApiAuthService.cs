@@ -23,9 +23,16 @@ public class ApiAuthService : IApiAuthService
         return CustomResultUtils.GetApiResponse<string>(response, content);
     }
 
-    public async Task LoginProfile(LoginProfile loginProfile)
+    public async Task<CustomResult<string>> LoginProfile(LoginProfile loginProfile, string token)
     {
-        throw new NotImplementedException("This method is not implemented yet.");
+        var client = _httpClientService.CreateApiClient(token);
+
+        string apiEndpoint = "auth/login/profile";
+
+        var response = await client.PostAsJsonAsync(apiEndpoint, loginProfile);
+        var content = await response.Content.ReadAsStringAsync();
+
+        return CustomResultUtils.GetApiResponse<string>(response, content);
     }
 
     public async Task LoginWithProfileToken(LoginProfile request)

@@ -1,4 +1,4 @@
-﻿@inherits ComponentBase
+﻿@inherits ExtendedComponentBase
 
 <MudPaper Elevation="4">
     <div class="profile-picker">
@@ -6,7 +6,7 @@
 
         @foreach (var profile in Profiles)
         {
-            <div class="profile">
+            <div class="profile" @onclick="@(_ => ProfileSelectedHandler(profile))">
                 <MudIcon Class="profile-icon" Icon="@GetProfileIcon(profile)" Color="Color.Primary" />
 
                 <div class="profile-type">@profile.RoleType</div>
