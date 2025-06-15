@@ -13,7 +13,8 @@ public static class CustomResultUtils
         {
             if (response.IsSuccessStatusCode)
             {
-                var result = content.Adapt<T>();
+                var result = JsonSerializer.Deserialize<T>(content, _caseInsensitive);
+                //var result = content.Adapt<T>();
 
                 if (result is null)
                 {

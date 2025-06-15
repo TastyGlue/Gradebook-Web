@@ -32,6 +32,7 @@ public static class ServiceCollectionExtensions
         builder.Services.AddTransient<TokenService>();
 
         builder.Services.AddTransient<IApiAuthService, ApiAuthService>();
+        builder.Services.AddTransient<IApiSchoolService, ApiSchoolService>();
 
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();
