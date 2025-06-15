@@ -2,32 +2,48 @@
 @inherits ExtendedComponentBase
 @layout AnonymousLayout
 
-<EditForm Model="ViewModel" OnValidSubmit="ValidSubmitHandler">
-    <DataAnnotationsValidator />
+@if (!IsLoginComplete)
+{
+    <MudPaper Class="form-surface" Elevation="4">
+        <h1>@("Login")</h1>
+        <EditForm class="login-form" Model="ViewModel" OnValidSubmit="ValidSubmitHandler">
+            <DataAnnotationsValidator />
 
-    <div class="anonymous-form-field">
-        <MudIcon Icon="@Icons.Material.Sharp.Email" Color="Color.Primary" />
-        <MudTextField @bind-Value="@ViewModel.Email" 
-                      Label="@("Email")" 
-                      InputType="InputType.Email" 
-                      For="@(() => ViewModel.Email)" />
-    </div>
+            <div class="anon-form-field">
+                <MudIcon Icon="@Icons.Material.Sharp.Email" Color="Color.Primary" />
+                <MudTextField @bind-Value="@ViewModel.Email" 
+                              Label="@("Email")" 
+                              InputType="InputType.Email" 
+                              For="@(() => ViewModel.Email)" />
+            </div>
 
-    <div class="anonymous-form-field">
-        <MudIcon Icon="@Icons.Material.Sharp.Password" Color="Color.Primary" />
-        <MudTextField @bind-Value="@ViewModel.Password" 
-                      Label="@("Password")" 
-                      InputType="@PasswordInputType" 
-                      For="@(() => ViewModel.Password)"
-                      Adornment="Adornment.End" AdornmentAriaLabel="Password Visibility" AdornmentIcon="@PasswordIcon" AdornmentColor="Color.Primary" 
-                      OnAdornmentClick="PasswordVisibilityHandler" />
-    </div>
+            <div class="anon-form-field">
+                <MudIcon Icon="@Icons.Material.Sharp.Password" Color="Color.Primary" />
+                <MudTextField @bind-Value="@ViewModel.Password" 
+                              Label="@("Password")" 
+                              InputType="@PasswordInputType" 
+                              For="@(() => ViewModel.Password)"
+                              Adornment="Adornment.End" AdornmentAriaLabel="Password Visibility" AdornmentIcon="@PasswordIcon" AdornmentColor="Color.Primary" 
+                              OnAdornmentClick="PasswordVisibilityHandler" />
+            </div>
 
-    <MudButton ButtonType="ButtonType.Submit" 
-               Class="anonymous-form-button" 
-               Variant="Variant.Filled" 
-               Color="Color.Primary" 
-               DropShadow="false">@("Login")</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" 
+                       Class="anonymous-form-button" 
+                       Variant="Variant.Filled" 
+                       Color="Color.Primary"
+                       DropShadow="false" 
+                       Style="width: 70%;">@("Login")</MudButton>
 
-    <MudLink Class="anonymous-form-link" Href="/account/register">@("Don't have an account? Click here to register")</MudLink>
-</EditForm>
+            <MudLink Style="text-align: center;" Class="anon-form-link" Href="/account/register">@("Don't have an account? Click here to register")</MudLink>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+            }
+        </EditForm>
+    </MudPaper>
+}
+else
+{
+    <ProfilePicker Profiles="UserProfiles" />
+}
