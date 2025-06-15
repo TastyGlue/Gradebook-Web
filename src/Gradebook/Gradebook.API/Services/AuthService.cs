@@ -31,6 +31,12 @@ public class AuthService : IAuthService
             return new(error);
         }
 
+        if (!user.IsActive)
+        {
+            var error = new ErrorResult("User is not active", ErrorCodes.LOGIN_INACTIVE_USER);
+            return new(error);
+        }
+
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
 
         if (!isPasswordValid)

@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
     [Authorize(AuthenticationSchemes = AUTH_SCHEME)]
     public async Task<IActionResult> LoginProfile([FromBody] LoginProfile request)
     {
-        var userId = HttpUtils.GetUserIdFrom(HttpContext);
+        var userId = TokenUtils.GetUserId(HttpContext.User);
 
         var result = await _authService.LoginProfile(request, userId!.Value);
 
@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
     {
         var expirationTimespan = TimeSpan.FromDays(_jwtSettings.RefreshTokenExpirationDays);
 
-        var isTokenExpired = HttpUtils.IsTokenExpired(HttpContext, expirationTimespan);
+        var isTokenExpired = TokenUtils.IsTokenExpired(HttpContext.User, expirationTimespan);
 
         if (isTokenExpired is null)
         {
@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
             return ApiResponseFactory.CreateResponse<object>(errorResult);
         }
 
-        var userId = HttpUtils.GetUserIdFrom(HttpContext);
+        var userId = TokenUtils.GetUserId(HttpContext.User);
 
         var result = await _authService.LoginProfile(request, userId!.Value);
 
