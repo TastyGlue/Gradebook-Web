@@ -84,4 +84,11 @@ public static class TokenUtils
             return false;
         }
     }
+
+    public static IEnumerable<Claim> ParseClaimsFromToken(string token)
+    {
+        var jwtHandler = new JwtSecurityTokenHandler();
+        var jwtToken = jwtHandler.ReadJwtToken(token);
+        return jwtToken.Claims;
+    }
 }

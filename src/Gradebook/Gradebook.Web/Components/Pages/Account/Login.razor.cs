@@ -6,20 +6,31 @@ public partial class Login : ExtendedComponentBase
 
     protected LoginViewModel ViewModel { get; set; } = new();
 
+    protected List<ProfileClaim> UserProfiles { get; set; } = [];
+
+    public string ErrorMessage { get; set; } = string.Empty;
+
+    protected bool IsLoginComplete { get; set; } = false;
+
     bool IsPasswordVisible = false;
     InputType PasswordInputType = InputType.Password;
     string PasswordIcon = Icons.Material.Sharp.VisibilityOff;
 
     protected async Task ValidSubmitHandler()
     {
+        ErrorMessage = string.Empty;
+
         LoaderService.ToggleLoading(true);
 
         var result = await ApiAuthService.LoginWithCredentials(ViewModel.Adapt<LoginCredentials>());
 
         if (result.Succeeded)
-            Notify(result.Value!, Severity.Success);
+        {
+            UserProfiles = ParseProfilesClaim(result.Value!);
+            IsLoginComplete = true;
+        }
         else
-            Notify(result.Error!.Message, Severity.Error);
+            ErrorMessage = result.Error!.Message;
 
         LoaderService.ToggleLoading(false);
     }
@@ -38,5 +49,19 @@ public partial class Login : ExtendedComponentBase
         }
 
         IsPasswordVisible = !IsPasswordVisible;
+    }
+
+    protected List<ProfileClaim> ParseProfilesClaim(string token)
+    {
+        var claims = TokenUtils.ParseClaimsFromToken(token);
+
+        var profilesClaimValue = claims.Where(c => c.Type == Claims.PROFILES).Select(c => c.Value).First();
+
+        var profiles = JsonSerializer.Deserialize<List<ProfileClaim>>(profilesClaimValue, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        return profiles!;
     }
 }
