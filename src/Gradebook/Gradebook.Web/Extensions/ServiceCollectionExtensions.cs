@@ -25,6 +25,13 @@ public static class ServiceCollectionExtensions
             client.BaseAddress = new Uri(builder.Configuration.GetSection("ApiAddress").Value!);
         });
 
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("MySettings"));
+
+        builder.Services.AddTransient<HttpClientService>();
+        builder.Services.AddTransient<TokenService>();
+
+        builder.Services.AddTransient<IApiAuthService, ApiAuthService>();
+
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();
 

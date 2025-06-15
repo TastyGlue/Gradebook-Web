@@ -7,10 +7,6 @@ public class Student : Profile, ISchoolMember
 
     public School School { get; set; } = default!;
 
-    [NotMapped]
-    [JsonIgnore]
-    public string SchoolName => School?.Name ?? string.Empty;
-
     [ForeignKey(nameof(Class))]
     public Guid? ClassId { get; set; }
 

@@ -6,6 +6,6 @@ global using Gradebook.Data.Models;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Gradebook.Data.Extensions;
 global using Gradebook.Shared.Constants;
-global using Gradebook.Shared.Interfaces;
+global using Gradebook.Data.Interfaces;
 global using System.Text.Json.Serialization;
 global using static Gradebook.Shared.Constants.IndexConstants;

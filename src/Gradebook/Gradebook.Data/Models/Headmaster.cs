@@ -10,8 +10,4 @@ public class Headmaster : Profile, IBusinessEmail, ISchoolMember
     public Guid? SchoolId { get; set; }
 
     public School School { get; set; } = default!;
-
-    [NotMapped]
-    [JsonIgnore]
-    public string SchoolName => School?.Name ?? string.Empty;
 }

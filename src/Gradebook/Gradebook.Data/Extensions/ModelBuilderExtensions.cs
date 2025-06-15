@@ -38,15 +38,6 @@ public static class ModelBuilderExtensions
         modelBuilder.ConfigureProfileRepeatingColumns();
 
         modelBuilder.ConfigureProfileNullableColumns();
-
-        modelBuilder.Entity<Headmaster>()
-            .Ignore(x => x.SchoolName);
-
-        modelBuilder.Entity<Teacher>()
-            .Ignore(x => x.SchoolName);
-
-        modelBuilder.Entity<Student>()
-            .Ignore(x => x.SchoolName);
     }
 
     /// <summary>

@@ -45,6 +45,15 @@ public class AuthService : IAuthService
             return new(error);
         }
 
+        
+        foreach (var profile in user.Profiles)
+        {
+            if (profile is ISchoolMember schoolMember)
+            {
+                _context.Entry(schoolMember).Reference(s => s.School).Load();
+            }
+        }
+
         return _tokenService.GenerateAuthToken(user);
     }
 
