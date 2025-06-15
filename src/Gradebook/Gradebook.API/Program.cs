@@ -1,3 +1,5 @@
+using Gradebook.API.Middlewares;
+
 namespace Gradebook.API;
 
 public class Program
@@ -5,6 +7,10 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .CreateLogger();
 
         builder.Services.RegisterGradebookServices(builder);
 
@@ -40,6 +46,8 @@ public class Program
         }
 
         // Configure the HTTP request pipeline.
+
+        app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

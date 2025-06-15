@@ -21,7 +21,7 @@ public class ErrorResult
     /// Gets or sets a collection of additional details, such as validation error messages.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public List<string> Details { get; set; } = [];
+    public List<string> Details { get; set; } = default!;
 
     public ErrorResult(string message, string? errorCode = null, List<string> details = null!)
     {

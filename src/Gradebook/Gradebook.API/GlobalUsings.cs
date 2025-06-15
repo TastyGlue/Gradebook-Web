@@ -25,4 +25,7 @@ global using Gradebook.API.Factories;
 global using Microsoft.AspNetCore.Authorization;
 global using Gradebook.Shared.Utils;
 global using Mapster;
+global using Npgsql;
+global using Serilog;
+global using System.Net;
 global using static Gradebook.Shared.Constants.AuthSchemes;
