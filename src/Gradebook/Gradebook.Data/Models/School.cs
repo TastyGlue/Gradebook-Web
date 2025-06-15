@@ -11,6 +11,8 @@ public class School
 
     public string? Website { get; set; }
 
+    public bool IsActive { get; set; }
+
     public ICollection<Class> Classes { get; set; } = [];
 
     public ICollection<Headmaster> Headmasters { get; set; } = [];

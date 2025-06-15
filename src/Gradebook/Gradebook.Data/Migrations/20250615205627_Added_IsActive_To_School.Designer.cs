@@ -3,6 +3,7 @@ using System;
 using Gradebook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Gradebook.Data.Migrations
 {
     [DbContext(typeof(GradebookDbContext))]
-    partial class GradebookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250615205627_Added_IsActive_To_School")]
+    partial class Added_IsActive_To_School
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

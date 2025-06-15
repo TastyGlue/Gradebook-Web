@@ -10,6 +10,8 @@ public class SchoolDto
 
     public string? Website { get; set; }
 
+    public bool IsActive { get; set; }
+
     public ICollection<HeadmasterDto> Headmasters { get; set; } = [];
 
     public ICollection<SchoolYearDto> SchoolYears { get; set; } = [];

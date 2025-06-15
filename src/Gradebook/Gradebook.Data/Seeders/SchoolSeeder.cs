@@ -29,14 +29,16 @@ public class SchoolSeeder : IDataSeeder
                 Id = Guid.Parse(SCHOOL_RIVERSIDE_ID),
                 Name = "Riverside High School",
                 Address = "101 River Road, Education Town, Country",
-                Website = "https://riversidehigh.example.com"
+                Website = "https://riversidehigh.example.com",
+                IsActive = true
             },
             new School
             {
                 Id = Guid.Parse(SCHOOL_HILLCREST_ID),
                 Name = "Hillcrest Academy",
                 Address = "202 Hilltop Avenue, Suburbia, Country",
-                Website = "https://hillcrestacademy.example.com"
+                Website = "https://hillcrestacademy.example.com",
+                IsActive = true
             }
         ];
     }
