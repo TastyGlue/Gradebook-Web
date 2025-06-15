@@ -16,7 +16,7 @@ namespace Gradebook.API.Controllers
             _service = service;
         }
 
-        // GET: api/Schools
+        // GET: api/School
         [HttpGet]
         public async Task<IActionResult> GetSchools()
         {
@@ -24,7 +24,7 @@ namespace Gradebook.API.Controllers
             return ApiResponseFactory.AdaptAndCreateResponse<IEnumerable<School>, IEnumerable<SchoolDto>>(result);
         }
 
-        // GET: api/Schools/{id}
+        // GET: api/School/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSchool(Guid id)
         {
@@ -32,7 +32,7 @@ namespace Gradebook.API.Controllers
             return ApiResponseFactory.AdaptAndCreateResponse<School, SchoolDto>(result);
         }
 
-        // POST: api/Schools
+        // POST: api/School
         [HttpPost]
         public async Task<IActionResult> CreateSchool([FromBody] SchoolDto schoolDto)
         {
@@ -40,7 +40,7 @@ namespace Gradebook.API.Controllers
             return ApiResponseFactory.AdaptAndCreateResponse<School, SchoolDto>(result);
         }
 
-        // PUT: api/Schools/{id}
+        // PUT: api/School/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSchool(Guid id, [FromBody] SchoolDto schoolDto)
         {
@@ -48,7 +48,7 @@ namespace Gradebook.API.Controllers
             return ApiResponseFactory.AdaptAndCreateResponse<School, SchoolDto>(result);
         }
 
-        // DELETE: api/Schools/{id}
+        // DELETE: api/School/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchool(Guid id)
         {

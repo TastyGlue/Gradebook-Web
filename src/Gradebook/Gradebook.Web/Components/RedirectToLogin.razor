@@ -1,0 +1,12 @@
+﻿@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Redirect to login page if the user is not authenticated
+        if (!NavigationManager.Uri.Contains("/account", StringComparison.OrdinalIgnoreCase))
+        {
+            NavigationManager.NavigateTo("/account/login", true);
+        }
+    }
+}

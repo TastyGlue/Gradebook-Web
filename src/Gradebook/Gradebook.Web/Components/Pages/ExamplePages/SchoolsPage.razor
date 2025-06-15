@@ -1,0 +1,26 @@
+﻿@page "/example"
+@inherits ExtendedComponentBase
+@inject IApiSchoolService ApiSchoolService
+
+@code {
+    protected List<SchoolDto> Schools { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSchools();
+    }
+
+    protected async Task GetSchools()
+    {
+        var result = await ApiSchoolService.GetSchools();
+
+        if (result.Succeeded)
+            Schools = result.Value!.ToList(); // To adapt use ".Adapt<List<SchoolViewModel>>()"
+        else
+        {
+            // NavigationManager.NavigateTo("/");
+
+            Notify(result.Error!.Message, Severity.Error);
+        }
+    }
+}

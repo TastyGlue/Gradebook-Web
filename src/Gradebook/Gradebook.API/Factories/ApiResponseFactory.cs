@@ -65,7 +65,7 @@ public static class ApiResponseFactory
     /// status code (e.g., "ERROR_404").</param>
     /// <returns>The extracted HTTP status code as an integer. Returns <see langword="500"/> if the input is <see
     /// langword="null"/> or does not contain a valid underscore-delimited HTTP status code.</returns>
-    private static int GetHttpStatusCode(string? errorCode)
+    public static int GetHttpStatusCode(string? errorCode)
     {
         if (errorCode is null)
             return 500; // Default to Internal Server Error if no error code is provided

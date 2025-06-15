@@ -1,0 +1,28 @@
+﻿@page "/example/{id:guid}"
+@inherits ExtendedComponentBase
+@inject IApiSchoolService ApiSchoolService
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    protected SchoolDto SchoolToEdit { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSchoolToEdit();
+    }
+
+    protected async Task GetSchoolToEdit()
+    {
+        var result = await ApiSchoolService.GetSchool(Id);
+
+        if (result.Succeeded)
+            SchoolToEdit = result.Value!; // To adapt use ".Adapt<SchoolViewModel>()"
+        else
+        {
+            // NavigationManager.NavigateTo("/");
+
+            Notify(result.Error!.Message, Severity.Error);
+        }
+    }
+}

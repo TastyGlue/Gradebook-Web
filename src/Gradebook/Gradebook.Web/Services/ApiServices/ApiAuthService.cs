@@ -11,25 +11,39 @@ public class ApiAuthService : IApiAuthService
         _httpClientService = httpClientService;
     }
 
-    public async Task<CustomResult<string>> LoginWithCredentials(LoginCredentials credentials)
+    public async Task<CustomResult<string>> LoginWithCredentials(LoginCredentials request)
     {
         var client = _httpClientService.CreateApiClient();
 
         string apiEndpoint = "auth/login/credentials";
 
-        var response = await client.PostAsJsonAsync(apiEndpoint, credentials);
+        var response = await client.PostAsJsonAsync(apiEndpoint, request);
         var content = await response.Content.ReadAsStringAsync();
 
         return CustomResultUtils.GetApiResponse<string>(response, content);
     }
 
-    public async Task LoginProfile(LoginProfile loginProfile)
+    public async Task<CustomResult<string>> LoginProfile(LoginProfile request, string authToken)
     {
-        throw new NotImplementedException("This method is not implemented yet.");
+        var client = _httpClientService.CreateApiClient(authToken);
+
+        string apiEndpoint = "auth/login/profile";
+
+        var response = await client.PostAsJsonAsync(apiEndpoint, request);
+        var content = await response.Content.ReadAsStringAsync();
+
+        return CustomResultUtils.GetApiResponse<string>(response, content);
     }
 
-    public async Task LoginWithProfileToken(LoginProfile request)
+    public async Task<CustomResult<string>> LoginWithProfileToken(LoginProfile request, string accessToken)
     {
-        throw new NotImplementedException();
+        var client = _httpClientService.CreateApiClient(accessToken);
+
+        string apiEndpoint = "auth/login/profile/token";
+
+        var response = await client.PostAsJsonAsync(apiEndpoint, request);
+        var content = await response.Content.ReadAsStringAsync();
+
+        return CustomResultUtils.GetApiResponse<string>(response, content);
     }
 }

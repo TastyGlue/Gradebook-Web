@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Gradebook.Shared.Models;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -67,7 +68,7 @@ public static class TokenUtils
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(securityKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(securityKey)),
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = validateLifetime,
@@ -76,7 +77,7 @@ public static class TokenUtils
 
         try
         {
-            tokenHandler.ValidateToken(token, validationParameters, out _);
+            tokenHandler.ValidateToken(token, validationParameters, out var args);
             return true;
         }
         catch

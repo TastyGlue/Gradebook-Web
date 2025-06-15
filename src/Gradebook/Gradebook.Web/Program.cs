@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.DataProtection;
+
 namespace Gradebook.Web;
 
 public class Program
@@ -13,10 +15,11 @@ public class Program
 
         builder.RegisterServices();
 
-        var app = builder.Build();
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/keys"))
+            .SetApplicationName("Gradebook.Web");
 
-        builder.Services.AddMudServices();
-        builder.Services.AddMudLocalization();
+        var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

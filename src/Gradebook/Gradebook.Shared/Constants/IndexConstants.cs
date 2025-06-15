@@ -28,4 +28,17 @@ public static class IndexConstants
 
     public const string PROFILE_USERID_PARENT_INDEX = "IX_Profile_UserId_Parent";
     public static IndexViolation ProfileUserIdParentViolation => new(PROFILE_USERID_PARENT_INDEX, "This user is already registered as a Parent.");
+
+    public static readonly HashSet<IndexViolation> IndexViolations =
+    [
+        SchoolNameViolation,
+        ClassSignatureViolation,
+        SubjectNameViolation,
+        SchoolYearUniqueViolation,
+        ProfileUserIdAdminViolation,
+        ProfileUserIdHeadmasterViolation,
+        ProfileUserIdTeacherViolation,
+        ProfileUserIdStudentViolation,
+        ProfileUserIdParentViolation
+    ];
 }
