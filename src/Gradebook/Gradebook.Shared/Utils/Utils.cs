@@ -21,4 +21,16 @@ public static class Utils
 
         return errorMessage.ToString();
     }
+
+    public static bool LooksLikeJson(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return false;
+
+        content = content.Trim();
+
+        return (content.StartsWith('{') && content.EndsWith('}')) ||
+               (content.StartsWith('[') && content.EndsWith(']')) ||
+               (content.StartsWith('\"') && content.EndsWith('\"'));
+    }
 }

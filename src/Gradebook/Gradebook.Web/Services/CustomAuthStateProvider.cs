@@ -36,7 +36,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             else
             {
                 // Attempt to refresh the token
-                if (await TryRefreshToken(accessToken, identity))
+                if (await TryRefreshToken(accessToken, new ClaimsIdentity(claims)))
                 {
                     accessToken = (await _localStorage.GetAsync<string>(Constants.ACCESS_TOKEN_KEY)).Value; // Get new token
                     claims = TokenUtils.ParseClaimsFromToken(accessToken!);
@@ -61,7 +61,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             return false;
 
         // Check if the refresh token expiration is still valid
-        if (isTokenExpired.Value)
+        if (!isTokenExpired.Value)
         {
             // Call the API to refresh the token
             var roleTypeString = identity.FindFirst(Claims.ROLE)?.Value;

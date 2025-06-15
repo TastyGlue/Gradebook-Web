@@ -13,16 +13,19 @@ public static class CustomResultUtils
         {
             if (response.IsSuccessStatusCode)
             {
-                var result = JsonSerializer.Deserialize<T>(content, _caseInsensitive);
-                //var result = content.Adapt<T>();
-
-                if (result is null)
+                if (Utils.LooksLikeJson(content))
                 {
-                    var error = new ErrorResult("Unexpected Error");
-                    return new(error);
-                }
+                    var result = JsonSerializer.Deserialize<T>(content, _caseInsensitive);
 
-                return new(result);
+                    return CheckNullResult(result);
+                }
+                else
+                {
+                    // Handle conversion for simple types like int, string, etc.
+                    var result = (T)Convert.ChangeType(content, typeof(T));
+
+                    return CheckNullResult(result);
+                }
             }
             else
             {
@@ -36,5 +39,16 @@ public static class CustomResultUtils
         {
             return new(new ErrorResult("Unexpected Error"));
         }
+    }
+
+    private static CustomResult<T> CheckNullResult<T>(T? result)
+    {
+        if (result is null)
+        {
+            var error = new ErrorResult("Unexpected Error");
+            return new(error);
+        }
+
+        return new(result);
     }
 }
