@@ -27,10 +27,12 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        else
+        {
+            app.UseHttpsRedirection();
+        }
 
         // Configure the HTTP request pipeline.
-
-        app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseAuthorization();

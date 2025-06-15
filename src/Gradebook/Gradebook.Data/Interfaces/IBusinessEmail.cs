@@ -1,4 +1,4 @@
-﻿namespace Gradebook.Shared.Interfaces;
+﻿namespace Gradebook.Data.Interfaces;
 
 public interface IBusinessEmail
 {

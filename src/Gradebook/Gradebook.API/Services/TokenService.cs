@@ -1,4 +1,6 @@
-﻿namespace Gradebook.API.Services;
+﻿using Gradebook.Shared.Models;
+
+namespace Gradebook.API.Services;
 
 public class TokenService : ITokenService
 {
@@ -26,7 +28,7 @@ public class TokenService : ITokenService
         foreach (var profile in activeProfiles)
         {
             if (profile is ISchoolMember schoolMember)
-                profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, schoolMember.SchoolName));
+                profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, schoolMember.School.Name));
             else
                 profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, null));
         }
@@ -63,7 +65,10 @@ public class TokenService : ITokenService
             claims.Add(new(Claims.BUSINESS_EMAIL, profileWithBusinessEmail.BusinessEmail));
 
         if (profile is ISchoolMember schoolMember)
+        {
             claims.Add(new(Claims.SCHOOL_ID, schoolMember.SchoolId!.Value.ToString()));
+            claims.Add(new(Claims.SCHOOL_NAME, schoolMember.School.Name));
+        }
 
         if (profile is Student student)
         {

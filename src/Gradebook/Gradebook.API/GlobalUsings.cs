@@ -17,7 +17,7 @@ global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Security.Cryptography;
-global using Gradebook.Shared.Interfaces;
+global using Gradebook.Data.Interfaces;
 global using System.Text.Json;
 global using Gradebook.Shared.Exceptions;
 global using Gradebook.API.Services;

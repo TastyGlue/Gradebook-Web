@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudMainContent>
+        <MudOverlay Visible="IsLoading" ZIndex="1010" LightBackground Absolute="true">
+            <MudProgressCircular Size="@Size.Large" Indeterminate="true" Color="@Color.Primary" />
+        </MudOverlay>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    [Inject] public LoaderService LoaderService { get; set; } = default!;
+
+    private bool IsLoading { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoaderService.Register(state =>
+        {
+            InvokeAsync(() =>
+            {
+                IsLoading = state;
+                StateHasChanged();
+            });
+        });
+
+        base.OnInitialized();
+    }
+}

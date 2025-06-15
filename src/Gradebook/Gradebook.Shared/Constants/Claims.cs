@@ -11,6 +11,7 @@ public static class Claims
     public const string PROFILE_ID = "profile_id";
     public const string BUSINESS_EMAIL = "business_email";
     public const string SCHOOL_ID = "school_id";
+    public const string SCHOOL_NAME = "school_name";
     public const string CLASS_ID = "class_id";
     public const string STUDENT_IDS = "student_ids";
 

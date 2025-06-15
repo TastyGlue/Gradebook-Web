@@ -7,9 +7,4 @@
 /// provided and adhere to any validation rules defined by the consuming system.</remarks>
 /// <param name="Email">The email address of the user attempting to log in. This value cannot be null or empty.</param>
 /// <param name="Password">The password associated with the user's account. This value cannot be null or empty.</param>
-public class LoginCredentials
-{
-    public string Email { get; set; } = default!;
-
-    public string Password { get; set; } = default!;
-}
+public record LoginCredentials(string Email, string Password);

@@ -1,4 +1,6 @@
-﻿namespace Gradebook.Shared.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Gradebook.Shared.Models;
 
 /// <summary>
 /// Represents an error result containing details about an error that occurred during an operation.
@@ -18,6 +20,7 @@ public class ErrorResult
     /// <summary>
     /// Gets or sets a collection of additional details, such as validation error messages.
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public List<string> Details { get; set; } = [];
 
     public ErrorResult(string message, string? errorCode = null, List<string> details = null!)

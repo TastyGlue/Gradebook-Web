@@ -6,6 +6,7 @@ public class ExtendedComponentBase : ComponentBase
     [Inject] public ProtectedLocalStorage LocalStorage { get; set; } = default!;
     [Inject] public LoaderService LoaderService { get; set; } = default!;
     [Inject] public UserStateContainer UserStateContainer { get; set; } = default!;
+    [Inject] public TokenService TokenService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
     [Inject] public IJSRuntime Js { get; set; } = default!;
