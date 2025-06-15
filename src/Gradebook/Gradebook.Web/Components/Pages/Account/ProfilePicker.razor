@@ -1,0 +1,21 @@
+﻿@inherits ComponentBase
+
+<MudPaper Elevation="4">
+    <div class="profile-picker">
+        <h1 style="text-align: center;">@("Choose profile")</h1>
+
+        @foreach (var profile in Profiles)
+        {
+            <div class="profile">
+                <MudIcon Class="profile-icon" Icon="@GetProfileIcon(profile)" Color="Color.Primary" />
+
+                <div class="profile-type">@profile.RoleType</div>
+
+                @if (profile.SchoolName is not null)
+                {
+                    <div class="school-name">@profile.SchoolName</div>
+                }
+            </div>
+        }
+    </div>
+</MudPaper>
