@@ -11,10 +11,6 @@ public class Teacher : Profile, IBusinessEmail, ISchoolMember
 
     public School School { get; set; } = default!;
 
-    [NotMapped]
-    [JsonIgnore]
-    public string SchoolName => School?.Name ?? string.Empty;
-
     public Guid? ClassId { get; set; }
 
     public Class? Class { get; set; }

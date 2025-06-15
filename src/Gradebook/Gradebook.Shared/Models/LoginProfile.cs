@@ -1,3 +1,8 @@
 ﻿namespace Gradebook.Shared.Models;
 
-public record LoginProfile(RoleType RoleType, Guid ProfileId);
+public class LoginProfile
+{
+    public RoleType RoleType { get; set; }
+
+    public Guid ProfileId { get; set; }
+}

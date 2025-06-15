@@ -1,4 +1,4 @@
-﻿namespace Gradebook.API.Models;
+﻿namespace Gradebook.Shared.Models;
 
 public class JwtSettings
 {

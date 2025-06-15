@@ -1,3 +1,5 @@
+using Blazored.LocalStorage;
+
 namespace Gradebook.Web;
 
 public class Program
@@ -6,6 +8,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddBlazoredLocalStorage();
+
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
@@ -13,6 +17,9 @@ public class Program
         builder.RegisterServices();
 
         var app = builder.Build();
+
+        builder.Services.AddMudServices();
+        builder.Services.AddMudLocalization();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

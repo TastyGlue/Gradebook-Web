@@ -31,12 +31,27 @@ public class AuthService : IAuthService
             return new(error);
         }
 
+        if (!user.IsActive)
+        {
+            var error = new ErrorResult("User is not active", ErrorCodes.LOGIN_INACTIVE_USER);
+            return new(error);
+        }
+
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
 
         if (!isPasswordValid)
         {
             var error = new ErrorResult("Invalid password", ErrorCodes.LOGIN_CREDENTIALS);
             return new(error);
+        }
+
+        
+        foreach (var profile in user.Profiles)
+        {
+            if (profile is ISchoolMember schoolMember)
+            {
+                _context.Entry(schoolMember).Reference(s => s.School).Load();
+            }
         }
 
         return _tokenService.GenerateAuthToken(user);

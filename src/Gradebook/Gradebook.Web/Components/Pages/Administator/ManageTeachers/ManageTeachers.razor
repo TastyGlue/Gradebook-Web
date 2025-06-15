@@ -1,0 +1,67 @@
+﻿@page "/manageteachers"
+@inherits ExtendedComponentBase
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">Manage Teachers</MudText>
+
+    <MudDataGrid T="TeacherViewModel"
+                 Items="_teachers"
+                 @bind-SelectedItem="_selectedTeacher"
+                 Filterable="true"
+                 FilterMode="DataGridFilterMode.Simple"
+                 Hover="true"
+                 Loading="_isLoading"
+                 Elevation="1"
+                 Class="mb-4">
+
+        <ToolBarContent>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="CreateTeacher">
+                Create
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Warning"
+                       StartIcon="@Icons.Material.Filled.Edit"
+                       Disabled="_selectedTeacher == null"
+                       OnClick="EditTeacher"
+                       Class="ml-2">
+                Edit
+            </MudButton>
+
+            <MudSpacer />
+
+            <MudTextField @bind-Value="_searchString"
+                          Placeholder="Search..."
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          Immediate="true"
+                          Class="ml-2" />
+        </ToolBarContent>
+
+        <Columns>
+            <PropertyColumn Property="x => x.FullName" Title="Full Name" />
+            <PropertyColumn Property="x => x.Email" Title="Email" />
+            <PropertyColumn Property="x => x.BusinessEmail" Title="Business Email" />
+            <PropertyColumn Property="x => x.BusinessPhoneNumber" Title="Phone" />
+            <PropertyColumn Property="x => x.SchoolName" Title="School" />
+            <PropertyColumn Property="x => x.ClassName" Title="Class" />
+            <TemplateColumn Title="Subjects">
+                <CellTemplate>
+                    <p>@string.Join(", ", context.Item.Subjects)</p>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+
+        <NoRecordsContent>
+            <MudText>No teachers to display.</MudText>
+        </NoRecordsContent>
+
+        <PagerContent>
+            <MudDataGridPager T="TeacherViewModel" />
+        </PagerContent>
+
+    </MudDataGrid>
+</MudPaper>

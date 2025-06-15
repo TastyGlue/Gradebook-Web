@@ -1,4 +1,6 @@
-﻿namespace Gradebook.API.Services;
+﻿using Gradebook.Shared.Models;
+
+namespace Gradebook.API.Services;
 
 public class TokenService : ITokenService
 {
@@ -18,29 +20,15 @@ public class TokenService : ITokenService
             new(Claims.USER_ID, user.Id.ToString()),
         };
 
-        // Prevent users without profiles from generating an auth token
-        if (profiles.Count == 0)
-        {
-            var error = new ErrorResult("Cannot generate a token for a User with no profiles", ErrorCodes.LOGIN_NO_PROFILES);
-            return new(error);
-        }
+        var profileClaims = new List<ProfileClaim>();
 
         var activeProfiles = profiles.Where(p => p.IsActive).ToList();
-
-        // Prevent users with no active profiles from generating an auth token
-        if (activeProfiles.Count == 0)
-        {
-            var error = new ErrorResult("Cannot generate a token for a User with no active profiles", ErrorCodes.LOGIN_NO_ACTIVE_PROFILES);
-            return new(error);
-        }
-
-        var profileClaims = new List<ProfileClaim>();
 
         // Add profile claims
         foreach (var profile in activeProfiles)
         {
             if (profile is ISchoolMember schoolMember)
-                profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, schoolMember.SchoolName));
+                profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, schoolMember.School.Name));
             else
                 profileClaims.Add(new ProfileClaim(profile.RoleType.ToString(), profile.Id, null));
         }
@@ -77,7 +65,10 @@ public class TokenService : ITokenService
             claims.Add(new(Claims.BUSINESS_EMAIL, profileWithBusinessEmail.BusinessEmail));
 
         if (profile is ISchoolMember schoolMember)
+        {
             claims.Add(new(Claims.SCHOOL_ID, schoolMember.SchoolId!.Value.ToString()));
+            claims.Add(new(Claims.SCHOOL_NAME, schoolMember.School.Name));
+        }
 
         if (profile is Student student)
         {
