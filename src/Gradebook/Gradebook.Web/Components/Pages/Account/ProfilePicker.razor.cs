@@ -1,17 +1,58 @@
-﻿using Gradebook.Shared.Constants;
+﻿namespace Gradebook.Web.Components.Pages.Account;
 
-namespace Gradebook.Web.Components.Pages.Account;
-
-public partial class ProfilePicker : ComponentBase
+public partial class ProfilePicker : ExtendedComponentBase
 {
-    [Parameter] public List<ProfileClaim> Profiles { get; set; } = [];
+    [Inject] protected IApiAuthService ApiAuthService { get; set; } = default!;
+
+    [Parameter] public string Token { get; set; } = string.Empty;
+
+    protected List<ProfileClaim> Profiles { get; set; } = [];
 
     protected override void OnInitialized()
     {
+        Profiles = ParseProfilesClaim(Token);
+
         Profiles = Profiles
             .OrderBy(c => Enum.TryParse<RoleType>(c.RoleType, out var role) ? (int)role : int.MaxValue)
             .ToList();
+
         StateHasChanged();
+    }
+
+    protected async Task ProfileSelectedHandler(ProfileClaim profile)
+    {
+        var request = new LoginProfile
+        {
+            ProfileId = profile.ProfileId,
+            RoleType = Enum.Parse<RoleType>(profile.RoleType)
+        };
+
+        var result = await ApiAuthService.LoginProfile(request, Token);
+        if (result.Succeeded)
+        {
+            // Store the access token in local storage
+            await LocalStorage.SetAsync(Constants.ACCESS_TOKEN_KEY, result.Value!);
+
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Notify(result.Error!.Message, Severity.Error);
+        }
+    }
+
+    protected List<ProfileClaim> ParseProfilesClaim(string token)
+    {
+        var claims = TokenUtils.ParseClaimsFromToken(token);
+
+        var profilesClaimValue = claims.Where(c => c.Type == Claims.PROFILES).Select(c => c.Value).First();
+
+        var profiles = JsonSerializer.Deserialize<List<ProfileClaim>>(profilesClaimValue, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        return profiles!;
     }
 
     protected string GetProfileIcon(ProfileClaim profile)
