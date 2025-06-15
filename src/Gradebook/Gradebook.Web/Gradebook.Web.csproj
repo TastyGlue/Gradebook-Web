@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Gradebook.Shared\Gradebook.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Pages\Login\" />
+  </ItemGroup>
+
 </Project>

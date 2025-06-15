@@ -10,13 +10,13 @@ public class AbsenceDto
 
     public Guid SchoolYearId { get; set; }
 
-    public SchoolYearDto SchoolYear { get; set; } = default!;
+    public SchoolYearDto? SchoolYear { get; set; } = default!;
 
     public Guid StudentId { get; set; }
 
-    public StudentDto Student { get; set; } = default!;
+    public StudentDto? Student { get; set; } = default!;
 
     public Guid TimetableId { get; set; }
 
-    public TimetableDto Timetable { get; set; } = default!;
+    public TimetableDto? Timetable { get; set; } = default!;
 }

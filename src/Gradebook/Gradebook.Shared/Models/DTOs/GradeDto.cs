@@ -8,17 +8,17 @@ public class GradeDto
 
     public Guid SchoolYearId { get; set; }
 
-    public SchoolYearDto SchoolYear { get; set; } = default!;
+    public SchoolYearDto? SchoolYear { get; set; } = default!;
 
     public DateTime Date { get; set; }
 
     public Guid SubjectId { get; set; }
 
-    public SubjectDto Subject { get; set; } = default!;
+    public SubjectDto? Subject { get; set; } = default!;
 
     public Guid StudentId { get; set; }
 
-    public StudentDto Student { get; set; } = default!;
+    public StudentDto? Student { get; set; } = default!;
 
     public Guid? TeacherId { get; set; }
 

@@ -33,9 +33,9 @@ namespace Gradebook.API.Services
             if (grade == null)
                 return new (new ErrorResult($"Grade with ID {id} not found.", ErrorCodes.ENTITY_NOT_FOUND));
 
-            return new CustomResult<GradeDto>(grade.Adapt<GradeDto>());
+            return new CustomResult<Grade>(grade);
         }
-        public async Task<CustomResult<IEnumerable<GradeDto>>> GetAllGradesAsync()
+        public async Task<CustomResult> GetAllGradesAsync()
         {
             var grades = await _context.Grades
                 .Include(g => g.SchoolYear)
@@ -43,19 +43,10 @@ namespace Gradebook.API.Services
                 .Include(g => g.Student)
                 .Include(g => g.Teacher)
                 .ToListAsync();
-            return _mapper.Map<IEnumerable<GradeDto>>(grades);
+
+            return new CustomResult<IEnumerable<Grade>>(grades);
         }
-        public async Task<CustomResult> GetGradeByIdAsync(Guid id)
-        {
-            var grade = await _context.Grades
-                .Include(g => g.SchoolYear)
-                .Include(g => g.Subject)
-                .Include(g => g.Student)
-                .Include(g => g.Teacher)
-                .FirstOrDefaultAsync(g => g.Id == id);
-            return grade is null ? null : _mapper.Map<GradeDto>(grade);
-        }
-        public async Task<CustomResult<Grade>> CreateGrade(GradeDto gradeDto)
+        public async Task<CustomResult> CreateGrade(GradeDto gradeDto)
         {
             var grade = _mapper.Map<Grade>(gradeDto);
             grade.Id = Guid.NewGuid();
@@ -65,5 +56,35 @@ namespace Gradebook.API.Services
 
             return new CustomResult<Grade>(grade);
         }
+        public async Task<CustomResult> UpdateGrade(Guid id, GradeDto gradeDto)
+        {
+            if (id != gradeDto.Id)
+                return new CustomResult(new ErrorResult("Mismatching ids", ErrorCodes.ENTITY_MISMATCH_ID));
+
+            var grade = await _context.Grades.FindAsync(id);
+            if (grade == null)
+                return new CustomResult(new ErrorResult("Grade not found", ErrorCodes.ENTITY_NOT_FOUND));
+
+            _mapper.Map(gradeDto, grade);
+
+            _context.Entry(grade).State = EntityState.Modified;
+
+
+            await _context.SaveChangesAsync();
+           
+            return new CustomResult<Grade>(grade);
+        }
+        public async Task<CustomResult> DeleteGrade(Guid id)
+        {
+            var grade = await _context.Grades.FindAsync(id);
+            if (grade == null)
+                return new CustomResult(new ErrorResult("Grade not found", ErrorCodes.ENTITY_NOT_FOUND));
+
+            _context.Grades.Remove(grade);
+            await _context.SaveChangesAsync();
+
+            return new CustomResult<string>("Deleted successfully!");
+        }
+
     }
 }

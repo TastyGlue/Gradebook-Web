@@ -1,14 +1,14 @@
 ﻿using Gradebook.Shared.Models.DTOs;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Gradebook.API.Interfaces
 {
     public interface IGradeService
     {
-        Task<ActionResult<GradeDto>> GetGrade(Guid id);
-        Task<IEnumerable<GradeDto>> GetAllGradesAsync();
-        Task<GradeDto?> GetGradeByIdAsync(Guid id);
-        Task<ActionResult<GradeDto>> CreateGrade(GradeDto gradeDto);
+        Task<CustomResult> GetGrade(Guid id);
+        Task<CustomResult> GetAllGradesAsync();
+        Task<CustomResult> CreateGrade(GradeDto gradeDto);
+        Task<CustomResult> UpdateGrade(Guid id, GradeDto gradeDto);
+        Task<CustomResult> DeleteGrade(Guid id);
+   
     }
 }

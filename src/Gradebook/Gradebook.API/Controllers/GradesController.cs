@@ -16,76 +16,38 @@ namespace Gradebook.API.Controllers
     {
         private readonly GradebookDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IGradeService _service;
 
-        public GradesController(GradebookDbContext context, IMapper mapper)
+        public GradesController(GradebookDbContext context, IMapper mapper, IGradeService service)
         {
             _context = context;
             _mapper = mapper;
+            _service = service;
         }
 
         // GET: api/Grades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GradeDto>>> GetGrades()
+        public async Task<IActionResult> GetGrades()
         {         
-            var grades = await _context.Grades
-                .Include(g => g.SchoolYear)
-                .Include(g => g.Subject)
-                .Include(g => g.Student)
-                .Include(g => g.Teacher)
-                .ToListAsync();
-
-           
-            return Ok(grades);
+            var result = await _service.GetAllGradesAsync();
+            
+            return ApiResponseFactory.AdaptAndCreateResponse<IEnumerable<Grade>, IEnumerable<GradeDto>>(result);
         }
-
         // GET: api/Grades/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<GradeDto>> GetGrade(Guid id)
+        public async Task<IActionResult> GetGrade(Guid id)
         {
-            var grade = await _context.Grades
-                .Include(g => g.SchoolYear)
-                .Include(g => g.Subject)
-                .Include(g => g.Student)
-                .Include(g => g.Teacher)
-                .FirstOrDefaultAsync(g => g.Id == id);
+            var result = await _service.GetGrade(id);
 
-            if (grade == null)
-                return NotFound();
-
-            return Ok(grade);
-        }
-
-
-       
-
+            return ApiResponseFactory.AdaptAndCreateResponse<Grade, GradeDto>(result);
+        }   
         // PUT: api/Grades/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGrade(Guid id, GradeDto gradeDto)
+        public async Task<IActionResult> UpdateGrade(Guid id, [FromBody] GradeDto gradeDto)
         {
-            if (id != gradeDto.Id)
-                return BadRequest();
+            var result = await _service.UpdateGrade(id, gradeDto);
 
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null)
-                return NotFound();
-
-            _mapper.Map(gradeDto, grade);
-
-            _context.Entry(grade).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GradeExists(id))
-                    return NotFound();
-                else
-                    throw;
-            }
-
-            return NoContent();
+            return ApiResponseFactory.AdaptAndCreateResponse<Grade, GradeDto>(result);
         }
 
 
@@ -93,20 +55,12 @@ namespace Gradebook.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGrade(Guid id)
         {
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null)
-                return NotFound();
+            var result = await _service.DeleteGrade(id);
 
-            _context.Grades.Remove(grade);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return ApiResponseFactory.CreateResponse<string>(result);
         }
 
-        private bool GradeExists(Guid id)
-        {
-            return _context.Grades.Any(e => e.Id == id);
-        }
+
     }
 }
 

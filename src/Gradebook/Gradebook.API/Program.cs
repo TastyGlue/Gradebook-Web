@@ -11,6 +11,8 @@ public class Program
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddControllers();
+        
+        MapperConfig.ConfigureMappings();
 
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
