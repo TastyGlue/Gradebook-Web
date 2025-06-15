@@ -1,4 +1,4 @@
-﻿@page "/manageteachers"
+﻿@page "/manage-teachers"
 @inherits ExtendedComponentBase
 
 <MudPaper Class="pa-4">
@@ -9,6 +9,7 @@
                  @bind-SelectedItem="_selectedTeacher"
                  Filterable="true"
                  FilterMode="DataGridFilterMode.Simple"
+                 QuickFilter="QuickFilter"
                  Hover="true"
                  Loading="_isLoading"
                  Elevation="1"
@@ -50,7 +51,14 @@
             <PropertyColumn Property="x => x.ClassName" Title="Class" />
             <TemplateColumn Title="Subjects">
                 <CellTemplate>
-                    <p>@string.Join(", ", context.Item.Subjects)</p>
+                    @if (context.Item.Subjects != null && context.Item.Subjects.Any())
+                    {
+                        <p>@string.Join(", ", context.Item.Subjects.Select(s => s.Name))</p>
+                    }
+                    else
+                    {
+                        <p><em>No subjects</em></p>
+                    }
                 </CellTemplate>
             </TemplateColumn>
         </Columns>

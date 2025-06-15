@@ -1,0 +1,56 @@
+﻿@page "/manage-teachers/edit/{Id:guid}"
+@inherits ExtendedComponentBase
+
+<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:500px;">
+    <MudText Typo="Typo.h5" Class="mb-4">Edit Teacher</MudText>
+
+    @if (Model == null)
+    {
+        <MudText Color="Color.Error">Teacher not found.</MudText>
+    }
+    else
+    {
+        <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
+            <MudTextField T="string"
+                          Label="Name"
+                          @bind-Value="Model.FullName"
+                          Required="true"
+                          Immediate="true" />
+
+            <MudTextField T="string"
+                          Label="Email"
+                          @bind-Value="Model.Email"
+                          Required="true"
+                          Immediate="true" />
+
+            <MudTextField T="string"
+                          Label="Business Email"
+                          @bind-Value="Model.BusinessEmail"
+                          Immediate="true" />
+
+            <MudTextField T="string"
+                          Label="Business Phone Number"
+                          @bind-Value="Model.BusinessPhoneNumber"
+                          Immediate="true" />
+
+            <MudTextField T="string"
+                          Label="School Name"
+                          @bind-Value="Model.SchoolName"
+                          Immediate="true" />
+
+            <MudTextField T="string"
+                          Label="ClassName"
+                          @bind-Value="Model.ClassName"
+                          Immediate="true" />
+
+            <MudSelect T="SubjectViewModel" Label="Subjects" MultiSelection="true" @bind-SelectedValues="_options">
+                @foreach (var subject in _subjects)
+                {
+                    <MudSelectItem T="SubjectViewModel" Value="@subject">@subject.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">Save Changes</MudButton>
+        </EditForm>
+    }
+</MudPaper>

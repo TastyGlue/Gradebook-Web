@@ -1,4 +1,6 @@
-﻿namespace Gradebook.Web.Components.Pages.Administator.ManageTeachers;
+﻿using MudBlazor;
+
+namespace Gradebook.Web.Components.Pages.Administator.ManageTeachers;
 
 public partial class ManageTeachers : ExtendedComponentBase
 {
@@ -26,14 +28,23 @@ public partial class ManageTeachers : ExtendedComponentBase
         {
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                 FullName = "Ivan Petrov",
                 Email = "ivan.petrov@school.edu",
                 BusinessEmail = "ivan.p@school.edu",
                 BusinessPhoneNumber = "+359123456789",
                 SchoolName = "Green Hill School",
                 ClassName = "10A",
-                Subjects = new List<string> { "Math", "Physics" }
+                Subjects = [
+                    new (){
+                        Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                        Name = "Maths"
+                    },
+                        new (){
+                        Id = Guid.Parse("baaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                        Name = "Biology"
+                    }
+                    ]
             },
             new()
             {
@@ -44,7 +55,12 @@ public partial class ManageTeachers : ExtendedComponentBase
                 BusinessPhoneNumber = "+359987654321",
                 SchoolName = "Riverdale High",
                 ClassName = "11B",
-                Subjects = new List<string> { "Biology", "Chemistry" }
+                Subjects = [
+                    new (){
+                        Id = Guid.Parse("baaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                        Name = "Physics"
+                    }
+                    ]
             }
         };
 
@@ -53,12 +69,36 @@ public partial class ManageTeachers : ExtendedComponentBase
 
     protected void CreateTeacher()
     {
-        Navigation.NavigateTo("/admin/manage-teachers/create");
+        Navigation.NavigateTo("/manage-teachers/create");
     }
 
     protected void EditTeacher()
     {
         if (_selectedTeacher != null)
-            Navigation.NavigateTo($"/admin/manage-teachers/edit/{_selectedTeacher.Id}");
+            Navigation.NavigateTo($"/manage-teachers/edit/{_selectedTeacher.Id}");
     }
+
+    private Func<TeacherViewModel, bool> QuickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.FullName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.BusinessEmail.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.BusinessPhoneNumber.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.SchoolName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
 }

@@ -32,13 +32,13 @@
 
         protected void CreateSchool()
         {
-            Navigation.NavigateTo("/admin/manage-schools/create");
+            Navigation.NavigateTo("/manage-schools/create");
         }
 
         protected void EditSchool()
         {
             if (_selectedSchool != null)
-                Navigation.NavigateTo($"/admin/manage-schools/edit/{_selectedSchool.Id}");
+                Navigation.NavigateTo($"/manage-schools/edit/{_selectedSchool.Id}");
         }
     }
 }

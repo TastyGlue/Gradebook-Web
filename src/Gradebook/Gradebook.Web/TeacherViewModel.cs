@@ -17,6 +17,6 @@
         public string? ClassName { get; set; }
 
         // Flattened list of subject names
-        public List<string> Subjects { get; set; } = new();
+        public List<SubjectViewModel> Subjects { get; set; } = new();
     }
 }

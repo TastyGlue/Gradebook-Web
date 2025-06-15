@@ -1,0 +1,26 @@
+﻿@page "/manage-headmasters/create"
+@inherits ExtendedComponentBase
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">Create Headmaster</MudText>
+
+    <EditForm Model="_headmaster" OnValidSubmit="HandleValidSubmit">
+        <MudTextField @bind-Value="_headmaster.FullName" Label="Full Name" Required="true" />
+        <MudTextField @bind-Value="_headmaster.Email" Label="Email" Required="true" />
+        <MudTextField @bind-Value="_headmaster.BusinessEmail" Label="Business Email" Required="true" />
+        <MudTextField @bind-Value="_headmaster.BusinessPhoneNumber" Label="Phone" Required="true" />
+
+        <MudSelect T="Guid" @bind-Value="_headmaster.SchoolId" Label="School" Required="true" MultiSelection=false Placeholder="Nothing selected">
+            @foreach (var school in _schools)
+            {
+                <MudSelectItem T="Guid" Value="@(school.Id)">
+                    @school.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudCheckBox T="bool" @bind-Checked="_headmaster.IsActive" Label="Active" />
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+    </EditForm>
+</MudPaper>

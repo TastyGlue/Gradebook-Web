@@ -17,7 +17,7 @@
             {
                 // TODO: Save logic (via service)
                 Snackbar.Add("School created successfully!", Severity.Success);
-                Navigation.NavigateTo("/manageschools");
+                Navigation.NavigateTo("/manage-schools");
             }
             else
             {
@@ -27,7 +27,7 @@
 
         protected void GoBack()
         {
-            Navigation.NavigateTo("/manageschools");
+            Navigation.NavigateTo("/manage-schools");
         }
     }
 }

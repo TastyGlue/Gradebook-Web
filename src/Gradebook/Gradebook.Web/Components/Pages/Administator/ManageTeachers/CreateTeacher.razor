@@ -1,0 +1,36 @@
+﻿@page "/manage-teachers/create"
+@inherits ExtendedComponentBase
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">Create Teacher</MudText>
+
+    <EditForm Model="_teacher" OnValidSubmit="HandleValidSubmit">
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="_teacher.FullName" Label="Full Name" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="_teacher.Email" Label="Email" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="_teacher.BusinessEmail" Label="Business Email" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="_teacher.BusinessPhoneNumber" Label="Business Phone Number" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="_teacher.SchoolName" Label="School Name" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="string" Label="Subjects" MultiSelection="true" @bind-SelectedValues="_options" Placeholder="Nothing selected">
+                @foreach (var subject in _subject)
+                {
+                        <MudSelectItem T="string" Value="@subject.Name">@subject.Name</MudSelectItem>
+                }
+            </MudSelect>
+            </MudItem>
+        </MudGrid>
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">Save</MudButton>
+    </EditForm>
+</MudPaper>

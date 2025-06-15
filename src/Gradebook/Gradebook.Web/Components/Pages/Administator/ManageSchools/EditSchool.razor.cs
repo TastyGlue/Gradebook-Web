@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace Gradebook.Web.Components.Pages.Administator.ManageSchools
 {
-    public class EditSchoolBase : ComponentBase
+    public partial class EditSchool : ExtendedComponentBase
     {
         [Parameter] public Guid Id { get; set; }
-
-        protected MudForm? _form;
         protected SchoolViewModel Model { get; set; } = new();
 
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
@@ -40,7 +38,7 @@ namespace Gradebook.Web.Components.Pages.Administator.ManageSchools
             else
             {
                 Snackbar.Add("School not found.", Severity.Error);
-                Navigation.NavigateTo("/manageschools");
+                Navigation.NavigateTo("/manage-schools");
             }
         }
 
@@ -50,8 +48,9 @@ namespace Gradebook.Web.Components.Pages.Administator.ManageSchools
             await Task.Delay(300); // Simulate save
 
             Snackbar.Add("School updated successfully!", Severity.Success);
-            Navigation.NavigateTo("/manageschools");
+            Navigation.NavigateTo("/manage-schools");
         }
+
         // For test, to be deleted
         private List<SchoolViewModel> GetMockSchools() => new()
         {

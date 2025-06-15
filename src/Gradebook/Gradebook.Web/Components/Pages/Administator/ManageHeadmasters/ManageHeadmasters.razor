@@ -1,14 +1,15 @@
-﻿@page "/manage-schools"
+﻿@page "/manage-headmasters"
 @inherits ExtendedComponentBase
 
 <MudPaper Class="pa-4">
-    <MudText Typo="Typo.h5" Class="mb-4">Manage Schools</MudText>
+    <MudText Typo="Typo.h5" Class="mb-4">Manage Headmasters</MudText>
 
-    <MudDataGrid T="SchoolViewModel"
-                 Items="_schools"
-                 @bind-SelectedItem="_selectedSchool"
+    <MudDataGrid T="HeadmasterViewModel"
+                 Items="_headmasters"
+                 @bind-SelectedItem="_selectedHeadmaster"
                  Filterable="true"
                  FilterMode="DataGridFilterMode.Simple"
+                 QuickFilter="QuickFilter"
                  Hover="true"
                  Loading="_isLoading"
                  Elevation="1"
@@ -18,15 +19,15 @@
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        StartIcon="@Icons.Material.Filled.Add"
-                       OnClick="CreateSchool">
+                       OnClick="CreateHeadmaster">
                 Create
             </MudButton>
 
             <MudButton Variant="Variant.Filled"
                        Color="Color.Warning"
                        StartIcon="@Icons.Material.Filled.Edit"
-                       Disabled="_selectedSchool == null"
-                       OnClick="EditSchool"
+                       Disabled="_selectedHeadmaster == null"
+                       OnClick="EditHeadmaster"
                        Class="ml-2">
                 Edit
             </MudButton>
@@ -42,18 +43,26 @@
         </ToolBarContent>
 
         <Columns>
-            <PropertyColumn Property="x => x.Name" Title="Name" />
-            <PropertyColumn Property="x => x.Address" Title="Address" />
-            <PropertyColumn Property="x => x.Website" Title="Website" />
-            <PropertyColumn Property="x => x.Headmasters" Title="Headmasters" />
+            <PropertyColumn Property="x => x.FullName" Title="Full Name" />
+            <PropertyColumn Property="x => x.Email" Title="Email" />
+            <PropertyColumn Property="x => x.BusinessEmail" Title="Business Email" />
+            <PropertyColumn Property="x => x.BusinessPhoneNumber" Title="Phone" />
+            <TemplateColumn Title="School">
+                <CellTemplate>
+                    @{
+                        var school = _schools.FirstOrDefault(s => s.Id == context.Item.SchoolId);
+                        <p>@(school?.Name ?? "Unknown")</p>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
 
         <NoRecordsContent>
-            <MudText>No schools to display.</MudText>
+            <MudText>No headmasters to display.</MudText>
         </NoRecordsContent>
 
         <PagerContent>
-            <MudDataGridPager T="SchoolViewModel" />
+            <MudDataGridPager T="HeadmasterViewModel" />
         </PagerContent>
 
     </MudDataGrid>
