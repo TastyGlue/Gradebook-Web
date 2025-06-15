@@ -41,19 +41,6 @@ public partial class ProfilePicker : ExtendedComponentBase
         }
     }
 
-    protected string GetProfileIcon(ProfileClaim profile)
-    {
-        return profile.RoleType switch
-        {
-            nameof(RoleType.Admin) => Icons.Material.Sharp.ManageAccounts,
-            nameof(RoleType.Headmaster) => Icons.Material.Sharp.SupervisorAccount,
-            nameof(RoleType.Teacher) => Icons.Material.Sharp.Badge,
-            nameof(RoleType.Student) => Icons.Material.Sharp.School,
-            nameof(RoleType.Parent) => Icons.Material.Sharp.FamilyRestroom,
-            _ => Icons.Material.Sharp.PersonOutline
-        };
-    }
-
     protected List<ProfileClaim> ParseProfilesClaim(string token)
     {
         var claims = TokenUtils.ParseClaimsFromToken(token);
@@ -66,5 +53,18 @@ public partial class ProfilePicker : ExtendedComponentBase
         });
 
         return profiles!;
+    }
+
+    protected string GetProfileIcon(ProfileClaim profile)
+    {
+        return profile.RoleType switch
+        {
+            nameof(RoleType.Admin) => Icons.Material.Sharp.ManageAccounts,
+            nameof(RoleType.Headmaster) => Icons.Material.Sharp.SupervisorAccount,
+            nameof(RoleType.Teacher) => Icons.Material.Sharp.Badge,
+            nameof(RoleType.Student) => Icons.Material.Sharp.School,
+            nameof(RoleType.Parent) => Icons.Material.Sharp.FamilyRestroom,
+            _ => Icons.Material.Sharp.PersonOutline
+        };
     }
 }

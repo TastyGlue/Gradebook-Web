@@ -1,0 +1,13 @@
+﻿using Gradebook.Shared.Models.DTOs;
+
+namespace Gradebook.API.Interfaces
+{
+    public interface ITimetableService
+    {
+        Task<CustomResult> GetTimetable(Guid id);
+        Task<CustomResult> GetAllTimetablesAsync();
+        Task<CustomResult> CreateTimetable(TimetableDto timetableDto);
+        Task<CustomResult> UpdateTimetable(Guid id, TimetableDto timetableDto);
+        Task<CustomResult> DeleteTimetable(Guid id);
+    }
+}

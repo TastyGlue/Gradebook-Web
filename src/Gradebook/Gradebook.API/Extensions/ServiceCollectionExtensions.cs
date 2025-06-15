@@ -29,6 +29,14 @@ public static class ServiceCollectionExtensions
 
         services.AddDataSeeders();
 
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<ITimetableService, TimetableService>();
+        services.AddTransient<ISubjectService, SubjectService>();
+        services.AddTransient<IStudentService, StudentService>();
+        services.AddTransient<ISchoolYearService, SchoolYearService>();
+        services.AddTransient<IParentService, ParentService>();
+        services.AddTransient<IHeadmasterService, HeadmasterService>();
+        services.AddTransient<IClassService, ClassService>();
         services.AddTransient<ITeacherService, TeacherService>();
         services.AddTransient<ISchoolService, SchoolService>();
         services.AddTransient<IAbsenceService, AbsenceService>();
