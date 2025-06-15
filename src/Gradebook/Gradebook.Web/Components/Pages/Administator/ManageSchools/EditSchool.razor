@@ -1,0 +1,38 @@
+﻿@page "/admin/manage-schools/edit/{Id:guid}"
+@inherits EditSchoolBase
+
+<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:500px;">
+    <MudText Typo="Typo.h5" Class="mb-4">Edit School</MudText>
+
+    <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
+        <MudTextField T="string"
+                      Label="Name"
+                      @bind-Value="Model.Name"
+                      Required="true"
+                      Immediate="true" />
+
+        <MudTextField T="string"
+                      Label="Address"
+                      @bind-Value="Model.Address"
+                      Required="true"
+                      Immediate="true" />
+
+        <MudTextField T="string"
+                      Label="Website"
+                      @bind-Value="Model.Website"
+                      Immediate="true" />
+
+        <MudTextField T="string"
+                      Label="Headmasters"
+                      @bind-Value="Model.Headmasters"
+                      Immediate="true" />
+
+        <MudButton ButtonType="ButtonType.Submit"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Class="mt-4"
+                   FullWidth="true">
+            Save Changes
+        </MudButton>
+    </EditForm>
+</MudPaper>
