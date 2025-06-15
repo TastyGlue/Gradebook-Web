@@ -1,4 +1,3 @@
-using Blazored.LocalStorage;
 
 namespace Gradebook.Web;
 
@@ -7,8 +6,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddBlazoredLocalStorage();
 
         // Add services to the container.
         builder.Services.AddRazorComponents()

@@ -8,11 +8,11 @@ public class TeacherDto : ProfileDto
 
     public Guid SchoolId { get; set; }
 
-    public SchoolDto School { get; set; } = default!;
+    public SchoolDto? School { get; set; } = default!;
 
     public Guid? ClassId { get; set; }
 
     public ClassDto? Class { get; set; }
 
-    public ICollection<SubjectDto> Subjects { get; set; } = [];
+    public ICollection<SubjectDto>? Subjects { get; set; } = [];
 }

@@ -6,7 +6,7 @@ public class ProfileDto
 
     public Guid UserId { get; set; }
 
-    public UserDto User { get; set; } = default!;
+    public UserDto? User { get; set; } = default!;
 
     public RoleType RoleType { get; set; }
 
