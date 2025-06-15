@@ -55,18 +55,8 @@ namespace Gradebook.API.Controllers
             return Ok(grade);
         }
 
-        // POST: api/Grades
-        [HttpPost]
-        public async Task<ActionResult<GradeDto>> CreateGrade(GradeDto gradeDto)
-        {
-            var grade = _mapper.Map<Grade>(gradeDto);
-            grade.Id = Guid.NewGuid();
 
-            _context.Grades.Add(grade);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetGrade), new { id = grade.Id }, _mapper.Map<GradeDto>(grade));
-        }
+       
 
         // PUT: api/Grades/{id}
         [HttpPut("{id}")]

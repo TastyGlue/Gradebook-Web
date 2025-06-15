@@ -13,4 +13,6 @@ public static class ErrorCodes
     public const string PROFILE_NOT_BELONG_TO_USER = "PROFILE_110_403";
 
     public const string USER_NOT_AUTHENTICATED = "USER_100_401";
+
+    public const string ENTITY_NOT_FOUND = "ENTITY_100_404";
 }
