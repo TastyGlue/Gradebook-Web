@@ -1,15 +1,16 @@
 ﻿@page "/manage-teachers"
 @inherits ExtendedComponentBase
 
+<PageTitle>@PageTitle</PageTitle>
+
 <MudPaper Class="pa-4">
-    <MudText Typo="Typo.h5" Class="mb-4">Manage Teachers</MudText>
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
 
     <MudDataGrid T="TeacherViewModel"
                  Items="_teachers"
                  @bind-SelectedItem="_selectedTeacher"
                  Filterable="true"
                  FilterMode="DataGridFilterMode.Simple"
-                 QuickFilter="QuickFilter"
                  Hover="true"
                  Loading="_isLoading"
                  Elevation="1"
@@ -43,33 +44,22 @@
         </ToolBarContent>
 
         <Columns>
-            <PropertyColumn Property="x => x.FullName" Title="Full Name" />
-            <PropertyColumn Property="x => x.Email" Title="Email" />
+            <PropertyColumn Property="x => x.User.FullName" Title="Full Name" />
+            <PropertyColumn Property="x => x.User.Email" Title="Email" />
             <PropertyColumn Property="x => x.BusinessEmail" Title="Business Email" />
             <PropertyColumn Property="x => x.BusinessPhoneNumber" Title="Phone" />
-            <PropertyColumn Property="x => x.SchoolName" Title="School" />
-            <PropertyColumn Property="x => x.ClassName" Title="Class" />
+            <PropertyColumn Property="x => x.School.Name" Title="School" />
+            <PropertyColumn Property="x => x.Class.DisplayName" Title="Class" />
             <TemplateColumn Title="Subjects">
-                <CellTemplate>
-                    @if (context.Item.Subjects != null && context.Item.Subjects.Any())
-                    {
-                        <p>@string.Join(", ", context.Item.Subjects.Select(s => s.Name))</p>
-                    }
-                    else
-                    {
-                        <p><em>No subjects</em></p>
-                    }
-                </CellTemplate>
+                <CellTemplate>@string.Join(", ", context.Item.Subjects.Select(s => s.Name))</CellTemplate>
             </TemplateColumn>
         </Columns>
 
         <NoRecordsContent>
             <MudText>No teachers to display.</MudText>
         </NoRecordsContent>
-
         <PagerContent>
             <MudDataGridPager T="TeacherViewModel" />
         </PagerContent>
-
     </MudDataGrid>
 </MudPaper>

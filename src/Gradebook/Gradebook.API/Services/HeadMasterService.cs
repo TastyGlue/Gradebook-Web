@@ -20,6 +20,7 @@ namespace Gradebook.API.Services
         public async Task<CustomResult> GetHeadmaster(Guid id)
         {
             var headmaster = await _context.Headmasters
+                .Include(h => h.User)
                 .Include(h => h.School)
                 .FirstOrDefaultAsync(h => h.Id == id);
 
@@ -32,6 +33,7 @@ namespace Gradebook.API.Services
         public async Task<CustomResult> GetAllHeadmastersAsync()
         {
             var headmasters = await _context.Headmasters
+                .Include(h => h.User)
                 .Include(h => h.School)
                 .ToListAsync();
 

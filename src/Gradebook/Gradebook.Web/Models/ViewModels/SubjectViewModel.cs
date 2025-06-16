@@ -1,4 +1,4 @@
-﻿namespace Gradebook.Web
+﻿namespace Gradebook.Web.Models.ViewModels
 {
     public class SubjectViewModel : IEquatable<SubjectViewModel> 
     {

@@ -1,6 +1,6 @@
 ﻿namespace Gradebook.Web.Models.ViewModels;
 
-public class HeadmasterViewModelche : ProfileViewModel
+public class HeadmasterViewModel : ProfileViewModel
 {
     [Required]
     [MaxLength(ValidationConstants.TEXT_FIELD_MAX_LENGTH, ErrorMessage = ValidationConstants.MAX_LENGTH)]
@@ -16,16 +16,16 @@ public class HeadmasterViewModelche : ProfileViewModel
 
     public SchoolDto School { get; set; } = default!;
 
-    public bool Equals(HeadmasterViewModelche? other)
+    public bool Equals(HeadmasterViewModel? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
         return Id == other.Id;
     }
 
-    public override bool Equals(object? obj) => obj is HeadmasterViewModelche state && Equals(state);
+    public override bool Equals(object? obj) => obj is HeadmasterViewModel state && Equals(state);
 
     public override int GetHashCode() => Id.GetHashCode();
 
-    public override string ToString() => $"{User?.FullName ?? "N/A"} ({BusinessEmail}), {User?.FullName ?? "N/A"} ({BusinessEmail})";
+    public override string ToString() => $"{User?.FullName ?? "N/A"} ({BusinessEmail})";
 }

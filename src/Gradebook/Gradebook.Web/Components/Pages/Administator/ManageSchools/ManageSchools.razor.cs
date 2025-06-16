@@ -4,8 +4,8 @@
     {
         [Inject] protected IApiSchoolService ApiSchoolService { get; set; } = default!;
 
-        protected List<SchoolViewModelche> _schools = [];
-        protected SchoolViewModelche? _selectedSchool;
+        protected List<SchoolViewModel> _schools = [];
+        protected SchoolViewModel? _selectedSchool;
         protected string _searchString = "";
         protected bool _isLoading = true;
 
@@ -24,7 +24,7 @@
 
             if (result.Succeeded)
             {
-                _schools = result.Value!.Adapt<List<SchoolViewModelche>>();
+                _schools = result.Value!.Adapt<List<SchoolViewModel>>();
             }
             else
             {

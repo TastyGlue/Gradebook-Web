@@ -22,6 +22,7 @@ namespace Gradebook.API.Services
             var teacher = await _context.Teachers
                 .Include(t => t.School)
                 .Include(t => t.Class)
+                .Include(t => t.User)
                 .Include(t => t.Subjects)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -36,6 +37,7 @@ namespace Gradebook.API.Services
             var teachers = await _context.Teachers
                 .Include(t => t.School)
                 .Include(t => t.Class)
+                .Include(t => t.User)
                 .Include(t => t.Subjects)
                 .ToListAsync();
 
