@@ -1,21 +1,24 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace Gradebook.Web.Components.Pages.Administator.ManageTeachers
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageTeachers
 {
     public partial class CreateTeacher : ExtendedComponentBase
     {
-        protected TeacherViewModel _teacher = new();
-        List<SubjectViewModel> _subject = new() { new() { Id = Guid.NewGuid(), Name = "Mathematics" }, new() { Id = Guid.NewGuid(), Name = "Chemistry" } };
-        private IEnumerable<string> _options = new HashSet<string>();
+        [Inject] protected IApiTeacherService ApiTeacherService { get; set; } = default!;
+        protected TeacherViewModel ViewModel { get; set; } = new();
 
-        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected ISnackbar Snackbar { get; set; } = default!;
-
-        protected async Task HandleValidSubmit()
+        protected async Task ValidSubmitHandler()
         {
-            // TODO: Replace with service call
-            Snackbar.Add("Teacher created successfully.", Severity.Success);
-            Navigation.NavigateTo("/manage-teachers");
+            var dto = ViewModel.Adapt<TeacherDto>();
+            var result = await ApiTeacherService.CreateTeacher(dto);
+
+            if (result.Succeeded)
+            {
+                Notify("Teacher created successfully.", Severity.Success);
+                NavigationManager.NavigateTo("/manage-teachers");
+            }
+            else
+            {
+                Notify(result.Error!.Message, Severity.Error);
+            }
         }
-}
+    }
 }
