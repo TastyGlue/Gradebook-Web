@@ -1,4 +1,5 @@
 ﻿using Gradebook.API.Interfaces;
+using Gradebook.Data.Models;
 using Gradebook.Shared.Models.DTOs;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -63,8 +64,7 @@ namespace Gradebook.API.Services
             if (schoolYear == null)
                 return new CustomResult(new ErrorResult("SchoolYear not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(schoolYearDto, schoolYear);
-            _context.Entry(schoolYear).State = EntityState.Modified;
+            _context.Entry(schoolYear).CurrentValues.SetValues(schoolYearDto);
 
             await _context.SaveChangesAsync();
             return new CustomResult<SchoolYear>(schoolYear);

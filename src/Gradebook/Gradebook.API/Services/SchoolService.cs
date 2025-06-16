@@ -19,6 +19,7 @@ namespace Gradebook.API.Services
         {
             var school = await _context.Schools
                 .Include(s => s.Headmasters)
+                    .ThenInclude(h => h.User)
                 .Include(s => s.SchoolYears)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
@@ -32,6 +33,7 @@ namespace Gradebook.API.Services
         {
             var schools = await _context.Schools
                 .Include(s => s.Headmasters)
+                    .ThenInclude(h => h.User)
                 .Include(s => s.SchoolYears)
                 .ToListAsync();
 
@@ -62,9 +64,8 @@ namespace Gradebook.API.Services
             if (school == null)
                 return new CustomResult(new ErrorResult("School not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(schoolDto, school);
+            _context.Entry(school).CurrentValues.SetValues(schoolDto);
 
-            _context.Entry(school).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return new CustomResult<School>(school);
