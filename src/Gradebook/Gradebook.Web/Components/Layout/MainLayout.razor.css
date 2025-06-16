@@ -18,3 +18,45 @@
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.drawer-full {
+    height: 100vh;
+    padding: 0;
+}
+
+.drawer-full {
+    height: 100vh;
+    padding: 0;
+}
+
+.nav-grid {
+    display: grid;
+    height: 100%;
+    grid-auto-rows: 1fr; /* Adjust for number of items */
+}
+
+    .nav-grid span {
+        display: inline-flex;
+        justify-content: center; /* Horizontal centering */
+        align-items: center; /* Vertical centering */
+        padding: 0.5rem 1rem; /* Responsive spacing */
+        background-color: #f0f0f0;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+        .nav-grid span:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0px 4px 8px 2px rgb(89 74 226 / 33%);
+        }
+    .nav-grid a:hover {
+        background-color: transparent !important;
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+.mud-nav-link:hover {
+    background-color: inherit !important;
+}
+
+

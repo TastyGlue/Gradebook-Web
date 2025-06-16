@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
+
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -7,13 +8,51 @@
 
 @if (UserStateContainer.IsPopulated)
 {
-    <MudLayout>
+<MudLayout>
+    <MudAppBar Color="Color.Primary" Elevation="4">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" OnClick="@ToggleDrawer" Edge="Edge.Start" Color="Color.Inherit" />
+        <MudText Typo="Typo.h6">School Diary</MudText>
+    </MudAppBar>
+
+        <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Left" Elevation="4" Variant="DrawerVariant.Responsive" Class="drawer-full justify-space-between">
+            <div class="nav-grid">
+                <span><MudIcon Icon="@Icons.Material.Filled.Dashboard"/><MudNavLink Href="" Match="NavLinkMatch.All">Dashboard</MudNavLink></span>
+                <span><MudIcon Icon="@Icons.Material.Filled.Assignment" /><MudNavLink Href="assignments">Assignments</MudNavLink></span>
+                <span><MudIcon Icon="@Icons.Material.Filled.CalendarToday" /><MudNavLink Href="calendar">Calendar</MudNavLink></span>
+                <span><MudIcon Icon="@Icons.Material.Filled.Grade" /><MudNavLink Href="grades">Grades</MudNavLink></span>
+                <span><MudIcon Icon="@Icons.Material.Filled.CheckCircle" /><MudNavLink Href="attendance">Attendance</MudNavLink></span>
+                <span><MudIcon Icon="@Icons.Material.Filled.Message" /><MudNavLink Href="messages">Messages</MudNavLink></span>
+                <span><MudIcon Icon="@Icons.Material.Filled.Settings" /><MudNavLink Href="settings">Settings</MudNavLink></span>
+            </div>
+        </MudDrawer>
+
+
+
+
+        <MudMainContent>
+            @Body
+        </MudMainContent>
+
+    </MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+
+    void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
+
+
+{
+    @*<MudLayout>
         <MudAppBar Elevation="4">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => isDrawerOpen = !isDrawerOpen)" />
             <MudSpacer />
-            @* <UserProfile /> *@
+             <UserProfile /> 
             <MudDrawer @bind-Open="isDrawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
-                @* <NavMenu /> *@
+                 <NavMenu /> 
             </MudDrawer>
         </MudAppBar>
         <MudMainContent>
@@ -22,7 +61,8 @@
             </MudOverlay>
             @Body
         </MudMainContent>
-    </MudLayout>
+    </MudLayout>*@}
+
 }
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -32,100 +72,5 @@
 </div>
 
 @code {
-    bool isDrawerOpen = true;
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; } = default!;
-
-    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-    [Inject] public UserStateContainer UserStateContainer { get; set; } = default!;
-
-    [Inject] public LoaderService LoaderService { get; set; } = default!;
-
-    public ClaimsPrincipal User { get; set; } = default!;
-
-    private bool IsLoading { get; set; } = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        LoaderService.Register(state =>
-        {
-            InvokeAsync(() =>
-            {
-                IsLoading = state;
-                StateHasChanged();
-            });
-        });
-
-        User = (await authenticationStateTask).User;
-
-        if (!(User.Identity?.IsAuthenticated ?? false))
-        {
-            NavigationManager.NavigateTo("/account/login");
-            return;
-        }
-
-        CreateUserStateContainer();
-    }
-
-    private void CreateUserStateContainer()
-    {
-        if (UserStateContainer.Id == Guid.Empty)
-        {
-            UserStateContainer.Id = new Guid(User.FindFirstValue(Claims.USER_ID)!);
-        }
-
-        if (string.IsNullOrWhiteSpace(UserStateContainer.UserName))
-        {
-            UserStateContainer.UserName = User.FindFirstValue(Claims.USERNAME)!;
-        }
-
-        if (string.IsNullOrWhiteSpace(UserStateContainer.Email))
-        {
-            UserStateContainer.Email = User.FindFirstValue(Claims.EMAIL)!;
-        }
-
-        if (string.IsNullOrWhiteSpace(UserStateContainer.FullName))
-        {
-            UserStateContainer.FullName = User.FindFirstValue(Claims.FULL_NAME)!;
-        }
-
-        if (UserStateContainer.ProfileId == Guid.Empty)
-        {
-            UserStateContainer.ProfileId = new Guid(User.FindFirstValue(Claims.PROFILE_ID)!);
-        }
-
-        if (string.IsNullOrWhiteSpace(UserStateContainer.SchoolName))
-        {
-            UserStateContainer.SchoolName = User.FindFirstValue(Claims.SCHOOL_NAME);
-        }
-
-        if (UserStateContainer.SchoolId is null && UserStateContainer.SchoolId == Guid.Empty)
-        {
-            var schoolIdClaim = User.FindFirstValue(Claims.SCHOOL_ID);
-            UserStateContainer.SchoolId = string.IsNullOrWhiteSpace(schoolIdClaim) ? null : new Guid(schoolIdClaim);
-        }
-
-        if (UserStateContainer.ClassId is null && UserStateContainer.ClassId == Guid.Empty)
-        {
-            var classIdClaim = User.FindFirstValue(Claims.CLASS_ID);
-            UserStateContainer.ClassId = string.IsNullOrWhiteSpace(classIdClaim) ? null : new Guid(classIdClaim);
-        }
-
-        if (UserStateContainer.Role == 0)
-        {
-            var role = User.FindFirstValue(Claims.ROLE)!;
-            if (Enum.TryParse(role, out RoleType userRole))
-            {
-                UserStateContainer.Role = userRole;
-            }
-            else
-            {
-                UserStateContainer.Role = RoleType.Student; // Default role if parsing fails
-            }
-        }
-
-        UserStateContainer.IsPopulated = true;
-    }
 }
