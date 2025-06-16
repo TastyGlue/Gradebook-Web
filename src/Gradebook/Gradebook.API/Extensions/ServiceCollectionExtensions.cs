@@ -26,6 +26,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddAuthenticationSchemes(builder);
+        services.AddAuthorizationPolicies();
 
         services.AddDataSeeders();
 
@@ -97,6 +98,19 @@ public static class ServiceCollectionExtensions
             });
 
         builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            foreach (var role in Enum.GetValues<RoleType>())
+            {
+                options.AddPolicy(role.ToString(), policy => policy.RequireClaim(Claims.ROLE, role.ToString()));
+            }
+        });
 
         return services;
     }

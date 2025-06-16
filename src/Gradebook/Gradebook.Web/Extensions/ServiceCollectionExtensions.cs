@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
         builder.Services.AddMudLocalization();
 
         // Add Authentication and Authorization
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorizationPolicies();
         builder.Services.AddCascadingAuthenticationState();
 
         builder.Services.AddHttpClient(Constants.API_CLIENT_NAME, client =>
@@ -41,5 +41,18 @@ public static class ServiceCollectionExtensions
         builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
         return builder;
+    }
+
+    private static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            foreach (var role in Enum.GetValues<RoleType>())
+            {
+                options.AddPolicy(role.ToString(), policy => policy.RequireClaim(Claims.ROLE, role.ToString()));
+            }
+        });
+
+        return services;
     }
 }

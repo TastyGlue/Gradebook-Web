@@ -1,0 +1,21 @@
+﻿@if (_isAnyRole)
+{
+    @ChildContent
+}
+
+@code {
+    private bool _isAnyRole;
+
+    [Inject] protected UserStateContainer UserStateContainer { get; set; } = default!;
+
+    [Parameter] public RoleType[] Roles { get; set; } = [];
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var userRole = UserStateContainer.Role;
+
+        _isAnyRole = Roles.Contains(userRole);
+    }
+}
