@@ -10,7 +10,7 @@
         <MudTextField @bind-Value="_headmaster.BusinessEmail" Label="Business Email" Required="true" />
         <MudTextField @bind-Value="_headmaster.BusinessPhoneNumber" Label="Phone" Required="true" />
 
-        <MudSelect T="Guid" @bind-Value="_headmaster.SchoolId" Label="School" Required="true" MultiSelection=false Placeholder="Nothing selected">
+        <MudSelect T="Guid" @bind-Value="_headmaster.SchoolId" Label="School" Required="true" Placeholder="Nothing selected">
             @foreach (var school in _schools)
             {
                 <MudSelectItem T="Guid" Value="@(school.Id)">
