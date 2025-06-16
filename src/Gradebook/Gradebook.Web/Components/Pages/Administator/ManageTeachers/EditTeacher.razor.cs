@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Gradebook.Web.Components.Pages.Administator.ManageTeachers
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageTeachers
 {
     public partial class EditTeacher : ExtendedComponentBase
     {
