@@ -14,10 +14,10 @@
 </style>
 
 @code {
-    [Parameter] public HeadmasterViewModelche Headmaster { get; set; } = new();
+    [Parameter] public HeadmasterViewModel Headmaster { get; set; } = new();
 
     [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
 
-    protected void HeadmasterClickHandler(HeadmasterViewModelche headmaster)
+    protected void HeadmasterClickHandler(HeadmasterViewModel headmaster)
         => NavigationManager.NavigateTo($"manage-headmasters/edit/{headmaster.Id}");
 }

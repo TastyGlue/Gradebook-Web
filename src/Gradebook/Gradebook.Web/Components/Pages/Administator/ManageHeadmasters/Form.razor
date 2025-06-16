@@ -1,0 +1,27 @@
+﻿@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+@* <MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <EditForm Model="ViewModel" OnValidSubmit="HandleValidSubmit">
+        <MudTextField @bind-Value="ViewModel.FullName" Label="Full Name" Required="true" />
+        <MudTextField @bind-Value="ViewModel.Email" Label="Email" Required="true" />
+        <MudTextField @bind-Value="ViewModel.BusinessEmail" Label="Business Email" Required="true" />
+        <MudTextField @bind-Value="ViewModel.BusinessPhoneNumber" Label="Phone" Required="true" />
+
+        <MudSelect T="Guid" @bind-Value="ViewModel.SchoolId" Label="School" Required="true" MultiSelection=false Placeholder="Nothing selected">
+            @foreach (var school in _schools)
+            {
+                <MudSelectItem T="Guid" Value="@(school.Id)">
+                    @school.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudCheckBox T="bool" @bind-Checked="ViewModel.IsActive" Label="Active" />
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Create</MudButton>
+    </EditForm>
+</MudPaper> *@

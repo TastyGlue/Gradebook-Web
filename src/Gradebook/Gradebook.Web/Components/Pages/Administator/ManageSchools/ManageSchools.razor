@@ -6,7 +6,7 @@
 <MudPaper Class="pa-4">
     <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
 
-    <MudDataGrid T="SchoolViewModelche"
+    <MudDataGrid T="SchoolViewModel"
                  Items="_schools"
                  @bind-SelectedItem="_selectedSchool"
                  Filterable="true"
@@ -64,7 +64,7 @@
         </NoRecordsContent>
 
         <PagerContent>
-            <MudDataGridPager T="SchoolViewModelche" />
+            <MudDataGridPager T="SchoolViewModel" />
         </PagerContent>
 
     </MudDataGrid>
