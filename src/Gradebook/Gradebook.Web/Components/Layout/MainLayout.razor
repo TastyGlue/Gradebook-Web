@@ -9,10 +9,10 @@
 {
     <MudLayout>
         <MudAppBar Elevation="4">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => _drawerOpen = !_drawerOpen)" />
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => isDrawerOpen = !isDrawerOpen)" />
             <MudSpacer />
             @* <UserProfile /> *@
-            <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
+            <MudDrawer @bind-Open="isDrawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
                 <NavMenu />
             </MudDrawer>
         </MudAppBar>
