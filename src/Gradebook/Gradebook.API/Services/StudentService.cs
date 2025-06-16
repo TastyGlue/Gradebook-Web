@@ -23,8 +23,10 @@ namespace Gradebook.API.Services
                 .Include(s => s.School)
                 .Include(s => s.Class)
                 .Include(s => s.Grades)
+                .Include(s => s.User)
                 .Include(s => s.Absences)
                 .Include(s => s.Parents)
+                .ThenInclude(s => s.User)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (student == null)
@@ -39,8 +41,10 @@ namespace Gradebook.API.Services
                 .Include(s => s.School)
                 .Include(s => s.Class)
                 .Include(s => s.Grades)
+                .Include(s => s.User)
                 .Include(s => s.Absences)
                 .Include(s => s.Parents)
+                .ThenInclude(s => s.User)
                 .ToListAsync();
 
             return new CustomResult<IEnumerable<Student>>(students);

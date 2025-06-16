@@ -1,0 +1,84 @@
+﻿@page "/manage-students"
+@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <MudDataGrid T="StudentViewModel"
+                 Items="_students"
+                 @bind-SelectedItem="_selectedStudent"
+                 Filterable="true"
+                 FilterMode="DataGridFilterMode.Simple"
+                 QuickFilter="QuickFilter"
+                 Hover="true"
+                 Loading="_isLoading"
+                 Elevation="1"
+                 Class="mb-4">
+
+        <ToolBarContent>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="CreateStudent">
+                Create
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Warning"
+                       StartIcon="@Icons.Material.Filled.Edit"
+                       Disabled="_selectedStudent == null"
+                       OnClick="EditStudent"
+                       Class="ml-2">
+                Edit
+            </MudButton>
+
+            <MudSpacer />
+
+            <MudTextField @bind-Value="_searchString"
+                          Placeholder="Search..."
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          Immediate="true"
+                          Class="ml-2" />
+        </ToolBarContent>
+
+        <Columns>
+            <PropertyColumn Property="x => x.User.FullName" Title="Full Name" />
+            <PropertyColumn Property="x => x.User.Email" Title="Email" />
+            <PropertyColumn Property="x => x.School.Name" Title="School" />
+            <PropertyColumn Property="x => x.Class.DisplayName" Title="Class" />
+            <TemplateColumn Title="Parents">
+                <CellTemplate>
+                    @if (context.Item.Parents != null && context.Item.Parents.Any())
+                    {
+                        @context.Item.ParentsString
+                    }
+                    else
+                    {
+                        <em>No parents assigned</em>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Excused Absences">
+                <CellTemplate>
+                    @(context.Item.Absences?.Count(a => a.Excused) ?? 0)
+                </CellTemplate>
+            </TemplateColumn>
+
+            <TemplateColumn Title="Unexcused Absences">
+                <CellTemplate>
+                    @(context.Item.Absences?.Count(a => !a.Excused) ?? 0)
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+
+        <NoRecordsContent>
+            <MudText>No students to display.</MudText>
+        </NoRecordsContent>
+        <PagerContent>
+            <MudDataGridPager T="StudentViewModel" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>

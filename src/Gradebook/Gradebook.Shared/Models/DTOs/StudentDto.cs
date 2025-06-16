@@ -13,4 +13,6 @@ public class StudentDto : ProfileDto
     public ICollection<GradeDto> Grades { get; set; } = [];
 
     public ICollection<AbsenceDto> Absences { get; set; } = [];
+
+    public ICollection<ParentDto> Parents { get; set; } = [];
 }

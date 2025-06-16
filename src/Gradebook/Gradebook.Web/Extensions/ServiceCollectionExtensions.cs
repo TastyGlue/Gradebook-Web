@@ -35,6 +35,8 @@ public static class ServiceCollectionExtensions
         builder.Services.AddTransient<IApiSchoolService, ApiSchoolService>();
         builder.Services.AddTransient<IApiTeacherService, ApiTeacherService>();
         builder.Services.AddTransient<IApiHeadmasterService, ApiHeadmasterService>();
+        builder.Services.AddTransient<IApiStudentService, ApiStudentService>();
+        builder.Services.AddTransient<IApiParentService, ApiParentService>();
 
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();

@@ -1,0 +1,9 @@
+﻿@page "/manage-students/edit/{Id:guid}"
+@inherits ExtendedComponentBase
+
+@if (IsLoadingComplete)
+{
+        <Form ViewModel="@ViewModel"
+          PageTitle="Edit Student"
+          OnValidSubmit="ValidSubmitHandler" />
+}

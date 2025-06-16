@@ -13,5 +13,10 @@
         public ICollection<GradeViewModel> Grades { get; set; } = [];
 
         public ICollection<AbsenceViewModel> Absences { get; set; } = [];
+
+        public ICollection<ParentViewModel> Parents { get; set; } = [];
+
+        public string ParentsString => (Parents.Count > 0) ? string.Join(", ", Parents.Select(p => p.User?.FullName ?? "")) : string.Empty;
+
     }
 }

@@ -1,0 +1,77 @@
+﻿@page "/manage-parents"
+@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    
+<MudDataGrid T="ParentViewModel"
+             Items="_parents"
+             @bind-SelectedItem="_selectedParent"
+             Filterable="true"
+             FilterMode="DataGridFilterMode.Simple"
+             QuickFilter="QuickFilter"
+             Hover="true"
+             Loading="_isLoading"
+             Elevation="1"
+             Class="mb-4">
+
+    <ToolBarContent>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="CreateParent">
+            Create
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Warning"
+                   StartIcon="@Icons.Material.Filled.Edit"
+                   Disabled="_selectedParent == null"
+                   OnClick="EditParent"
+                   Class="ml-2">
+            Edit
+        </MudButton>
+
+        <MudSpacer />
+
+        <MudTextField @bind-Value="_searchString"
+                      Placeholder="Search..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"
+                      Class="ml-2" />
+    </ToolBarContent>
+
+    <Columns>
+        <PropertyColumn Property="x => x.User.FullName" Title="Full Name" />
+        <PropertyColumn Property="x => x.User.Email" Title="Email" />
+        <PropertyColumn Property="x => x.User.PhoneNumber" Title="Phone" />
+        <TemplateColumn Title="Children">
+            <CellTemplate>
+                @if (context.Item.Students != null && context.Item.Students.Any())
+                {
+                    @foreach (var child in context.Item.Students)
+                    {
+                        <div>@child.User.FullName (@child.School.Name - @child.Class?.DisplayName)</div>
+                    }
+                }
+                else
+                {
+                    <em>No children assigned</em>
+                }
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn Property="x => x.IsActive" Title="Active" />
+    </Columns>
+
+    <NoRecordsContent>
+        <MudText>No parents to display.</MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        <MudDataGridPager T="ParentViewModel" />
+    </PagerContent>
+</MudDataGrid>
+</MudPaper>

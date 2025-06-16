@@ -21,6 +21,12 @@ namespace Gradebook.API.Services
         {
             var parent = await _context.Parents
                 .Include(p => p.Students)
+                .ThenInclude(p => p.User)
+                .Include(p => p.User)
+                .Include(p => p.Students)
+                .ThenInclude(x => x.School)
+                .Include(p => p.Students)
+                .ThenInclude(x => x.Class)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (parent == null)
@@ -33,6 +39,12 @@ namespace Gradebook.API.Services
         {
             var parents = await _context.Parents
                 .Include(p => p.Students)
+                .ThenInclude(p => p.User)
+                .Include(p => p.User)
+                .Include(p => p.Students)
+                .ThenInclude(x => x.School)
+                .Include(p => p.Students)
+                .ThenInclude(x => x.Class)
                 .ToListAsync();
 
             return new CustomResult<IEnumerable<Parent>>(parents);
