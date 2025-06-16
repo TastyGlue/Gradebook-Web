@@ -6,8 +6,8 @@
         [Inject] protected IApiHeadmasterService ApiHeadmasterService { get; set; } = default!;
         [Inject] protected IApiSchoolService ApiSchoolService { get; set; } = default!;
 
-        protected SchoolViewModelche ViewModel { get; set; } = new();
-        protected IEnumerable<HeadmasterViewModelche> Headmasters { get; set; } = [];
+        protected SchoolViewModel ViewModel { get; set; } = new();
+        protected IEnumerable<HeadmasterViewModel> Headmasters { get; set; } = [];
 
         protected override async Task OnInitializedAsync()
         {
@@ -36,7 +36,7 @@
             }
             else
             {
-                ViewModel = result.Value!.Adapt<SchoolViewModelche>();
+                ViewModel = result.Value!.Adapt<SchoolViewModel>();
             }
         }
 
@@ -55,7 +55,7 @@
             }
             else
             {
-                Headmasters = result.Value!.Adapt<IEnumerable<HeadmasterViewModelche>>();
+                Headmasters = result.Value!.Adapt<IEnumerable<HeadmasterViewModel>>();
             }
         }
 

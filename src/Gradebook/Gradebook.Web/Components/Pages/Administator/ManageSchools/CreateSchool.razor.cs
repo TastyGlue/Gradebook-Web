@@ -3,7 +3,7 @@
 public partial class CreateSchool : ExtendedComponentBase
 {
     [Inject] protected IApiSchoolService ApiSchoolService { get; set; } = default!;
-    protected SchoolViewModelche ViewModel { get; set; } = new();
+    protected SchoolViewModel ViewModel { get; set; } = new();
 
     protected async Task ValidSubmitHandler()
     {

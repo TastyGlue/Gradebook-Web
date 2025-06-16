@@ -5,8 +5,8 @@
     <MudText Typo="Typo.h5" Class="mb-4">Manage Headmasters</MudText>
 
     <MudDataGrid T="HeadmasterViewModel"
-                 Items="_headmasters"
-                 @bind-SelectedItem="_selectedHeadmaster"
+                 Items="Headmasters"
+                 @bind-SelectedItem="SelectedHeadmaster"
                  Filterable="true"
                  FilterMode="DataGridFilterMode.Simple"
                  QuickFilter="QuickFilter"
@@ -26,7 +26,7 @@
             <MudButton Variant="Variant.Filled"
                        Color="Color.Warning"
                        StartIcon="@Icons.Material.Filled.Edit"
-                       Disabled="_selectedHeadmaster == null"
+                       Disabled="SelectedHeadmaster == null"
                        OnClick="EditHeadmaster"
                        Class="ml-2">
                 Edit
@@ -43,15 +43,14 @@
         </ToolBarContent>
 
         <Columns>
-            <PropertyColumn Property="x => x.FullName" Title="Full Name" />
-            <PropertyColumn Property="x => x.Email" Title="Email" />
+            <PropertyColumn Property="x => x.User!.FullName" Title="Full Name" />
+            <PropertyColumn Property="x => x.User!.Email" Title="Email" />
             <PropertyColumn Property="x => x.BusinessEmail" Title="Business Email" />
             <PropertyColumn Property="x => x.BusinessPhoneNumber" Title="Phone" />
             <TemplateColumn Title="School">
                 <CellTemplate>
                     @{
-                        var school = _schools.FirstOrDefault(s => s.Id == context.Item.SchoolId);
-                        <p>@(school?.Name ?? "Unknown")</p>
+                        <span>@context.Item.School.Name</span>
                     }
                 </CellTemplate>
             </TemplateColumn>

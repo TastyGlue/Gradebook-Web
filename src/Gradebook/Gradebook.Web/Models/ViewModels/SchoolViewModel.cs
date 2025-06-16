@@ -1,6 +1,6 @@
 ﻿namespace Gradebook.Web.Models.ViewModels;
 
-public class SchoolViewModelche
+public class SchoolViewModel
 {
     public Guid Id { get; set; }
 
@@ -18,7 +18,7 @@ public class SchoolViewModelche
 
     public bool IsActive { get; set; } = true;
 
-    public ICollection<HeadmasterViewModelche> Headmasters { get; set; } = [];
+    public ICollection<HeadmasterViewModel> Headmasters { get; set; } = [];
 
     public ICollection<SchoolYearDto> SchoolYears { get; set; } = [];
 }
