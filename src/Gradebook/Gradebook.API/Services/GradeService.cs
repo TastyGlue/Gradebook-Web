@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Gradebook.Data.Models;
 
 namespace Gradebook.API.Services
 {
@@ -65,10 +66,7 @@ namespace Gradebook.API.Services
             if (grade == null)
                 return new CustomResult(new ErrorResult("Grade not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(gradeDto, grade);
-
-            _context.Entry(grade).State = EntityState.Modified;
-
+            _context.Entry(grade).CurrentValues.SetValues(gradeDto);
 
             await _context.SaveChangesAsync();
            

@@ -1,4 +1,5 @@
 ﻿using Gradebook.API.Interfaces;
+using Gradebook.Data.Models;
 using Gradebook.Shared.Models.DTOs;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -64,8 +65,7 @@ namespace Gradebook.API.Services
             if (teacher == null)
                 return new CustomResult(new ErrorResult("Teacher not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(teacherDto, teacher);
-            _context.Entry(teacher).State = EntityState.Modified;
+            _context.Entry(teacher).CurrentValues.SetValues(teacherDto);
 
             await _context.SaveChangesAsync();
             return new CustomResult<Teacher>(teacher);

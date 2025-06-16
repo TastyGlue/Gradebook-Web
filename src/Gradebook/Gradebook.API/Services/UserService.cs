@@ -7,13 +7,15 @@ namespace Gradebook.API.Services
 {
     public class UserService : IUserService
     {
+        private readonly UserManager<User> _userManager;
         private readonly GradebookDbContext _context;
         private readonly IMapper _mapper;
 
-        public UserService(GradebookDbContext context, IMapper mapper)
+        public UserService(GradebookDbContext context, IMapper mapper, UserManager<User> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<CustomResult> GetUser(Guid id)
@@ -57,10 +59,19 @@ namespace Gradebook.API.Services
             if (user == null)
                 return new CustomResult(new ErrorResult("User not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(userDto, user);
-            _context.Entry(user).State = EntityState.Modified;
+            user.UserName = userDto.UserName;
+            user.Email = userDto.Email;
+            user.PhoneNumber = userDto.PhoneNumber;
+            user.FullName = userDto.FullName;
+            user.IsActive = userDto.IsActive;
 
-            await _context.SaveChangesAsync();
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var details = result.Errors.Select(x => x.Description).ToList();
+                var error = new ErrorResult("Updating user failed.", ErrorCodes.USER_UPDATE_FAILED, details);
+            }
 
             return new CustomResult<User>(user);
         }

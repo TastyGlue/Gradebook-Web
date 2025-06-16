@@ -1,16 +1,15 @@
 ﻿using Gradebook.API.Interfaces;
-using Gradebook.Shared.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gradebook.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HeadmastersController : ControllerBase
+    public class HeadmasterController : ControllerBase
     {
         private readonly IHeadmasterService _service;
 
-        public HeadmastersController(IHeadmasterService service)
+        public HeadmasterController(IHeadmasterService service)
         {
             _service = service;
         }

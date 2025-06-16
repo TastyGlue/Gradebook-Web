@@ -20,10 +20,15 @@ public class Program
         
         MapperConfig.ConfigureMappings();
 
-        builder.Services.AddControllers().AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-        });
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

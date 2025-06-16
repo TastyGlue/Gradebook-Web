@@ -1,0 +1,50 @@
+﻿@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:500px">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <EditForm Model="ViewModel" OnValidSubmit="@ValidSubmitHandler" >
+        <DataAnnotationsValidator />
+
+        <MudTextField @bind-Value="ViewModel.Name" Label="Name" For="@(() => ViewModel.Name)" />
+        <MudTextField @bind-Value="ViewModel.Address" Label="Address" For="@(() => ViewModel.Address)" />
+        <MudTextField @bind-Value="ViewModel.Website" Label="Website" For="@(() => ViewModel.Website)" />
+
+        @if (ViewModel.Id != Guid.Empty)
+        {
+            @* <MudSelect @bind-SelectedValues="@SelectedHeadmasters"
+                       Label="Headmasters"
+                       MultiSelection="true" 
+                       ReadOnly="true" 
+                       Adornment="Adornment.None">
+                @foreach (var headmaster in ViewModel.Headmasters)
+                {
+                    <MudSelectItem Value="@headmaster">
+                        <MudChip T="string">
+                            <div style="display:flex; flex-direction:column;">
+                                <span>@(headmaster.User?.FullName ?? "N/A")</span>
+                                <span style="font-size: 10px;">@headmaster.BusinessEmail</span>
+                            </div>
+                        </MudChip>
+                    </MudSelectItem>
+                }
+            </MudSelect> *@
+            <MudInputLabel>@("Headmasters")</MudInputLabel>
+            <div class="chip-list">
+                @foreach (var headmaster in ViewModel.Headmasters)
+                {
+                    <HeadmasterChip Headmaster="headmaster" />
+                }
+            </div>
+        }
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+            @("Submit")
+        </MudButton>
+        <MudButton OnClick="CancelHandler" Variant="Variant.Text" Class="mt-4 ml-2">
+            @("Cancel")
+        </MudButton>
+    </EditForm>
+</MudPaper>

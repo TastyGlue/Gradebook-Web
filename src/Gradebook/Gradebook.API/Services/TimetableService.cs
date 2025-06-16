@@ -1,4 +1,5 @@
 ﻿using Gradebook.API.Interfaces;
+using Gradebook.Data.Models;
 using Gradebook.Shared.Models.DTOs;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -63,8 +64,7 @@ namespace Gradebook.API.Services
             if (timetable == null)
                 return new CustomResult(new ErrorResult("Timetable not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(timetableDto, timetable);
-            _context.Entry(timetable).State = EntityState.Modified;
+            _context.Entry(timetable).CurrentValues.SetValues(timetableDto);
 
             await _context.SaveChangesAsync();
 

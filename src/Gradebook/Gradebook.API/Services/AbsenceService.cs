@@ -1,4 +1,5 @@
 ﻿using Gradebook.API.Interfaces;
+using Gradebook.Data.Models;
 using Gradebook.Shared.Models.DTOs;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -61,8 +62,8 @@ namespace Gradebook.API.Services
             if (absence == null)
                 return new CustomResult(new ErrorResult("Absence not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(absenceDto, absence);
-            _context.Entry(absence).State = EntityState.Modified;
+            _context.Entry(absence).CurrentValues.SetValues(absenceDto);
+
             await _context.SaveChangesAsync();
 
             return new CustomResult<Absence>(absence);

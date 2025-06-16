@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
       - "11501:443"
-      - "9301:80"
+      - "10301:80"
 
   gradebook.web:
     container_name: gradebook.web
@@ -23,7 +23,7 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
       - "11502:443"
-      - "9302:80"
+      - "10302:80"
     depends_on:
       gradebook.api:
         condition: service_started
@@ -34,7 +34,7 @@ services:
     container_name: gradebook.db
     image: postgres:alpine
     ports:
-      - "5642:5432"
+      - "15642:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

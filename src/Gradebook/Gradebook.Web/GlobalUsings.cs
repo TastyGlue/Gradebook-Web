@@ -15,6 +15,7 @@ global using Gradebook.Shared.Utils;
 global using Gradebook.Web.Components.Abstract;
 global using Gradebook.Web.Models;
 global using Gradebook.Web.Models.ViewModels;
+global using Gradebook.Web.Components.Shared;
 global using Microsoft.Extensions.Options;
 global using System.ComponentModel.DataAnnotations;
 global using Microsoft.JSInterop;

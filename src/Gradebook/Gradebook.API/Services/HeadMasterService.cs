@@ -1,4 +1,5 @@
 ﻿using Gradebook.API.Interfaces;
+using Gradebook.Data.Models;
 using Gradebook.Shared.Models.DTOs;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -57,8 +58,7 @@ namespace Gradebook.API.Services
             if (headmaster == null)
                 return new CustomResult(new ErrorResult("Headmaster not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _mapper.Map(headmasterDto, headmaster);
-            _context.Entry(headmaster).State = EntityState.Modified;
+            _context.Entry(headmaster).CurrentValues.SetValues(headmasterDto);
 
             await _context.SaveChangesAsync();
             return new CustomResult<Headmaster>(headmaster);

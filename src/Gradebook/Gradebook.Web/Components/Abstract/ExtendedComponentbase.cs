@@ -10,6 +10,8 @@ public class ExtendedComponentBase : ComponentBase
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
     [Inject] public IJSRuntime Js { get; set; } = default!;
+    public string PageTitle { get; set; } = default!;
+    public bool IsLoadingComplete { get; set; }
 
     public void Notify(string message, Severity severity, int duration = 5000)
     {

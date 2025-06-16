@@ -1,61 +1,77 @@
-﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
-using System;
-using System.Threading.Tasks;
-
-namespace Gradebook.Web.Components.Pages.Administator.ManageSchools
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageSchools
 {
     public partial class EditSchool : ExtendedComponentBase
     {
         [Parameter] public Guid Id { get; set; }
-        protected SchoolViewModel Model { get; set; } = new();
+        [Inject] protected IApiHeadmasterService ApiHeadmasterService { get; set; } = default!;
+        [Inject] protected IApiSchoolService ApiSchoolService { get; set; } = default!;
 
-        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected ISnackbar Snackbar { get; set; } = default!;
+        protected SchoolViewModelche ViewModel { get; set; } = new();
+        protected IEnumerable<HeadmasterViewModelche> Headmasters { get; set; } = [];
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadSchoolAsync();
+            IsLoadingComplete = false;
+            LoaderService.ToggleLoading(true);
+
+            await GetSchool();
+            await LoadHeadmasters();
+
+            IsLoadingComplete = true;
+            LoaderService.ToggleLoading(false);
         }
 
-        private async Task LoadSchoolAsync()
+        protected async Task GetSchool()
         {
-            // TODO: Replace with real data fetching logic
-            await Task.Delay(300);
-            var school = GetMockSchools().FirstOrDefault(s => s.Id == Id);
+            var result = await ApiSchoolService.GetSchool(Id);
 
-            if (school != null)
+            if (!result.Succeeded)
             {
-                Model = new SchoolViewModel
-                {
-                    Id = school.Id,
-                    Name = school.Name,
-                    Address = school.Address,
-                    Website = school.Website,
-                    Headmasters = school.Headmasters
-                };
+                LoaderService.ToggleLoading(false);
+
+                Notify(result.Error!.Message, Severity.Error);
+
+                NavigationManager.NavigateTo("manage-schools");
+                return;
             }
             else
             {
-                Snackbar.Add("School not found.", Severity.Error);
-                Navigation.NavigateTo("/manage-schools");
+                ViewModel = result.Value!.Adapt<SchoolViewModelche>();
             }
         }
 
-        protected async Task HandleValidSubmit()
+        protected async Task LoadHeadmasters()
         {
-            // TODO: Save the changes via service
-            await Task.Delay(300); // Simulate save
+            var result = await ApiHeadmasterService.GetHeadmasters();
 
-            Snackbar.Add("School updated successfully!", Severity.Success);
-            Navigation.NavigateTo("/manage-schools");
+            if (!result.Succeeded)
+            {
+                LoaderService.ToggleLoading(false);
+
+                Notify(result.Error!.Message, Severity.Error);
+
+                NavigationManager.NavigateTo("manage-schools");
+                return;
+            }
+            else
+            {
+                Headmasters = result.Value!.Adapt<IEnumerable<HeadmasterViewModelche>>();
+            }
         }
 
-        // For test, to be deleted
-        private List<SchoolViewModel> GetMockSchools() => new()
+        protected async Task ValidSubmitHandler()
         {
-            new() { Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), Name = "Green Hill School", Address = "123 Green St", Website = "https://greenhill.edu", Headmasters = "Valentin Stonev" },
-            new() { Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), Name = "Riverdale High", Address = "456 River Rd", Website = "https://riverdale.edu", Headmasters = "Joseph Santer" }
-        };
+            var result = await ApiSchoolService.EditSchool(Id, ViewModel.Adapt<SchoolDto>());
+
+            if (result.Succeeded)
+            {
+                Notify("Operation succeeded.", Severity.Success);
+                NavigationManager.NavigateTo("manage-schools");
+            }
+            else
+            {
+                Notify(result.Error!.Message, Severity.Error);
+            }
+        }
     }
 }
