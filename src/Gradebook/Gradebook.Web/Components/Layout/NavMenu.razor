@@ -1,0 +1,49 @@
+﻿@inherits ComponentBase
+@inject NavigationManager NavigationManager
+
+
+<div class="nav-grid">
+    <span @onclick="@(() => NavigationManager.NavigateTo("/dashboard"))">
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Dashboard" />
+        <MudNavLink Match="NavLinkMatch.Prefix" ActiveClass="bold" Href="/dashboard">Dashboard</MudNavLink>
+    </span>
+    <span>
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.CalendarToday" />
+        @*Href varies depending on the role*@
+        <MudNavLink Match="NavLinkMatch.Prefix" ActiveClass="bold" Href="calendar">Timetable</MudNavLink>
+    </span>
+    <span>
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Grade" />
+        @*Href varies depending on the role*@
+        <MudNavLink Match="NavLinkMatch.Prefix" ActiveClass="bold" Href="grades">Grades</MudNavLink>
+    </span>
+    <span>
+        <MudExpansionPanel Style="background-color:#f0f0f0;">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.AdminPanelSettings" class="mr-3"></MudIcon>
+                    <MudText><strong>Administration</strong></MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                @*Admin only*@
+                <MudNavLink Href="">Manage Headmasters</MudNavLink>
+                @*Admin only*@
+                <MudNavLink Href="">Manage Schools</MudNavLink>
+                @*Headmaster only*@
+                <MudNavLink Href="">Manage Teachers</MudNavLink>
+                @*Headmaster only*@
+                <MudNavLink Href="">Manage Students</MudNavLink>
+                @*Headmaster only*@
+                <MudNavLink Href="">Manage Parents</MudNavLink>
+                @*Headmaster only*@
+                <MudNavLink Href="">Manage Classes</MudNavLink>
+                @*Headmaster only*@
+                <MudNavLink Href="">Manage Timetable</MudNavLink>
+            </ChildContent>
+        </MudExpansionPanel>
+    </span>
+</div>
+@code {
+
+}
