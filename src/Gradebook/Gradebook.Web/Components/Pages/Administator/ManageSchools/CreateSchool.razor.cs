@@ -1,33 +1,20 @@
-﻿namespace Gradebook.Web.Components.Pages.Administator.ManageSchools
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageSchools;
+
+public partial class CreateSchool : ExtendedComponentBase
 {
-    public partial class CreateSchoolBase : ComponentBase
+    [Inject] protected IApiSchoolService ApiSchoolService { get; set; } = default!;
+    protected SchoolViewModelche ViewModel { get; set; } = new();
+
+    protected async Task ValidSubmitHandler()
     {
-        protected SchoolViewModel School { get; set; } = new();
+        var result = await ApiSchoolService.CreateSchool(ViewModel.Adapt<SchoolDto>());
 
-        protected MudForm _form = default!;
-
-        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected ISnackbar Snackbar { get; set; } = default!;
-
-        protected async Task SubmitAsync()
+        if (result.Succeeded)
         {
-            await _form.Validate();
-
-            if (_form.IsValid)
-            {
-                // TODO: Save logic (via service)
-                Snackbar.Add("School created successfully!", Severity.Success);
-                Navigation.NavigateTo("/manage-schools");
-            }
-            else
-            {
-                Snackbar.Add("Please fill all required fields.", Severity.Warning);
-            }
+            Notify("Operation succeeded.", Severity.Success);
+            NavigationManager.NavigateTo("manage-schools");
         }
-
-        protected void GoBack()
-        {
-            Navigation.NavigateTo("/manage-schools");
-        }
+        else
+            Notify(result.Error!.Message, Severity.Error);
     }
 }

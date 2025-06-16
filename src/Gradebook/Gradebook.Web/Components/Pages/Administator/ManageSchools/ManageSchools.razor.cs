@@ -2,43 +2,48 @@
 {
     public partial class ManageSchools : ExtendedComponentBase
     {
-        protected List<SchoolViewModel> _schools = new();
-        protected SchoolViewModel? _selectedSchool;
+        [Inject] protected IApiSchoolService ApiSchoolService { get; set; } = default!;
+
+        protected List<SchoolViewModelche> _schools = [];
+        protected SchoolViewModelche? _selectedSchool;
         protected string _searchString = "";
         protected bool _isLoading = true;
 
-        [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected ISnackbar Snackbar { get; set; } = default!;
-
         protected override async Task OnInitializedAsync()
         {
-            await LoadSchoolsAsync();
+            PageTitle = "Manage Schools";
+
+            await LoadSchools();
         }
 
-        private async Task LoadSchoolsAsync()
+        private async Task LoadSchools()
         {
             _isLoading = true;
-            //dummy data, to be deleted
-            // TODO: Replace with real data service call
-            await Task.Delay(500);
-            _schools = new List<SchoolViewModel>
+            
+            var result = await ApiSchoolService.GetSchools();
+
+            if (result.Succeeded)
             {
-                new() { Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), Name = "Green Hill School", Address = "123 Green St", Website = "https://greenhill.edu", Headmasters = "Valentin Stonev" },
-                new() { Id = Guid.NewGuid(), Name = "Riverdale High", Address = "456 River Rd", Website = "https://riverdale.edu", Headmasters = "Joseph Santer"},
-            };
+                _schools = result.Value!.Adapt<List<SchoolViewModelche>>();
+            }
+            else
+            {
+                Notify(result.Error!.Message, Severity.Error);
+                NavigationManager.NavigateTo("/");
+            }
 
             _isLoading = false;
         }
 
         protected void CreateSchool()
         {
-            Navigation.NavigateTo("/manage-schools/create");
+            NavigationManager.NavigateTo("/manage-schools/create");
         }
 
         protected void EditSchool()
         {
             if (_selectedSchool != null)
-                Navigation.NavigateTo($"/manage-schools/edit/{_selectedSchool.Id}");
+                NavigationManager.NavigateTo($"/manage-schools/edit/{_selectedSchool.Id}");
         }
     }
 }

@@ -36,4 +36,30 @@ public class ApiSchoolService : IApiSchoolService
 
         return CustomResultUtils.GetApiResponse<SchoolDto>(response, content);
     }
+
+    public async Task<CustomResult<SchoolDto>> CreateSchool(SchoolDto dto)
+    {
+        var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
+        var client = _httpClientService.CreateApiClient(token);
+
+        string apiEndpoint = "api/school";
+
+        var response = await client.PostAsJsonAsync(apiEndpoint, dto);
+        var content = await response.Content.ReadAsStringAsync();
+
+        return CustomResultUtils.GetApiResponse<SchoolDto>(response, content);
+    }
+
+    public async Task<CustomResult<SchoolDto>> EditSchool(Guid id, SchoolDto dto)
+    {
+        var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
+        var client = _httpClientService.CreateApiClient(token);
+
+        string apiEndpoint = $"api/school/{id}";
+
+        var response = await client.PutAsJsonAsync(apiEndpoint, dto);
+        var content = await response.Content.ReadAsStringAsync();
+
+        return CustomResultUtils.GetApiResponse<SchoolDto>(response, content);
+    }
 }

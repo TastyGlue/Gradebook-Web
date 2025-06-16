@@ -1,0 +1,23 @@
+﻿<MudChip OnClick="@(() => HeadmasterClickHandler(Headmaster))" T="string">
+    <div class="user-chip">
+        <span>@(Headmaster.User?.FullName ?? "N/A")</span>
+        <span style="font-size: 11px;">@Headmaster.BusinessEmail</span>
+    </div>
+</MudChip>
+
+<style>
+    .user-chip {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+</style>
+
+@code {
+    [Parameter] public HeadmasterViewModelche Headmaster { get; set; } = new();
+
+    [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
+
+    protected void HeadmasterClickHandler(HeadmasterViewModelche headmaster)
+        => NavigationManager.NavigateTo($"manage-headmasters/edit/{headmaster.Id}");
+}
