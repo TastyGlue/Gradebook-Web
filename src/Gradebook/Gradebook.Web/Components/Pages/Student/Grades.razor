@@ -3,41 +3,63 @@
 
 <PageTitle>@PageTitle</PageTitle>
 
+
+<div class="flex justify-between items-center mb-6">
+    <MudText Typo="Typo.h3" Class="text-indigo-600 font-bold">Grades</MudText>
+</div>
 <MudPaper Class="pa-4">
     <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
 
-    <MudDataGrid T="GradeViewModel"
-             Items="_grades"
-             Filterable="true"
-             FilterMode="DataGridFilterMode.Simple"
-             Hover="true"
-             Loading="_isLoading"
-             Elevation="1"
-             Class="mb-4">
+    @if (_isLoading)
+    {
+        <div class="flex justify-center">
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+        </div>
+    }
+    else if (!_grades.Any())
+    {
+        <div class="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
+            <MudText Typo="Typo.subtitle1" Color="Color.Secondary">No grades available.</MudText>
+        </div>
+    }
+    else
+    {
+        @foreach (var subjectGroup in _grades.GroupBy(g => g.Subject.Name))
+        {
+            <div class="mt-6">
+                <MudText Typo="Typo.h6" Class="mb-2 text-gray-700 border-b-2 border-indigo-200 pb-1">@subjectGroup.Key</MudText>
+                <div class="flex flex-wrap items-center">
+                    @foreach (var grade in subjectGroup)
+                    {
+                        <MudChip T="decimal"
+                                 Variant="Variant.Filled"
+                                 Color="@GetGradeColor(grade.Value)"
+                                 Class="m-1 px-3 py-1 text-sm font-medium"
+                                 Style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            @grade.Value.ToString("F1")
+                        </MudChip>
+                    }
+                </div>
+            </div>
+        }
 
-    <ToolBarContent>
-        <MudTextField @bind-Value="_searchString"
-                      Placeholder="Search subjects..."
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      Immediate="true"
-                      Class="mb-4" />
-    </ToolBarContent>
-
-    <Columns>
-        <PropertyColumn Property="x => x.Subject.Name" Title="Subject" />
-        <PropertyColumn Property="x => x.Value" Title="Grade" />
-        <PropertyColumn Property="x => x.Date" Title="Date" />
-    </Columns>
-
-    <NoRecordsContent>
-        <MudText>No grades to display.</MudText>
-    </NoRecordsContent>
-
-@*     <FooterContent>
-        <MudText Typo="Typo.subtitle1">
-            Average: @(_grades.Any() ? _grades.Average(g => g.Value).ToString("F2") : "N/A")
-        </MudText>
-    </FooterContent> *@
-</MudDataGrid>
+        <div class="mt-8 border-t border-gray-200 pt-4 text-right">
+            <MudText Typo="Typo.h6" Color="Color.Primary">
+                Overall Average:
+                <span class="font-semibold ml-2">@(_grades.Average(g => g.Value).ToString("F2"))</span>
+            </MudText>
+        </div>
+    }
 </MudPaper>
+
+@code {
+private Color GetGradeColor(decimal value) => value switch
+{
+2m => Color.Error,
+3m => Color.Secondary,
+4m => Color.Warning,
+5m => Color.Info,
+6m => Color.Success,
+_  => Color.Default
+};
+}
