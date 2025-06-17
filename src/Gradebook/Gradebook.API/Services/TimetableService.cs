@@ -21,9 +21,11 @@ namespace Gradebook.API.Services
         {
             var timetable = await _context.Timetables
                 .Include(t => t.SchoolYear)
+                .ThenInclude(t => t.School)
                 .Include(t => t.Subject)
                 .Include(t => t.Class)
                 .Include(t => t.Teacher)
+                .ThenInclude(t => t.User)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (timetable == null)
@@ -36,9 +38,11 @@ namespace Gradebook.API.Services
         {
             var timetables = await _context.Timetables
                 .Include(t => t.SchoolYear)
+                .ThenInclude(t => t.School)
                 .Include(t => t.Subject)
                 .Include(t => t.Class)
                 .Include(t => t.Teacher)
+                .ThenInclude(t => t.User)
                 .ToListAsync();
 
             return new CustomResult<IEnumerable<Timetable>>(timetables);
@@ -49,6 +53,7 @@ namespace Gradebook.API.Services
             var timetable = _mapper.Map<Timetable>(timetableDto);
             timetable.Id = Guid.NewGuid();
 
+            timetable.TimeOfDay = DateTime.SpecifyKind(timetable.TimeOfDay, DateTimeKind.Utc);
             _context.Timetables.Add(timetable);
             await _context.SaveChangesAsync();
 

@@ -1,0 +1,61 @@
+﻿@using Gradebook.Web.Models.ViewModels
+@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:600px">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <EditForm Model="ViewModel" OnValidSubmit="ValidSubmitHandler">
+        <DataAnnotationsValidator />
+
+        <MudTextField T="string"
+                      @bind-Value="ViewModel.User.FullName"
+                      Label="Full Name"
+                      For="@(() => ViewModel.User.FullName)"
+                      Required="true" />
+
+        <MudTextField T="string"
+                      @bind-Value="ViewModel.User.Email"
+                      Label="Email"
+                      For="@(() => ViewModel.User.Email)"
+                      Required="true" />
+
+        <MudTextField T="string"
+                      @bind-Value="ViewModel.User.PhoneNumber"
+                      Label="Phone Number"
+                      For="@(() => ViewModel.User.PhoneNumber)" />
+
+        <MudCheckBox T="bool"
+                     @bind-Checked="ViewModel.IsActive"
+                     Label="Is Active" />
+
+        @* only show chips when editing an existing parent *@
+@*         @if (ViewModel != null && ViewModel.Id != Guid.Empty)
+        {
+            <MudInputLabel>Students</MudInputLabel>
+            <div class="chip-list">
+                @foreach (var student in SelectedStudents)
+                {
+                    <MudChip T="string"
+                             Clickable="true"
+                             OnClick="() => StudentClickHandler(student)">
+                        @student.User.FullName
+                    </MudChip>
+                }
+            </div>
+         *@}
+
+        <MudButton ButtonType="ButtonType.Submit"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Class="mt-4">
+            Submit
+        </MudButton>
+        <MudButton OnClick="CancelHandler"
+                   Variant="Variant.Text"
+                   Class="mt-4 ml-2">
+            Cancel
+        </MudButton>
+    </EditForm>
+</MudPaper>

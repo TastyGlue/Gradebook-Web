@@ -1,0 +1,83 @@
+﻿@page "/manage-timetables"
+@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <MudDataGrid T="TimetableViewModel"
+                 Items="_timetables"
+                 @bind-SelectedItem="_selectedTimetable"
+                 Filterable="true"
+                 FilterMode="DataGridFilterMode.Simple"
+                 QuickFilter="QuickFilter"
+                 Hover="true"
+                 Loading="_isLoading"
+                 Elevation="1"
+                 Class="mb-4">
+
+        <ToolBarContent>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="CreateTimetable">
+                Create
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Warning"
+                       StartIcon="@Icons.Material.Filled.Edit"
+                       Disabled="_selectedTimetable == null"
+                       OnClick="EditTimetable"
+                       Class="ml-2">
+                Edit
+            </MudButton>
+
+            <MudSpacer />
+
+            <MudTextField @bind-Value="_searchString"
+                          Placeholder="Search..."
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          Immediate="true"
+                          Class="ml-2" />
+        </ToolBarContent>
+
+        <Columns>
+
+            <TemplateColumn Title="School">
+                <CellTemplate>
+                    @context.Item.SchoolYear.School.Name
+                </CellTemplate>
+            </TemplateColumn>
+
+            <TemplateColumn Title="School Year">
+                <CellTemplate>
+                    @($"{context.Item.SchoolYear.Year} – Sem {context.Item.SchoolYear.Semester}")
+                </CellTemplate>
+            </TemplateColumn>
+
+            <PropertyColumn Property="x => x.DayOfWeek" Title="Day" />
+
+            <TemplateColumn Title="Time">
+                <CellTemplate>@context.Item.TimeOfDay.ToString("t")</CellTemplate>
+            </TemplateColumn>
+
+            <TemplateColumn Title="Teacher">
+                <CellTemplate>@(context.Item.Teacher?.User.FullName ?? "-")</CellTemplate>
+            </TemplateColumn>
+
+            <PropertyColumn Property="x => x.Class.DisplayName" Title="Class" />
+            <PropertyColumn Property="x => x.Subject.Name" Title="Subject" />
+        </Columns>
+
+        <NoRecordsContent>
+            <MudText>No timetable entries to display.</MudText>
+        </NoRecordsContent>
+
+        <PagerContent>
+            <MudDataGridPager T="TimetableViewModel" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
