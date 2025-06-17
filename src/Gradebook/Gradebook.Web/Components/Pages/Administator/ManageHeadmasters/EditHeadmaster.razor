@@ -1,0 +1,10 @@
+﻿@page "/manage-headmasters/edit/{id:guid}"
+@inherits ExtendedComponentBase
+
+@if (IsLoadingComplete)
+{
+    <Form ViewModel="ViewModel"
+          IsCreate="false"
+          PageTitle="Edit Headmaster"
+          OnValidSubmit="ValidSubmitHandler" />
+}

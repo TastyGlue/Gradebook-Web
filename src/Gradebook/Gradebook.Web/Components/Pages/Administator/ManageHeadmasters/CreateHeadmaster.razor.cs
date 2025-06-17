@@ -2,25 +2,22 @@
 
 public partial class CreateHeadmaster : ExtendedComponentBase
 {
-    protected HeadmasterViewModel ViewModel { get; set; } = new();
+    [Inject] protected IApiHeadmasterService ApiHeadmasterService { get; set; } = default!;
+    protected CreateRoleUserViewModel<HeadmasterViewModel> ViewModel { get; set; } = new();
 
-    protected List<SchoolViewModel> Schools { get; set; } = [];
-
-    protected override async Task OnInitializedAsync()
+    protected async Task ValidSubmitHandler()
     {
-        await LoadSchools();
-    }
+        var dto = ViewModel.Adapt<CreateUserRoleDto<HeadmasterDto>>();
+        var result = await ApiHeadmasterService.CreateHeadmaster(dto);
 
-    private async Task LoadSchools()
-    {
-        
-    }
-
-    protected async Task HandleValidSubmit()
-    {
-        // TODO: Call real backend service
-        await Task.Delay(300);
-        Snackbar.Add("Headmaster created successfully.", Severity.Success);
-        //Navigation.NavigateTo("/manage-headmasters");
+        if (result.Succeeded)
+        {
+            Notify("Headmaster created successfully", Severity.Success);
+            NavigationManager.NavigateTo("/manage-headmasters");
+        }
+        else
+        {
+            Notify(result.Error!.Message, Severity.Error);
+        }
     }
 }

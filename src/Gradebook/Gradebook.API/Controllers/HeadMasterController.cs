@@ -32,17 +32,17 @@ namespace Gradebook.API.Controllers
 
         // POST: api/Headmasters
         [HttpPost]
-        public async Task<IActionResult> CreateHeadmaster([FromBody] HeadmasterDto headmasterDto)
+        public async Task<IActionResult> CreateHeadmaster([FromBody] CreateUserRoleDto<HeadmasterDto> createUserRole)
         {
-            var result = await _service.CreateHeadmaster(headmasterDto);
+            var result = await _service.CreateHeadmaster(createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Headmaster, HeadmasterDto>(result);
         }
 
         // PUT: api/Headmasters/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateHeadmaster(Guid id, [FromBody] HeadmasterDto headmasterDto)
+        public async Task<IActionResult> UpdateHeadmaster(Guid id, [FromBody] CreateUserRoleDto<HeadmasterDto> createUserRole)
         {
-            var result = await _service.UpdateHeadmaster(id, headmasterDto);
+            var result = await _service.UpdateHeadmaster(id, createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Headmaster, HeadmasterDto>(result);
         }
 
