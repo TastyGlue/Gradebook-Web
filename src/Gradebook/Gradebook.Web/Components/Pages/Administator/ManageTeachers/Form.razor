@@ -1,0 +1,128 @@
+﻿@inherits CreateUserRoleBaseComponent<TeacherViewModel>
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <MudForm @ref="FormRef">
+
+        @if (IsCreate)
+        {
+            <MudToggleGroup Value="SelectedCreationType"
+                            ValueChanged="@SelectedCreationTypeChanged"
+                            T="string"
+                            CheckMark="false"
+                            Size="Size.Medium">
+                @foreach (string creationType in CreationTypes)
+                {
+                    <MudToggleItem Value="@creationType" />
+                }
+            </MudToggleGroup>
+        }
+
+        @if (SelectedCreationType == CreationTypes[0])
+        {
+            @if (IsCreate)
+            {
+                <MudAutocomplete T="UserViewModel"
+                                 Value="ViewModel.User"
+                                 ValueChanged="@UserChanged"
+                                 Label="User"
+                                 SearchFunc="SearchUsers"
+                                 ToStringFunc="@(args => (args is null) ? "" : args.ToString())"
+                                 CoerceText="true"
+                                 Variant="Variant.Text"
+                                 Clearable="false"
+                                 ShowProgressIndicator="true"
+                                 Validation="@(new Func<UserViewModel, IEnumerable<string>>(UserValidity))">
+                    <ProgressIndicatorTemplate>
+                        <MudProgressLinear Size="Size.Small" Indeterminate="true" Color="@Color.Info" />
+                    </ProgressIndicatorTemplate>
+
+                    <NoItemsTemplate>
+                        <p class="no-content">No data to display</p>
+                    </NoItemsTemplate>
+
+                    <ItemTemplate Context="user">
+                        <div class="dropdown-item-container">
+                            <p class="dropdown-item-title">@user.ToString()</p>
+                            <p class="dropdown-item-subtitle">@user.PhoneNumber</p>
+                            <p class="dropdown-item-subtitle">
+                                @{
+                                    string isActive = "Is Active: ";
+                                    string isActiveEmoji = user.IsActive ? "✅" : "❌";
+                                }
+                                <span>@($"{isActive}{isActiveEmoji}")</span>
+                            </p>
+                        </div>
+                    </ItemTemplate>
+                </MudAutocomplete>
+            }
+            else
+            {
+                <UserForm @bind-ViewModel="ViewModel.User" />
+            }
+        }
+        else
+        {
+            <UserForm @bind-ViewModel="ViewModel.User" />
+        }
+
+        <MudTextField @bind-Value="ViewModel.Role.BusinessEmail" For="@(() => ViewModel.Role.BusinessEmail)" Label="Business Email" />
+        <MudTextField @bind-Value="ViewModel.Role.BusinessPhoneNumber" For="@(() => ViewModel.Role.BusinessPhoneNumber)" Label="Business Phone Number" />
+
+        <MudAutocomplete T="SchoolViewModel"
+                         Value="ViewModel.Role.School"
+                         ValueChanged="SelectedSchoolChanged"
+                         Label="School"
+                         SearchFunc="SearchSchools"
+                         ToStringFunc="@(args => (args is null) ? "" : args.Name)"
+                         CoerceText="true"
+                         Variant="Variant.Text"
+                         Clearable="false"
+                         ShowProgressIndicator="true"
+                         Validation="@(new Func<SchoolViewModel, IEnumerable<string>>(SchoolValidity))"
+                         Disabled="@(!IsCreate)">
+            <ProgressIndicatorTemplate>
+                <MudProgressLinear Size="Size.Small" Indeterminate="true" Color="@Color.Info" />
+            </ProgressIndicatorTemplate>
+
+            <NoItemsTemplate>
+                <p class="no-content">No data to display</p>
+            </NoItemsTemplate>
+
+            <ItemTemplate Context="school">
+                <div class="dropdown-item-container">
+                    <p class="dropdown-item-title">@school.Name</p>
+                </div>
+            </ItemTemplate>
+        </MudAutocomplete>
+
+        <MudSelect @bind-SelectedValues="@SelectedSubjects"
+                   ToStringFunc="@((args) => (args != null) ? args.Name : "")"
+                   Label="Subjects"
+                   MultiSelection="true"
+                   Clearable="true">
+            @foreach (var subject in Subjects)
+            {
+                <MudSelectItem T="SubjectViewModel" Value="subject">
+                    <div class="dropdown-item-container">
+                        <p class="dropdown-item-title">@subject.Name</p>
+                    </div>
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudInputLabel>@("Is Active")</MudInputLabel>
+        <MudCheckBox @bind-Value="ViewModel.Role.IsActive" Color="Color.Primary" />
+
+        <MudButton OnClick="@SubmitHandler" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+            @("Submit")
+        </MudButton>
+        <MudButton OnClick="CancelHandler" Variant="Variant.Text" Class="mt-4 ml-2">
+            @("Cancel")
+        </MudButton>
+    </MudForm>
+
+</MudPaper>

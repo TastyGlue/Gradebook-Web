@@ -1,6 +1,7 @@
 ﻿@page "/manage-teachers/create"
 @inherits ExtendedComponentBase
 
-<Form ViewModel="@ViewModel"
+<Form ViewModel="ViewModel"
+      IsCreate="true" 
       PageTitle="Create Teacher"
-      OnValidSubmit="ValidSubmitHandler" />
+      OnValidSubmit="ValidSubmitHandler"/>

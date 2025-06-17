@@ -113,7 +113,7 @@ namespace Gradebook.API.Services
             return new CustomResult<string>("Deleted successfully!");
         }
 
-        private void AdaptHeadmasterDto(ref Headmaster headmaster, HeadmasterDto dto)
+        private static void AdaptHeadmasterDto(ref Headmaster headmaster, HeadmasterDto dto)
         {
             var jsonString = JsonSerializer.Serialize(dto);
             headmaster = JsonSerializer.Deserialize<Headmaster>(jsonString)!;
