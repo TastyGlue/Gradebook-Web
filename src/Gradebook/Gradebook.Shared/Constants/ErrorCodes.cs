@@ -15,6 +15,7 @@ public static class ErrorCodes
 
     public const string USER_NOT_AUTHENTICATED = "USER_100_401";
     public const string USER_UPDATE_FAILED = "USER_110_500";
+    public const string USER_CREATE_FAILED = "USER_120_400";
 
     public const string ENTITY_NOT_FOUND = "ENTITY_100_404";
     public const string ENTITY_MISMATCH_ID = "ENTITY_100_400";

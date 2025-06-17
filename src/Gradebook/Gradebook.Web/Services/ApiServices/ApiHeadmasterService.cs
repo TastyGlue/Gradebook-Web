@@ -37,7 +37,7 @@ public class ApiHeadmasterService : IApiHeadmasterService
         return CustomResultUtils.GetApiResponse<HeadmasterDto>(response, content);
     }
 
-    public async Task<CustomResult<HeadmasterDto>> CreateHeadmaster(HeadmasterDto dto)
+    public async Task<CustomResult<HeadmasterDto>> CreateHeadmaster(CreateUserRoleDto<HeadmasterDto> dto)
     {
         var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
         var client = _httpClientService.CreateApiClient(token);
@@ -50,7 +50,7 @@ public class ApiHeadmasterService : IApiHeadmasterService
         return CustomResultUtils.GetApiResponse<HeadmasterDto>(response, content);
     }
 
-    public async Task<CustomResult<HeadmasterDto>> EditHeadmaster(Guid id, HeadmasterDto dto)
+    public async Task<CustomResult<HeadmasterDto>> EditHeadmaster(Guid id, CreateUserRoleDto<HeadmasterDto> dto)
     {
         var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
         var client = _httpClientService.CreateApiClient(token);

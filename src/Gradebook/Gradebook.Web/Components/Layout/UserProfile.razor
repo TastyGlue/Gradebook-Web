@@ -1,4 +1,5 @@
 ﻿@inherits ExtendedComponentBase
+@inject ProtectedLocalStorage ProtectedLocalStorage
 
 @*<span class="user-full-name">@FullName</span>*@
 <MudMenu AnchorOrigin="Origin.BottomRight">
@@ -7,7 +8,7 @@
     </ActivatorContent>
     <ChildContent>
         <MudMenuItem Href="/profile">Profile</MudMenuItem>
-        <MudMenuItem>Logout</MudMenuItem>
+        <MudMenuItem OnClick="LogoutHandler">Logout</MudMenuItem>
     </ChildContent>
 </MudMenu>
 
@@ -34,6 +35,13 @@
             else
                 return names[0].Substring(0, 1);
         }
+    }
+
+    private async Task LogoutHandler()
+    {
+        await LocalStorage.DeleteAsync(Constants.ACCESS_TOKEN_KEY);
+
+        NavigationManager.NavigateTo("account/login", forceLoad: true);
     }
 }
 

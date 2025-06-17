@@ -1,8 +1,4 @@
-﻿using Gradebook.API.Interfaces;
-using Gradebook.Data.Models;
-using Gradebook.Shared.Models.DTOs;
-using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using MapsterMapper;
 
 namespace Gradebook.API.Services
 {
@@ -10,11 +6,13 @@ namespace Gradebook.API.Services
     {
         private readonly GradebookDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public HeadmasterService(GradebookDbContext context, IMapper mapper)
+        public HeadmasterService(GradebookDbContext context, IMapper mapper, IUserService userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<CustomResult> GetHeadmaster(Guid id)
@@ -40,27 +38,64 @@ namespace Gradebook.API.Services
             return new CustomResult<IEnumerable<Headmaster>>(headmasters);
         }
 
-        public async Task<CustomResult> CreateHeadmaster(HeadmasterDto headmasterDto)
+        public async Task<CustomResult> CreateHeadmaster(CreateUserRoleDto<HeadmasterDto> createUserRole)
         {
-            var headmaster = _mapper.Map<Headmaster>(headmasterDto);
-            headmaster.Id = Guid.NewGuid();
+            Headmaster headmaster = new();
 
-            _context.Headmasters.Add(headmaster);
-            await _context.SaveChangesAsync();
+            if (createUserRole.FromNewUser)
+            {
+                var result = await _userService.CreateUser(createUserRole.User);
+
+                if (!result.Succeeded)
+                    return result;
+
+                var userId = (result as CustomResult<User>)!.Value!.Id;
+
+                AdaptHeadmasterDto(ref headmaster, createUserRole.Role);
+
+                _context.Headmasters.Add(headmaster);
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(Utils.GetFullExceptionMessage(ex));
+
+                    var errorResult = ex.GetErrorMessageFromException();
+
+                    await _userService.DeleteUser(userId);
+                    await _context.SaveChangesAsync();
+
+                    return new(errorResult);
+                }
+            }
+            else
+            {
+                AdaptHeadmasterDto(ref headmaster, createUserRole.Role);
+
+                _context.Headmasters.Add(headmaster);
+                await _context.SaveChangesAsync();
+            }
 
             return new CustomResult<Headmaster>(headmaster);
         }
 
-        public async Task<CustomResult> UpdateHeadmaster(Guid id, HeadmasterDto headmasterDto)
+        public async Task<CustomResult> UpdateHeadmaster(Guid id, CreateUserRoleDto<HeadmasterDto> createUserRole)
         {
-            if (id != headmasterDto.Id)
+            if (id != createUserRole.Role.Id)
                 return new CustomResult(new ErrorResult("Mismatching ids", ErrorCodes.ENTITY_MISMATCH_ID));
 
             var headmaster = await _context.Headmasters.FindAsync(id);
             if (headmaster == null)
                 return new CustomResult(new ErrorResult("Headmaster not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _context.Entry(headmaster).CurrentValues.SetValues(headmasterDto);
+            var result = await _userService.UpdateUser(createUserRole.Role.User!.Id, createUserRole.User);
+            if (!result.Succeeded)
+                return result;
+
+            _context.Entry(headmaster).CurrentValues.SetValues(createUserRole.Role);
 
             await _context.SaveChangesAsync();
             return new CustomResult<Headmaster>(headmaster);
@@ -76,6 +111,15 @@ namespace Gradebook.API.Services
             await _context.SaveChangesAsync();
 
             return new CustomResult<string>("Deleted successfully!");
+        }
+
+        private void AdaptHeadmasterDto(ref Headmaster headmaster, HeadmasterDto dto)
+        {
+            var jsonString = JsonSerializer.Serialize(dto);
+            headmaster = JsonSerializer.Deserialize<Headmaster>(jsonString)!;
+
+            headmaster.User = null!;
+            headmaster.School = null!;
         }
     }
 }
