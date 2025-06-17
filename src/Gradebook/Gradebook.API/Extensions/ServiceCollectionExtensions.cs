@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
 
         services.AddDataSeeders();
 
+     
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ITimetableService, TimetableService>();
         services.AddTransient<ISubjectService, SubjectService>();
