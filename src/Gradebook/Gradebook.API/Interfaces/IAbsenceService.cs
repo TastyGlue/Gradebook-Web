@@ -9,5 +9,6 @@ namespace Gradebook.API.Interfaces
         Task<CustomResult> CreateAbsence(AbsenceDto absenceDto);
         Task<CustomResult> UpdateAbsence(Guid id, AbsenceDto absenceDto);
         Task<CustomResult> DeleteAbsence(Guid id);
+        Task<CustomResult> GetAbsencesByStudentId(Guid id);
     }
 }

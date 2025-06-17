@@ -80,5 +80,19 @@ namespace Gradebook.API.Services
 
             return new CustomResult<string>("Deleted successfully!");
         }
+        public async Task<CustomResult> GetAbsencesByStudentId(Guid id)
+        {
+            var absence = await _context.Absences
+                .Include(a => a.SchoolYear)
+                .Include(a => a.Student)
+                .Include(a => a.Timetable)
+                .Where(a=>a.StudentId == id)
+                .ToListAsync();
+
+            if (absence == null)
+                return new CustomResult(new ErrorResult($"Absence with ID {id} not found.", ErrorCodes.ENTITY_NOT_FOUND));
+
+            return new CustomResult<List<Absence>>(absence);
+        }
     }
 }

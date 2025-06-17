@@ -29,14 +29,16 @@
                 </MudItem>
                 <MudItem xs="12" sm="6" md="3">
                     <MudPaper Class="pa-4" Elevation="3">
-                        <MudText Typo="Typo.h6">Assignments</MudText>
-                        <MudText Typo="Typo.subtitle1">2 Due This Week</MudText>
+                        <MudText Typo="Typo.h6">Absences</MudText>
+                    <MudText Style="@($"color:{Colors.LightGreen.Default};")" Typo="Typo.subtitle1">Excused: @excusedAbsencesCount</MudText>
+                    <MudText Style="@($"color:{Colors.Red.Default};")" Typo="Typo.subtitle1">Inexcused: @inexcusedAbsencesCount</MudText>
+                    <MudText Typo="Typo.subtitle1">Total: @excusedAbsencesCount+@inexcusedAbsencesCount</MudText>
                     </MudPaper>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="3">
                     <MudPaper Class="pa-4" Elevation="3">
                         <MudText Typo="Typo.h6">Grades</MudText>
-                        <MudText Typo="Typo.subtitle1">Avg: 4.33</MudText>
+                    <MudText Typo="Typo.subtitle1">Avg: @avgGradeString</MudText>
                     </MudPaper>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="3">

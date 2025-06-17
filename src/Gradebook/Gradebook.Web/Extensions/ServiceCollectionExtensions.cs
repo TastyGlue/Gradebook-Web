@@ -33,6 +33,8 @@ public static class ServiceCollectionExtensions
         builder.Services.AddTransient<HttpClientService>();
         builder.Services.AddTransient<TokenService>();
 
+        builder.Services.AddTransient<IApiAbsencesService, ApiAbsencesService>();   
+        builder.Services.AddTransient<IApiStudentGradeService, ApiStudentGradeService>();
         builder.Services.AddTransient<IApiAuthService, ApiAuthService>();
         builder.Services.AddTransient<IApiSchoolService, ApiSchoolService>();
         builder.Services.AddTransient<IApiTeacherService, ApiTeacherService>();
@@ -45,6 +47,7 @@ public static class ServiceCollectionExtensions
         builder.Services.AddScoped<IApiClassService, ApiClassService>();
         builder.Services.AddScoped<IApiSubjectService, ApiSubjectService>();
         builder.Services.AddScoped<IApiSchoolYearService, ApiSchoolYearService>();
+        builder.Services.AddScoped<IApiGradeService, ApiGradeService>();
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();
 

@@ -54,5 +54,13 @@ namespace Gradebook.API.Controllers
             var result = await _service.DeleteAbsence(id);
             return ApiResponseFactory.CreateResponse<string>(result);
         }
+        // GET: api/Absences/student{id}
+        [HttpGet("student/{id}")]
+        public async Task<IActionResult> GetAbsenceByStudentId(Guid id)
+        {
+            var result = await _service.GetAbsencesByStudentId(id);
+
+            return ApiResponseFactory.AdaptAndCreateResponse<List<Absence>, List<AbsenceDto>>(result);
+        }
     }
 }

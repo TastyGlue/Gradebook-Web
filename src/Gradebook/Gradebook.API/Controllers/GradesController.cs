@@ -59,7 +59,14 @@ namespace Gradebook.API.Controllers
 
             return ApiResponseFactory.CreateResponse<string>(result);
         }
+        // GET: api/Grades/Student/{id}
+        [HttpGet("student/{id}")]
+        public async Task<IActionResult> GetStudentGrades(Guid id)
+        {
+            var result = await _service.GetGradeByStudentId(id);
 
+            return ApiResponseFactory.AdaptAndCreateResponse<List<Grade>, List<GradeDto>>(result);
+        }
 
     }
 }
