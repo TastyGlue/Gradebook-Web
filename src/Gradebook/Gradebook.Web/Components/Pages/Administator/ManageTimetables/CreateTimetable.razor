@@ -1,0 +1,100 @@
+﻿@page "/manage-timetables/create"
+@inherits ExtendedComponentBase
+
+<PageTitle>Create Timetable</PageTitle>
+
+<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:600px">
+    <MudText Typo="Typo.h5" Class="mb-4">Create Timetable Entry</MudText>
+
+    <MudForm @ref="_form">
+
+        <!-- School Year -->
+        <MudSelect T="Guid"
+                   Label="School Year"
+                   @bind-Value="ViewModel.SchoolYearId"
+                   Required="true"
+                   RequiredError="Please select a school year"
+                   Class="mb-4">
+            @foreach (var sy in SchoolYears)
+            {
+                <MudSelectItem T="Guid" Value="@(sy.Id)">
+                    <div>@sy.School.Name</div>
+                    <small>Year @sy.Year, Semester @sy.Semester</small>
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Day of Week -->
+        <MudSelect T="DayOfWeek"
+                   Label="Day of Week"
+                   @bind-Value="ViewModel.DayOfWeek"
+                   Required="true"
+                   RequiredError="Please select a day"
+                   Class="mb-4">
+            @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                <MudSelectItem T="DayOfWeek" Value="@day">@day</MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Time of Day -->
+        <MudTimePicker Time="SelectedTime"
+                       TimeChanged="SelectedTimeChanged"
+                       Label="Time of Day"
+                       Required="true"
+                       Class="mb-4" />
+
+        <!-- Teacher -->
+        <MudSelect T="Guid?"
+                   Label="Teacher"
+                   @bind-Value="ViewModel.TeacherId"
+                   Required="true"
+                   RequiredError="Please select a teacher"
+                   Class="mb-4">
+            @foreach (var teacher in Teachers)
+            {
+                <MudSelectItem T="Guid?" Value="@(teacher.Id)">@teacher.User.FullName</MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Class -->
+        <MudSelect T="Guid?"
+                   Label="Class"
+                   @bind-Value="ViewModel.ClassId"
+                   Required="true"
+                   RequiredError="Please select a class"
+                   Class="mb-4">
+            @foreach (var cls in Classes)
+            {
+                <MudSelectItem T="Guid?" Value="@(cls.Id)">@cls.DisplayName</MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Subject -->
+        <MudSelect T="Guid"
+                   Label="Subject"
+                   @bind-Value="ViewModel.SubjectId"
+                   Required="true"
+                   RequiredError="Please select a subject"
+                   Class="mb-4">
+            @foreach (var subject in Subjects)
+            {
+                <MudSelectItem T="Guid" Value="@(subject.Id)">@subject.Name</MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Actions -->
+        <div class="mt-6 flex justify-end">
+            <MudButton OnClick="ValidSubmitHandler" ButtonType="ButtonType.Button"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Class="mr-2">
+                Submit
+            </MudButton>
+            <MudButton OnClick="Cancel"
+                       Variant="Variant.Text">
+                Cancel
+            </MudButton>
+        </div>
+    </MudForm>
+</MudPaper>

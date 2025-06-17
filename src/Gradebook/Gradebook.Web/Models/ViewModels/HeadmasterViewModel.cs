@@ -2,11 +2,13 @@
 
 public class HeadmasterViewModel : ProfileViewModel
 {
+    [Display(Name = "Business Email")]
     [Required]
     [MaxLength(ValidationConstants.TEXT_FIELD_MAX_LENGTH, ErrorMessage = ValidationConstants.MAX_LENGTH)]
     [RegularExpression(Constants.EMAIL_FORMAT_REGEX, ErrorMessage = ValidationConstants.EMAIL)]
     public string BusinessEmail { get; set; } = default!;
 
+    [Display(Name = "Business Phone Number")]
     [Required]
     [MaxLength(ValidationConstants.TEXT_FIELD_MAX_LENGTH, ErrorMessage = ValidationConstants.MAX_LENGTH)]
     [RegularExpression(Constants.PHONE_FORMAT_REGEX, ErrorMessage = ValidationConstants.PHONE_NUMBER)]
@@ -14,7 +16,7 @@ public class HeadmasterViewModel : ProfileViewModel
 
     public Guid SchoolId { get; set; }
 
-    public SchoolDto School { get; set; } = default!;
+    public SchoolViewModel School { get; set; } = default!;
 
     public bool Equals(HeadmasterViewModel? other)
     {

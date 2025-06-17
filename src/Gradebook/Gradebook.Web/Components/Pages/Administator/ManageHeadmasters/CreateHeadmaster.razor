@@ -1,4 +1,7 @@
 ﻿@page "/manage-headmasters/create"
 @inherits ExtendedComponentBase
 
-
+<Form ViewModel="ViewModel"
+      IsCreate="true" 
+      PageTitle="Create Headmaster"
+      OnValidSubmit="ValidSubmitHandler"/>

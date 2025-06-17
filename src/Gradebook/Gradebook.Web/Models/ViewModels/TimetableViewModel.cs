@@ -23,5 +23,6 @@
         public Guid SubjectId { get; set; }
 
         public SubjectViewModel Subject { get; set; } = default!;
+
     }
 }
