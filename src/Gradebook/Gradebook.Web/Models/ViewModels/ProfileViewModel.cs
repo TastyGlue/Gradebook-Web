@@ -6,7 +6,7 @@ public class ProfileViewModel
 
     public Guid UserId { get; set; }
 
-    public UserViewModel? User { get; set; } = default!;
+    public UserViewModel User { get; set; } = default!;
 
     public RoleType RoleType { get; set; }
 

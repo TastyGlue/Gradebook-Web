@@ -29,7 +29,7 @@
             return CustomResultUtils.GetApiResponse<TeacherDto>(response, content);
         }
 
-        public async Task<CustomResult<TeacherDto>> CreateTeacher(TeacherDto dto)
+        public async Task<CustomResult<TeacherDto>> CreateTeacher(CreateUserRoleDto<TeacherDto> dto)
         {
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);
@@ -38,7 +38,7 @@
             return CustomResultUtils.GetApiResponse<TeacherDto>(response, content);
         }
 
-        public async Task<CustomResult<TeacherDto>> EditTeacher(Guid id, TeacherDto dto)
+        public async Task<CustomResult<TeacherDto>> EditTeacher(Guid id, CreateUserRoleDto<TeacherDto> dto)
         {
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);

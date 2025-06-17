@@ -6,8 +6,8 @@ namespace Gradebook.API.Interfaces
     {
         Task<CustomResult> GetTeacher(Guid id);
         Task<CustomResult> GetAllTeachersAsync();
-        Task<CustomResult> CreateTeacher(TeacherDto teacherDto);
-        Task<CustomResult> UpdateTeacher(Guid id, TeacherDto teacherDto);
+        Task<CustomResult> CreateTeacher(CreateUserRoleDto<TeacherDto> createUserRole);
+        Task<CustomResult> UpdateTeacher(Guid id, CreateUserRoleDto<TeacherDto> dto);
         Task<CustomResult> DeleteTeacher(Guid id);
     }
 }
