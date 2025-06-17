@@ -1,4 +1,4 @@
-﻿namespace Gradebook.Web.Components.Shared;
+﻿namespace Gradebook.Web.Components.Abstract;
 
 public partial class CreateUserRoleBaseComponent<T> : ExtendedComponentBase where T : ProfileViewModel, new()
 {
