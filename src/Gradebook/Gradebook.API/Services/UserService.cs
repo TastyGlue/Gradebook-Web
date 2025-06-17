@@ -41,11 +41,15 @@ namespace Gradebook.API.Services
 
         public async Task<CustomResult> CreateUser(UserDto userDto)
         {
-            var user = _mapper.Map<User>(userDto);
-            user.Id = Guid.NewGuid();
+            var user = userDto.Adapt<User>();
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            var result = await _userManager.CreateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var details = result.Errors.Select(x => x.Description).ToList();
+                var error = new ErrorResult("Creating user failed.", ErrorCodes.USER_CREATE_FAILED, details);
+            }
 
             return new CustomResult<User>(user);
         }
@@ -59,7 +63,6 @@ namespace Gradebook.API.Services
             if (user == null)
                 return new CustomResult(new ErrorResult("User not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            user.UserName = userDto.UserName;
             user.Email = userDto.Email;
             user.PhoneNumber = userDto.PhoneNumber;
             user.FullName = userDto.FullName;

@@ -1,0 +1,7 @@
+﻿@inherits ComponentBase
+
+<MudTextField @bind-Value="ViewModel.Email" For="@(() => ViewModel.Email)" Label="Email" />
+<MudTextField @bind-Value="ViewModel.FullName" For="@(() => ViewModel.FullName)" Label="Full Name" />
+<MudTextField @bind-Value="ViewModel.PhoneNumber" For="@(() => ViewModel.PhoneNumber)" Label="Phone Number" />
+<MudInputLabel>@("Is Active")</MudInputLabel>
+<MudCheckBox @bind-Value="ViewModel.IsActive" Color="Color.Primary" />

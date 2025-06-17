@@ -28,12 +28,15 @@ public static class ServiceCollectionExtensions
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
+        MapperConfig.ConfigureMappings();
+
         builder.Services.AddTransient<HttpClientService>();
         builder.Services.AddTransient<TokenService>();
 
         builder.Services.AddTransient<IApiAuthService, ApiAuthService>();
         builder.Services.AddTransient<IApiSchoolService, ApiSchoolService>();
         builder.Services.AddTransient<IApiHeadmasterService, ApiHeadmasterService>();
+        builder.Services.AddTransient<IApiUserService, ApiUserService>();
 
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();
