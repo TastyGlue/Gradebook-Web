@@ -9,6 +9,7 @@
 
 
 <MudLayout>
+
     <MudPaper Class="pa-6 mb-6 greeting-banner" Elevation="4" Square="false" Style="border-radius: 16px;">
         <MudText Typo="Typo.h4" Class="mb-2" Color="Color.Primary">
             👋 Welcome back, <b>@userStateContainer.FullName</b>! (@userStateContainer.Role)
@@ -17,40 +18,38 @@
             Hope you're ready to learn something great today.
         </MudText>
     </MudPaper>
-    
-        <!-- Main content -->
-        <MudContainer MaxWidth="MaxWidth.False" Class="p-4">
-            <MudGrid GutterSize="4">
-                <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4" Elevation="3">
-                        <MudText Typo="Typo.h6">Courses</MudText>
-                        <MudText Typo="Typo.subtitle1">5 Enrolled</MudText>
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4" Elevation="3">
-                        <MudText Typo="Typo.h6">Absences</MudText>
+
+    <!-- Main content -->
+    <MudContainer MaxWidth="MaxWidth.False" Class="p-4">
+        <MudGrid GutterSize="4">
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Elevation="3">
+                    <MudText Typo="Typo.h6">Courses</MudText>
+                    <MudText Typo="Typo.subtitle1">5 Enrolled</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Elevation="3">
+                    <MudText Typo="Typo.h6">Absences</MudText>
                     <MudText Style="@($"color:{Colors.LightGreen.Default};")" Typo="Typo.subtitle1">Excused: @excusedAbsencesCount</MudText>
                     <MudText Style="@($"color:{Colors.Red.Default};")" Typo="Typo.subtitle1">Inexcused: @inexcusedAbsencesCount</MudText>
-                    <MudText Typo="Typo.subtitle1">Total: @excusedAbsencesCount+@inexcusedAbsencesCount</MudText>
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4" Elevation="3">
-                        <MudText Typo="Typo.h6">Grades</MudText>
-                    <MudText Typo="Typo.subtitle1">Avg: @avgGradeString</MudText>
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4" Elevation="3">
-                        <MudText Typo="Typo.h6">Messages</MudText>
-                        <MudText Typo="Typo.subtitle1">1 Unread</MudText>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
+                    <MudText Typo="Typo.subtitle1">Total: @(excusedAbsencesCount + inexcusedAbsencesCount)</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Elevation="3">
+                    <MudText Typo="Typo.h6">Grades</MudText>
+                    <MudText Style="@(averageGrade == 2 ? $"color:{Colors.Red.Default}" : averageGrade > 4 ? $"color:{Colors.Green.Default}" : $"color:{Colors.Orange.Default}")" Typo="Typo.subtitle1">Avgerage: @avgGradeString</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Elevation="3">
+                    <MudText Typo="Typo.h6">Messages</MudText>
+                    <MudText Typo="Typo.subtitle1">1 Unread</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     </MudContainer>
-    <ExtendedAuthorizeView Roles="@([RoleType.Student])">
-    </ExtendedAuthorizeView>
 </MudLayout>
 
 <style>

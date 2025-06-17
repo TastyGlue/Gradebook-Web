@@ -1,0 +1,49 @@
+﻿@inherits ExtendedComponentBase
+@using MudBlazor
+
+@* Footer.razor *@
+<MudPaper Class="mud-theme-primary footer" Elevation="0">
+    <MudContainer Class="d-flex flex-wrap justify-content-between align-items-center">
+        <MudStack Spacing="1" AlignItems="AlignItems.Start">
+            <MudText Typo="Typo.h6">Gradebook</MudText>
+            <MudText Typo="Typo.body2">© @DateTime.Now.Year MyApp, Inc. All rights reserved.</MudText>
+        </MudStack>
+
+        <MudStack Spacing="2" Direction="Row" AlignItems="AlignItems.Center">
+            <div class="fac-num">
+                <MudText Class="">F101308</MudText>
+                <MudText Class="">F100926</MudText>
+                <MudText Class="">F100922</MudText>
+            </div>
+        </MudStack>
+    </MudContainer>
+</MudPaper>
+
+<style>
+    .footer {
+        padding: 1rem 1rem 1rem 0rem;
+    }
+
+    .mud-container {
+        padding-left: 0;
+    }
+
+    .fac-num {
+        display: flex;
+        flex-wrap: wrap; /* allow wrapping on small widths */
+        justify-content: flex-end; /* keep content aligned right */
+        gap: 5rem; /* space between items */
+        width: 100%; /* take full width of parent */
+        max-width: 400px; /* optional max width */
+        margin-left: auto; /* push container to right */
+        
+    }
+
+        .fac-num > * {
+            flex: 1 1 80px; /* grow and shrink, but not smaller than 80px */
+            min-width: 80px; /* prevent items from getting too narrow */
+            text-align: right; /* align text inside each item to right */
+        }
+
+    
+</style>

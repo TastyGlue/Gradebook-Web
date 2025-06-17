@@ -9,21 +9,29 @@
 {
     <MudLayout>
         <MudAppBar Elevation="4">
+            
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => isDrawerOpen = !isDrawerOpen)" />
+            <MudImage Src="Images/raw.png" Alt="Logo"
+                      Style="width:3.5rem; height:auto; display:block;padding-left:0rem; margin-right:0.5rem; " />
             <MudSpacer />
-            <RoleIcon Size="Size.Small" />
-            <UserProfile /> 
+            
+            <UserProfile />
+            <span class="role-icon"><RoleIcon Size="Size.Small" /></span>
             <MudDrawer @bind-Open="isDrawerOpen" ClipMode="DrawerClipMode.Docked" Elevation="8">
                 <NavMenu />
             </MudDrawer>
         </MudAppBar>
-        <MudMainContent>
+        <MudMainContent Class="flex-grow-1">
             <MudOverlay Visible="IsLoading" ZIndex="1010" LightBackground Absolute="true">
                 <MudProgressCircular Size="@Size.Large" Indeterminate="true" Color="@Color.Primary" />
             </MudOverlay>
             @Body
         </MudMainContent>
+        <div class="sticky-bottom">
+        <Footer/>
+        </div>
     </MudLayout>
+    
 }
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -37,7 +45,21 @@
         background-color: transparent !important;
         width: 100%;
         height: 100%;
-    }</style>
+    }
+    .role-icon
+    {
+        margin-top:0.5rem;
+        margin-left:1rem;
+    }
+
+    .sticky-bottom {
+        position: fixed;
+        bottom: 0;
+        width: 100%; /* optional */
+        background-color: #fff; /* optional */
+    }
+
+</style>
 
 
     
