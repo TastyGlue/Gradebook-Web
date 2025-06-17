@@ -1,0 +1,15 @@
+﻿@using MudBlazor
+
+@inherits ExtendedComponentBase
+@inject UserStateContainer userStateContainer
+
+<MudIcon Class="profile-icon" Size="@size" Icon="@GetProfileIcon(userStateContainer.Role)" />
+
+<style>
+    .profile-icon
+    {
+        width: 1.5rem;
+         
+        margin-right:0.5rem;
+    }
+</style>
