@@ -5,6 +5,10 @@
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
+        public Guid SchoolId { get; set; }
+
+        public SchoolViewModel School { get; set; } = default!;
+
         public bool Equals(SubjectViewModel? other)
         {
             if (ReferenceEquals(null, other)) return false;
