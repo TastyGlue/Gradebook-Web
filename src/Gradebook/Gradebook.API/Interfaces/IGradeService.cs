@@ -9,6 +9,8 @@ namespace Gradebook.API.Interfaces
         Task<CustomResult> CreateGrade(GradeDto gradeDto);
         Task<CustomResult> UpdateGrade(Guid id, GradeDto gradeDto);
         Task<CustomResult> DeleteGrade(Guid id);
-   
+        Task<CustomResult> GetGradeByStudentId(Guid id);
+
+
     }
 }
