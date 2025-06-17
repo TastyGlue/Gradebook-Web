@@ -1,0 +1,58 @@
+﻿@page "/profile"
+@using MudBlazor
+
+@inherits ExtendedComponentBase
+@inject UserStateContainer userStateContainer
+
+<MudPaper Elevation="2" Class="p-4 mx-auto mt-6" Style="max-width: 50rem;padding:1rem;">
+    <MudStack Spacing="2">
+        <!-- Profile Header -->
+        <MudStack Direction="Row" AlignItems="AlignItems.Center" Spacing="2">
+            <MudAvatar Class="avatar" Size="Size.Large" Color="Color.Secondary">@Initials</MudAvatar>
+            <MudText Typo="Typo.h5">@userStateContainer.FullName</MudText>
+        </MudStack>
+
+        <!-- Editable Info -->
+        <MudDivider Class="my-2" />
+        <MudTextField @bind-Value="FullName" Label="Full Name" Variant="Variant.Outlined" />
+        <MudTextField ReadOnly="true" @bind-Value="UserEmail" Label="Email" Variant="Variant.Outlined" />
+        <MudDatePicker Label="yyyy-MM-dd" Editable="true" @bind-Date="BirthDate" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="ISO Date" Variant="Variant.Outlined" />
+
+        <!-- Save Button -->
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveProfile">
+            <MudIcon Icon="@Icons.Material.Filled.Save" /> Save
+        </MudButton>
+
+        <!-- Tabs Section -->
+        <MudTabs Rounded="true" Class="mt-4">
+            <!-- Diary Tab -->
+            <MudTabPanel Text="Diary">
+                <MudText Typo="Typo.h6" Class="w-50 p-3">Diary</MudText>
+                @foreach (var entry in DiaryEntries)
+                {
+                    <MudCard Class="my-2">
+                        <MudCardContent>
+                            <MudText Typo="Typo.subtitle2">@entry.Date.ToShortDateString()</MudText>
+                            <MudText>@entry.Content</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                }
+            </MudTabPanel>
+
+            <!-- Settings Tab -->
+            <MudTabPanel Text="Settings">
+                <MudText Typo="Typo.h6" Class="w-50 p-3">Settings</MudText>
+                <MudSwitch T="bool" @bind-Checked="NotificationsEnabled" Label="Enable Notifications" Class="my-2" />
+                <MudSwitch T="bool" Label="Dark Mode (Coming Soon)" Disabled="true" />
+            </MudTabPanel>
+        </MudTabs>
+    </MudStack>
+</MudPaper>
+<style>
+.avatar
+{
+    margin-top:1rem;
+}
+</style>
+
+

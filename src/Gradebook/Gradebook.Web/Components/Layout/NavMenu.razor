@@ -4,16 +4,16 @@
 
 <div class="nav-grid">
     <span @onclick="@(() => NavigationManager.NavigateTo("/dashboard"))">
-        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Dashboard" />
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Dashboard" class="mr-3" />
         <MudNavLink Match="NavLinkMatch.Prefix" ActiveClass="bold" Href="/dashboard">Dashboard</MudNavLink>
     </span>
     <span>
-        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.CalendarToday" />
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.CalendarToday" class="mr-3" />
         @*Href varies depending on the role*@
         <MudNavLink Match="NavLinkMatch.Prefix" ActiveClass="bold" Href="calendar">Timetable</MudNavLink>
     </span>
     <span>
-        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Grade" />
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Grade" class="mr-3" />
         @*Href varies depending on the role*@
         <MudNavLink Match="NavLinkMatch.Prefix" ActiveClass="bold" Href="grades">Grades</MudNavLink>
     </span>
@@ -27,15 +27,15 @@
             </TitleContent>
             <ChildContent>
                 @*Admin only*@
-                <MudNavLink Href="">Manage Headmasters</MudNavLink>
+                <MudNavLink Href="/manage-headmasters">Manage Headmasters</MudNavLink>
                 @*Admin only*@
-                <MudNavLink Href="">Manage Schools</MudNavLink>
+                <MudNavLink Href="/manage-schools">Manage Schools</MudNavLink>
                 @*Headmaster only*@
-                <MudNavLink Href="">Manage Teachers</MudNavLink>
+                <MudNavLink Href="/manage-teachers">Manage Teachers</MudNavLink>
                 @*Headmaster only*@
-                <MudNavLink Href="">Manage Students</MudNavLink>
+                <MudNavLink Href="/manage-students">Manage Students</MudNavLink>
                 @*Headmaster only*@
-                <MudNavLink Href="">Manage Parents</MudNavLink>
+                <MudNavLink Href="/manage-parents">Manage Parents</MudNavLink>
                 @*Headmaster only*@
                 <MudNavLink Href="">Manage Classes</MudNavLink>
                 @*Headmaster only*@
@@ -44,6 +44,3 @@
         </MudExpansionPanel>
     </span>
 </div>
-@code {
-
-}

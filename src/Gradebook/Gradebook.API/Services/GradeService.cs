@@ -36,6 +36,21 @@ namespace Gradebook.API.Services
 
             return new CustomResult<Grade>(grade);
         }
+        public async Task<CustomResult> GetGradeByStudentId(Guid id)
+        {
+            var grades = await _context.Grades
+                .Include(g => g.SchoolYear)
+                .Include(g => g.Subject)
+                .Include(g => g.Student)
+                .Include(g => g.Teacher)
+                .Where(g => g.StudentId == id)
+                .ToListAsync();
+
+            if (grades == null)
+                return new(new ErrorResult($"Grade with ID {id} not found.", ErrorCodes.ENTITY_NOT_FOUND));
+
+            return new CustomResult<List<Grade>>(grades);
+        }
         public async Task<CustomResult> GetAllGradesAsync()
         {
             var grades = await _context.Grades

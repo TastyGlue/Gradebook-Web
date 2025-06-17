@@ -4,7 +4,7 @@ namespace Gradebook.Web.Components.Layout
 {
     public partial class MainLayout : LayoutComponentBase
     {
-        private bool isDrawerOpen = true;
+        private bool isDrawerOpen = false;
       
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; } = default!;
