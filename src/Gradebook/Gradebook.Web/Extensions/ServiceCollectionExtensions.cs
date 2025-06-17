@@ -41,6 +41,7 @@ public static class ServiceCollectionExtensions
         builder.Services.AddScoped<IApiClassService, ApiClassService>();
         builder.Services.AddScoped<IApiSubjectService, ApiSubjectService>();
         builder.Services.AddScoped<IApiSchoolYearService, ApiSchoolYearService>();
+        builder.Services.AddScoped<IApiGradeService, ApiGradeService>();
         builder.Services.AddScoped<LoaderService>();
         builder.Services.AddScoped<UserStateContainer>();
 

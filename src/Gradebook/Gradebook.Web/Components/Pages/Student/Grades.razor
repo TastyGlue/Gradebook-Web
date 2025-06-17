@@ -1,0 +1,43 @@
+﻿@page "/grades"
+@inherits ExtendedComponentBase
+
+<PageTitle>@PageTitle</PageTitle>
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
+
+    <MudDataGrid T="GradeViewModel"
+             Items="_grades"
+             Filterable="true"
+             FilterMode="DataGridFilterMode.Simple"
+             Hover="true"
+             Loading="_isLoading"
+             Elevation="1"
+             Class="mb-4">
+
+    <ToolBarContent>
+        <MudTextField @bind-Value="_searchString"
+                      Placeholder="Search subjects..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"
+                      Class="mb-4" />
+    </ToolBarContent>
+
+    <Columns>
+        <PropertyColumn Property="x => x.Subject.Name" Title="Subject" />
+        <PropertyColumn Property="x => x.Value" Title="Grade" />
+        <PropertyColumn Property="x => x.Date" Title="Date" />
+    </Columns>
+
+    <NoRecordsContent>
+        <MudText>No grades to display.</MudText>
+    </NoRecordsContent>
+
+@*     <FooterContent>
+        <MudText Typo="Typo.subtitle1">
+            Average: @(_grades.Any() ? _grades.Average(g => g.Value).ToString("F2") : "N/A")
+        </MudText>
+    </FooterContent> *@
+</MudDataGrid>
+</MudPaper>
