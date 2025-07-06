@@ -118,3 +118,16 @@ h1:focus {
 .school-name {
     color: rgb(86 86 86);
 }
+
+.form-paper {
+    max-width: 50rem;
+    margin: auto;
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.custom-form {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
