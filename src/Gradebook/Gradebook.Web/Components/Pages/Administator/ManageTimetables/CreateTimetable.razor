@@ -31,7 +31,7 @@
                    Required="true"
                    RequiredError="Please select a day"
                    Class="mb-4">
-            @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+            @foreach (DayOfWeek day in Utils.GetWeekDays())
             {
                 <MudSelectItem T="DayOfWeek" Value="@day">@day</MudSelectItem>
             }

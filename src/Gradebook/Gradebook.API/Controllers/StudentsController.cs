@@ -41,9 +41,9 @@ namespace Gradebook.API.Controllers
 
         // PUT: api/Students/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(Guid id, [FromBody] StudentDto studentDto)
+        public async Task<IActionResult> UpdateStudent(Guid id, [FromBody] CreateUserRoleDto<StudentDto> createUserRole)
         {
-            var result = await _service.UpdateStudent(id, studentDto);
+            var result = await _service.UpdateStudent(id, createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Student, StudentDto>(result);
         }
 

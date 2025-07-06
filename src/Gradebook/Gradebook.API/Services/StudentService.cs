@@ -1,20 +1,19 @@
 ﻿using Gradebook.API.Interfaces;
-using Gradebook.Data.Models;
-using Gradebook.Shared.Models.DTOs;
 using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
 
 namespace Gradebook.API.Services
 {
     public class StudentService : IStudentService
     {
         private readonly GradebookDbContext _context;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public StudentService(GradebookDbContext context, IMapper mapper)
+        public StudentService(GradebookDbContext context, IMapper mapper, IUserService userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<CustomResult> GetStudent(Guid id)
@@ -61,16 +60,20 @@ namespace Gradebook.API.Services
             return new CustomResult<Student>(student);
         }
 
-        public async Task<CustomResult> UpdateStudent(Guid id, StudentDto studentDto)
+        public async Task<CustomResult> UpdateStudent(Guid id, CreateUserRoleDto<StudentDto> createUserRole)
         {
-            if (id != studentDto.Id)
+            if (id != createUserRole.Role.Id)
                 return new CustomResult(new ErrorResult("Mismatching ids", ErrorCodes.ENTITY_MISMATCH_ID));
 
             var student = await _context.Students.FindAsync(id);
             if (student == null)
                 return new CustomResult(new ErrorResult("Student not found", ErrorCodes.ENTITY_NOT_FOUND));
 
-            _context.Entry(student).CurrentValues.SetValues(studentDto);
+            var result = await _userService.UpdateUser(createUserRole.Role.User!.Id, createUserRole.User);
+            if (!result.Succeeded)
+                return result;
+
+            _context.Entry(student).CurrentValues.SetValues(createUserRole.Role);
 
             await _context.SaveChangesAsync();
             return new CustomResult<Student>(student);

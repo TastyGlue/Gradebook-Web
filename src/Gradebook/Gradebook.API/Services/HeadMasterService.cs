@@ -1,17 +1,13 @@
-﻿using MapsterMapper;
-
-namespace Gradebook.API.Services
+﻿namespace Gradebook.API.Services
 {
     public class HeadmasterService : IHeadmasterService
     {
         private readonly GradebookDbContext _context;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public HeadmasterService(GradebookDbContext context, IMapper mapper, IUserService userService)
+        public HeadmasterService(GradebookDbContext context, IUserService userService)
         {
             _context = context;
-            _mapper = mapper;
             _userService = userService;
         }
 

@@ -2,7 +2,7 @@
 {
     public class StudentViewModel : ProfileViewModel
     {
-        public Guid? SchoolId { get; set; }
+        public Guid SchoolId { get; set; }
 
         public SchoolViewModel School { get; set; } = default!;
 

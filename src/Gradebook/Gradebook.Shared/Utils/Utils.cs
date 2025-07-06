@@ -37,6 +37,13 @@ public static class Utils
             return Enum.ToString();
     }
 
+    public static Array GetWeekDays()
+    {
+        return Enum.GetValues<DayOfWeek>()
+            .Where(day => day != DayOfWeek.Saturday && day != DayOfWeek.Sunday)
+            .ToArray();
+    }
+
     public static bool LooksLikeJson(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
