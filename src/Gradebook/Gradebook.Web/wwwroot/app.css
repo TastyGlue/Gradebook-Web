@@ -131,3 +131,7 @@ h1:focus {
     flex-direction: column;
     gap: .5rem;
 }
+
+.mud-checkbox .mud-icon-button {
+    padding: 0;
+}
