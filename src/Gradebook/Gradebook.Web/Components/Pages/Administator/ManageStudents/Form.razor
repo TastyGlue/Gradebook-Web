@@ -1,4 +1,4 @@
-﻿@inherits CreateUserRoleBaseComponent<TeacherViewModel>
+﻿@inherits CreateUserRoleBaseComponent<StudentViewModel>
 
 <PageTitle>@PageTitle</PageTitle>
 
@@ -71,12 +71,6 @@
             <UserForm @bind-ViewModel="ViewModel.User" />
         }
 
-        <!-- Business Email -->
-        <MudTextField @bind-Value="ViewModel.Role.BusinessEmail" For="@(() => ViewModel.Role.BusinessEmail)" Label="Business Email" />
-
-        <!-- Business Phone Number -->
-        <MudTextField @bind-Value="ViewModel.Role.BusinessPhoneNumber" For="@(() => ViewModel.Role.BusinessPhoneNumber)" Label="Business Phone Number" />
-
         <!-- School -->
         <MudAutocomplete T="SchoolViewModel"
                          Value="ViewModel.Role.School"
@@ -105,21 +99,31 @@
             </ItemTemplate>
         </MudAutocomplete>
 
-        <!-- Subject -->
-        <MudSelect @bind-SelectedValues="@SelectedSubjects"
-                   ToStringFunc="@((args) => (args != null) ? args.Name : "")"
-                   Label="Subjects"
-                   MultiSelection="true"
-                   Clearable="true">
-            @foreach (var subject in Subjects)
-            {
-                <MudSelectItem T="SubjectViewModel" Value="subject">
-                    <div class="dropdown-item-container">
-                        <p class="dropdown-item-title">@subject.Name</p>
-                    </div>
-                </MudSelectItem>
-            }
-        </MudSelect>
+        <!-- Class -->
+        <MudAutocomplete T="ClassViewModel"
+                         Value="ViewModel.Role.Class"
+                         ValueChanged="SelectedClassChanged"
+                         Label="Class"
+                         SearchFunc="SearchClasses"
+                         ToStringFunc="@(args => (args is null) ? "" : args.DisplayName)"
+                         CoerceText="true"
+                         Variant="Variant.Text"
+                         Clearable="true"
+                         ShowProgressIndicator="true" >
+            <ProgressIndicatorTemplate>
+                <MudProgressLinear Size="Size.Small" Indeterminate="true" Color="@Color.Info" />
+            </ProgressIndicatorTemplate>
+
+            <NoItemsTemplate>
+                <p class="no-content">No data to display</p>
+            </NoItemsTemplate>
+
+            <ItemTemplate Context="classObj">
+                <div class="dropdown-item-container">
+                    <p class="dropdown-item-title">@classObj.DisplayName</p>
+                </div>
+            </ItemTemplate>
+        </MudAutocomplete>
 
         <!-- Is Active -->
         <MudInputLabel>@("Is Active")</MudInputLabel>

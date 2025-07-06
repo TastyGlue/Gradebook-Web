@@ -2,10 +2,10 @@
 
 <PageTitle>@PageTitle</PageTitle>
 
-<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:500px">
+<MudPaper Class="form-paper">
     <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
 
-    <EditForm Model="ViewModel" OnValidSubmit="@ValidSubmitHandler" >
+    <EditForm Model="ViewModel" OnValidSubmit="@ValidSubmitHandler" class="custom-form">
         <DataAnnotationsValidator />
 
         <MudTextField @bind-Value="ViewModel.Name" Label="Name" For="@(() => ViewModel.Name)" />

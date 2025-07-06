@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using System.Reflection;
 
 namespace Gradebook.Shared.Utils;
 
@@ -23,6 +24,24 @@ public static class Utils
         }
 
         return errorMessage.ToString();
+    }
+
+    public static string GetEnumDisplayName<TEnum>(this TEnum Enum)
+        where TEnum : Enum
+    {
+        var MemberInfo = typeof(TEnum).GetMember(Enum.ToString());
+        var displayAttribute = MemberInfo[0].GetCustomAttribute<DisplayAttribute>();
+        if (displayAttribute != null)
+            return displayAttribute.GetName() ?? Enum.ToString();
+        else
+            return Enum.ToString();
+    }
+
+    public static Array GetWeekDays()
+    {
+        return Enum.GetValues<DayOfWeek>()
+            .Where(day => day != DayOfWeek.Saturday && day != DayOfWeek.Sunday)
+            .ToArray();
     }
 
     public static bool LooksLikeJson(string content)

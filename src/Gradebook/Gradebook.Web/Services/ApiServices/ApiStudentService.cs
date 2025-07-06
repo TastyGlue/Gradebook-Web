@@ -38,7 +38,7 @@
             return CustomResultUtils.GetApiResponse<StudentDto>(response, content);
         }
 
-        public async Task<CustomResult<StudentDto>> EditStudent(Guid id, StudentDto dto)
+        public async Task<CustomResult<StudentDto>> EditStudent(Guid id, CreateUserRoleDto<StudentDto> dto)
         {
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);

@@ -2,26 +2,28 @@
 
 <PageTitle>@PageTitle</PageTitle>
 
-<MudPaper Class="pa-4">
+<MudPaper Class="form-paper">
     <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
 
-    <MudForm @ref="FormRef">
+    <MudForm @ref="FormRef" Class="custom-form">
 
+        <!-- Tabs -->
         @if (IsCreate)
         {
             <MudToggleGroup Value="SelectedCreationType"
                             ValueChanged="@SelectedCreationTypeChanged"
-                            T="string"
+                            T="UserCreationType"
                             CheckMark="false"
                             Size="Size.Medium">
-                @foreach (string creationType in CreationTypes)
+                @foreach (UserCreationType creationType in Enum.GetValues(typeof(UserCreationType)))
                 {
-                    <MudToggleItem Value="@creationType" />
+                    <MudToggleItem Text="@creationType.GetEnumDisplayName()" Value="@creationType" />
                 }
             </MudToggleGroup>
         }
 
-        @if (SelectedCreationType == CreationTypes[0])
+        <!-- Existing User Select -->
+        @if (SelectedCreationType == UserCreationType.Existing)
         {
             @if (IsCreate)
             {
@@ -69,9 +71,13 @@
             <UserForm @bind-ViewModel="ViewModel.User" />
         }
 
+        <!-- Business Email -->
         <MudTextField @bind-Value="ViewModel.Role.BusinessEmail" For="@(() => ViewModel.Role.BusinessEmail)" Label="Business Email" />
+
+        <!-- Business Phone Number -->
         <MudTextField @bind-Value="ViewModel.Role.BusinessPhoneNumber" For="@(() => ViewModel.Role.BusinessPhoneNumber)" Label="Business Phone Number" />
 
+        <!-- School -->
         <MudAutocomplete T="SchoolViewModel"
                          @bind-Value="ViewModel.Role.School"
                          Label="School"
@@ -98,6 +104,7 @@
             </ItemTemplate>
         </MudAutocomplete>
         
+        <!-- Is Active -->
         <MudInputLabel>@("Is Active")</MudInputLabel>
         <MudCheckBox @bind-Value="ViewModel.Role.IsActive" Color="Color.Primary" />
 

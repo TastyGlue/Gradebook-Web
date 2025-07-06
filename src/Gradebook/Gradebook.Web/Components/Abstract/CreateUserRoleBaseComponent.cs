@@ -6,8 +6,7 @@ public partial class CreateUserRoleBaseComponent<T> : ExtendedComponentBase wher
     [Inject] protected IApiUserService ApiUserService { get; set; } = default!;
     protected IEnumerable<UserViewModel> Users { get; set; } = [];
 
-    protected static readonly string[] CreationTypes = ["From existing User", "Create new user"];
-    protected string SelectedCreationType { get; set; } = "From existing User";
+    protected UserCreationType SelectedCreationType { get; set; } = UserCreationType.Existing;
 
     protected async Task<IEnumerable<UserViewModel>> SearchUsers(string searchValue, CancellationToken token)
     {
@@ -39,14 +38,14 @@ public partial class CreateUserRoleBaseComponent<T> : ExtendedComponentBase wher
         ViewModel.Role.UserId = value.Id;
     }
 
-    protected void SelectedCreationTypeChanged(string value)
+    protected void SelectedCreationTypeChanged(UserCreationType value)
     {
         SelectedCreationType = value;
 
-        if (value == CreationTypes[0])
+        if (value == UserCreationType.Existing)
             ViewModel.User = new();
 
-        ViewModel.FromNewUser = value == CreationTypes[1];
+        ViewModel.FromNewUser = value == UserCreationType.New;
     }
 
     protected static IEnumerable<string> UserValidity(UserViewModel value)

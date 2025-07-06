@@ -3,10 +3,10 @@
 
 <PageTitle>Create Timetable</PageTitle>
 
-<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:600px">
+<MudPaper Class="form-paper">
     <MudText Typo="Typo.h5" Class="mb-4">Create Timetable Entry</MudText>
 
-    <MudForm @ref="_form">
+    <MudForm @ref="_form" Class="custom-form">
 
         <!-- School Year -->
         <MudSelect T="Guid"
@@ -31,7 +31,7 @@
                    Required="true"
                    RequiredError="Please select a day"
                    Class="mb-4">
-            @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+            @foreach (DayOfWeek day in Utils.GetWeekDays())
             {
                 <MudSelectItem T="DayOfWeek" Value="@day">@day</MudSelectItem>
             }
