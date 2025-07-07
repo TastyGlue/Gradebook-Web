@@ -1,4 +1,6 @@
-﻿namespace Gradebook.Web.Extensions;
+﻿using MudExtensions.Services;
+
+namespace Gradebook.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -16,6 +18,7 @@ public static class ServiceCollectionExtensions
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
         });
         builder.Services.AddMudLocalization();
+        builder.Services.AddMudExtensions();
 
         // Add Authentication and Authorization
         builder.Services.AddAuthorizationPolicies();

@@ -4,7 +4,7 @@
     {
         Task<CustomResult<IEnumerable<ParentDto>>> GetParents();
         Task<CustomResult<ParentDto>> GetParent(Guid id);
-        Task<CustomResult<ParentDto>> CreateParent(ParentDto dto);
+        Task<CustomResult<ParentDto>> CreateParent(CreateUserRoleDto<ParentDto> dto);
         Task<CustomResult<ParentDto>> EditParent(Guid id, CreateUserRoleDto<ParentDto> dto);
     }
 }

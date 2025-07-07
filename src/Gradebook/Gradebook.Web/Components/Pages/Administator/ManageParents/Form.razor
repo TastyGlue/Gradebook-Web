@@ -72,25 +72,33 @@
         }
 
         <!-- Subject -->
-        <MudSelect @bind-SelectedValues="@SelectedStudents"
-                   ToStringFunc="@((args) => (args != null) ? args.User.ToString() : "")"
-                   Label="Students"
-                   MultiSelection="true"
-                   Clearable="true">
-            @foreach (var student in FilteredStudents)
-            {
-                <MudSelectItem T="StudentViewModel" Value="student">
-                    <div class="dropdown-item-container">
-                        <p class="dropdown-item-title">@student.User.ToString()</p>
-                        <p class="dropdown-item-subtitle">@student.School.Name</p>
-                        @if (student.ClassId is not null && student.Class is not null)
-                        {
-                            <p class="dropdown-item-subtitle">@student.Class.DisplayName</p>
-                        }
-                    </div>
-                </MudSelectItem>
-            }
-        </MudSelect>
+        @* <MudInputLabel>@("Students")</MudInputLabel> *@
+        <MudSelectExtended @ref="StudentSelect"
+                           @bind-SelectedValues="@SelectedStudents"
+                           ShrinkLabel="true"
+                           Label="Students"
+                           ItemCollection="Students"
+                           ToStringFunc="@(new Func<StudentViewModel, string?>(StudentToString))"
+                           MultiSelection="true"
+                           Clearable="true"
+                           SearchBox="true"
+                           SearchBoxClearable="true"
+                           SearchFunc="@(new Func<StudentViewModel, string, bool>(SearchStudents))"
+                           ChipSize="Size.Medium"
+                           ChipCloseable="true"
+                           ChipVariant="Variant.Filled" ValuePresenter="ValuePresenter.Chip"
+                           AnchorOrigin="Origin.BottomCenter">
+            <ItemTemplate>
+                <div class="dropdown-item-container">
+                    <p class="dropdown-item-title">@(context.Value?.User.ToString() ?? "")</p>
+                    <p class="dropdown-item-subtitle">@(context.Value?.School.Name ?? "")</p>
+                    @if (context.Value?.ClassId is not null && context.Value.Class is not null)
+                    {
+                        <p class="dropdown-item-subtitle">@context.Value.Class.DisplayName</p>
+                    }
+                </div>
+            </ItemTemplate>
+        </MudSelectExtended>
 
         <!-- Is Active -->
         <MudInputLabel>@("Is Active")</MudInputLabel>

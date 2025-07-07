@@ -1,4 +1,6 @@
-﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents;
+﻿using MudExtensions;
+
+namespace Gradebook.Web.Components.Pages.Administator.ManageParents;
 
 public partial class Form : CreateUserRoleBaseComponent<ParentViewModel>
 {
@@ -7,11 +9,11 @@ public partial class Form : CreateUserRoleBaseComponent<ParentViewModel>
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Inject] protected IApiStudentService ApiStudentService { get; set; } = default!;
 
-    protected IEnumerable<StudentViewModel> Students { get; set; } = [];
-    protected IEnumerable<StudentViewModel> FilteredStudents { get; set; } = [];
+    protected ICollection<StudentViewModel> Students { get; set; } = [];
     protected IEnumerable<StudentViewModel> SelectedStudents { get; set; } = [];
 
     protected MudForm FormRef { get; set; } = default!;
+    protected MudSelectExtended<StudentViewModel> StudentSelect { get; set; } = default!;
 
     protected string? _studentSearchString;
 
@@ -36,6 +38,16 @@ public partial class Form : CreateUserRoleBaseComponent<ParentViewModel>
 
         if (FormRef.IsValid)
         {
+            if (IsCreate)
+            {
+                if (!ViewModel.FromNewUser && SelectedStudents.Any(x => x.User.Id == ViewModel.User.Id))
+                {
+                    Notify("You cannot create this Parent because the User is present in the selected Students!", Severity.Error);
+                    return;
+                }
+            }
+
+            ViewModel.Role.Students = SelectedStudents.ToList();
             await OnValidSubmit.InvokeAsync();
         }
     }
@@ -46,8 +58,7 @@ public partial class Form : CreateUserRoleBaseComponent<ParentViewModel>
         if (result.Succeeded)
         {
             var students = result.Value!.Adapt<IEnumerable<StudentViewModel>>();
-            Students = students;
-            FilteredStudents = students;
+            Students = students.ToList();
         }
         else
         {
@@ -55,6 +66,21 @@ public partial class Form : CreateUserRoleBaseComponent<ParentViewModel>
             NavigationManager.NavigateTo("/");
         }
     }
+
+    protected bool SearchStudents(StudentViewModel value, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        if (value.User.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)
+            || (value.Class is not null && value.Class.DisplayName.Contains(searchString, StringComparison.OrdinalIgnoreCase)))
+            return true;
+
+        return false;
+    }
+
+    protected string? StudentToString(StudentViewModel student)
+        => student?.User.ToString();
 
     protected void CancelHandler()
         => NavigationManager.NavigateTo("manage-parents");

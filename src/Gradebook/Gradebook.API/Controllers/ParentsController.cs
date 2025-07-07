@@ -33,17 +33,17 @@ namespace Gradebook.API.Controllers
 
         // POST: api/Parents
         [HttpPost]
-        public async Task<IActionResult> CreateParent([FromBody] ParentDto parentDto)
+        public async Task<IActionResult> CreateParent([FromBody] CreateUserRoleDto<ParentDto> createUserRole)
         {
-            var result = await _service.CreateParent(parentDto);
+            var result = await _service.CreateParent(createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Parent, ParentDto>(result);
         }
 
         // PUT: api/Parents/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateParent(Guid id, [FromBody] ParentDto parentDto)
+        public async Task<IActionResult> UpdateParent(Guid id, [FromBody] CreateUserRoleDto<ParentDto> createUserRole)
         {
-            var result = await _service.UpdateParent(id, parentDto);
+            var result = await _service.UpdateParent(id, createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Parent, ParentDto>(result);
         }
 

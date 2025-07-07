@@ -29,7 +29,7 @@
             return CustomResultUtils.GetApiResponse<ParentDto>(response, content);
         }
 
-        public async Task<CustomResult<ParentDto>> CreateParent(ParentDto dto)
+        public async Task<CustomResult<ParentDto>> CreateParent(CreateUserRoleDto<ParentDto> dto)
         {
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);

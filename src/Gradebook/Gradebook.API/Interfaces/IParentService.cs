@@ -6,8 +6,8 @@ namespace Gradebook.API.Interfaces
     {
         Task<CustomResult> GetParent(Guid id);
         Task<CustomResult> GetAllParentsAsync();
-        Task<CustomResult> CreateParent(ParentDto parentDto);
-        Task<CustomResult> UpdateParent(Guid id, ParentDto parentDto);
+        Task<CustomResult> CreateParent(CreateUserRoleDto<ParentDto> createUserRole);
+        Task<CustomResult> UpdateParent(Guid id, CreateUserRoleDto<ParentDto> createUserRole);
         Task<CustomResult> DeleteParent(Guid id);
     }
 }

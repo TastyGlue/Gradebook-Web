@@ -1,25 +1,24 @@
-﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents;
+
+public partial class CreateParent : ExtendedComponentBase
 {
-    public partial class CreateParent : ExtendedComponentBase
+    [Inject] protected IApiParentService ApiParentService { get; set; } = default!;
+
+    protected CreateRoleUserViewModel<ParentViewModel> ViewModel { get; set; } = new();
+
+    protected async Task ValidSubmitHandler()
     {
-        [Inject] protected IApiParentService ApiParentService { get; set; } = default!;
+        var dto = ViewModel.Adapt<CreateUserRoleDto<ParentDto>>();
+        var result = await ApiParentService.CreateParent(dto);
 
-        protected ParentViewModel ViewModel { get; set; } = new();
-
-        protected async Task ValidSubmitHandler()
+        if (result.Succeeded)
         {
-            var dto = ViewModel.Adapt<ParentDto>();
-            var result = await ApiParentService.CreateParent(dto);
-
-            if (result.Succeeded)
-            {
-                Notify("Parent created successfully.", Severity.Success);
-                NavigationManager.NavigateTo("/manage-parents");
-            }
-            else
-            {
-                Notify(result.Error!.Message, Severity.Error);
-            }
+            Notify("Parent created successfully.", Severity.Success);
+            NavigationManager.NavigateTo("/manage-parents");
+        }
+        else
+        {
+            Notify(result.Error!.Message, Severity.Error);
         }
     }
 }

@@ -127,9 +127,9 @@ h1:focus {
 }
 
 .custom-form {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .5rem !important;
 }
 
 .mud-checkbox .mud-icon-button {
