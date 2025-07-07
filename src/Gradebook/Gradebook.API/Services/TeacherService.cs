@@ -56,6 +56,7 @@ namespace Gradebook.API.Services
                 var userId = (result as CustomResult<User>)!.Value!.Id;
 
                 AdaptTeacherDto(ref teacher, createUserRole.Role);
+                teacher.UserId = userId;
                 _context.Teachers.Add(teacher);
                 CreateTeacherSubjects(teacher, createUserRole.Role.Subjects);
 
@@ -65,8 +66,9 @@ namespace Gradebook.API.Services
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(Utils.GetFullExceptionMessage(ex));
+                    _context.Entry(teacher).State = EntityState.Detached;
 
+                    Log.Error(Utils.GetFullExceptionMessage(ex));
                     var errorResult = ex.GetErrorMessageFromException();
 
                     await _userService.DeleteUser(userId);

@@ -35,6 +35,8 @@ namespace Gradebook.API
                 .MaxDepth(3);
             TypeAdapterConfig<User, UserDto>.NewConfig()
                 .MaxDepth(3);
+            TypeAdapterConfig<UserDto, User>.NewConfig()
+                .Ignore(dest => dest.Profiles);
         }
     }
 }

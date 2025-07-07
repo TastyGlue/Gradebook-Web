@@ -33,9 +33,9 @@ namespace Gradebook.API.Controllers
 
         // POST: api/Students
         [HttpPost]
-        public async Task<IActionResult> CreateStudent([FromBody] StudentDto studentDto)
+        public async Task<IActionResult> CreateStudent([FromBody] CreateUserRoleDto<StudentDto> createUserRole)
         {
-            var result = await _service.CreateStudent(studentDto);
+            var result = await _service.CreateStudent(createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Student, StudentDto>(result);
         }
 
