@@ -4,117 +4,144 @@
     {
         [Parameter] public Guid ClassId { get; set; }
         [Parameter] public Guid SubjectId { get; set; }
+        [Parameter] public Guid TimetableId { get; set; }
+        [Parameter] public Guid SchoolYearId { get; set; }
 
-        [Inject] private IApiClassService ApiClassService { get; set; } = default!;
-        [Inject] private IApiSubjectService ApiSubjectService { get; set; } = default!;
-        [Inject] private IApiStudentService ApiStudentService { get; set; } = default!;
-        [Inject] private IApiGradeService ApiGradeService { get; set; } = default!;
-        [Inject] private IApiAbsencesService ApiAbsencesService { get; set; } = default!;
 
         private bool _isLoading = true;
-        private string _className = "";
-        private string _subjectName = "";
+        private string _className = string.Empty;
+        private string _subjectName = string.Empty;
         private string _currentDate = DateTime.Today.ToString("dd MMM yyyy");
+        private Guid _schoolYearId;
         private List<StudentViewModel> _students = new();
 
+        // Grade dialog state
+        private bool _gradeDialogOpen;
+        private StudentViewModel? _dialogStudent;
+        private decimal _newGradeValue = 4.0m;
+
+        // Absence dialog state
+        private bool _absenceDialogOpen;
+        private bool _newAbsenceLate;
+
         protected override async Task OnInitializedAsync()
-
         {
+            _isLoading = true;
 
-            // 1) Load class and students
-            var classRes = await ApiClassService.GetClass(ClassId);
-            if (!classRes.Succeeded)
+            // class details
+            var cls = await ApiClassService.GetClass(ClassId);
+            if (!cls.Succeeded) { Notify(cls.Error!.Message, Severity.Error); return; }
+            _className = cls.Value!.Adapt<ClassViewModel>().DisplayName;
+
+            // subject
+            var sub = await ApiSubjectService.GetSubject(SubjectId);
+            if (!sub.Succeeded) { Notify(sub.Error!.Message, Severity.Error); return; }
+            _subjectName = sub.Value!.Name;
+
+            // timetable → school year
+            //var tt = await ApiTimetableService.GetTimetable(TimetableId);
+            //if (tt.Succeeded) _schoolYearId = tt.Value!.SchoolYearId;
+
+            // fetch students with nested User
+            var stu = await ApiStudentService.GetStudentsByClassId(ClassId);
+            if (!stu.Succeeded) { Notify(stu.Error!.Message, Severity.Error); return; }
+            _students = stu.Value.Adapt<List<StudentViewModel>>();
+
+            // load grades & absences
+            foreach (var s in _students)
             {
-                Notify(classRes.Error!.Message, Severity.Error);
-                _isLoading = false;
-                return;
-            }
-            var clsVm = classRes.Value!.Adapt<ClassViewModel>();
-            _className = clsVm.DisplayName;
-            _students = clsVm.Students?.ToList() ?? new();
+                var gr = await ApiGradeService.GetGradesByStudentId(s.Id);
+                if (gr.Succeeded)
+                    s.Grades = gr.Value!.Select(g => g.Adapt<GradeViewModel>()).ToList();
 
-            // 2) Load subject name
-            var subjRes = await ApiSubjectService.GetSubject(SubjectId);
-            if (!subjRes.Succeeded)
-            {
-                Notify(subjRes.Error!.Message, Severity.Error);
-                _isLoading = false;
-                return;
-            }
-            _subjectName = subjRes.Value!.Name;
-
-            // 3) Load each student’s grades & absences
-            foreach (var student in _students)
-            {
-                var gradesRes = await ApiGradeService.GetGradesByStudentId(student.Id);
-                if (gradesRes.Succeeded)
-                    student.Grades = gradesRes.Value!
-                                        .Select(g => g.Adapt<GradeViewModel>())
-                                        .ToList();
-
-                var absRes = await ApiAbsencesService.GetStudentAbsences(student.Id);
-                if (absRes.Succeeded)
-                    student.Absences = absRes.Value!
-                                           .Select(a => a.Adapt<AbsenceViewModel>())
-                                           .ToList();
+                var ab = await ApiAbsencesService.GetStudentAbsences(s.Id);
+                if (ab.Succeeded)
+                    s.Absences = ab.Value!.Select(a => a.Adapt<AbsenceViewModel>()).ToList();
             }
 
             _isLoading = false;
         }
 
-        private void ToggleAbsence(StudentViewModel student)
+        private void OpenGradeDialog(StudentViewModel s)
         {
-            var existing = student.Absences.FirstOrDefault();
-            if (existing == null)
+            _dialogStudent = s;
+            _newGradeValue = 4.0m;
+            _gradeDialogOpen = true;
+        }
+
+        private void CloseGradeDialog()
+            => _gradeDialogOpen = false;
+
+        private async Task SaveGrade()
+        {
+            if (_dialogStudent == null) return;
+            var dto = new GradeDto
             {
-                // Add a new absence record
-                student.Absences = new List<AbsenceViewModel>
-                {
-                    new AbsenceViewModel
-                    {
-                        Id            = Guid.Empty,
-                        Date          = DateTime.Now,
-                        Excused       = false,
-                        IsLate        = false,
-                        SchoolYearId  = Guid.Empty,        // TODO: set correct SchoolYearId
-                        StudentId     = student.Id,
-                        TimetableId   = Guid.Empty         // TODO: set if needed
-                    }
-                };
+                StudentId = _dialogStudent.Id,
+                SubjectId = SubjectId,
+                Value = _newGradeValue,
+                Date = DateTime.Today,
+                SchoolYearId = _schoolYearId
+            };
+            var res = await ApiGradeService.CreateGrade(dto);
+            if (res.Succeeded)
+            {
+                _dialogStudent.Grades.Add(res.Value!.Adapt<GradeViewModel>());
+                Notify("Grade added.", Severity.Success);
             }
             else
             {
-                // Toggle Late status
-                existing.IsLate = !existing.IsLate;
+                Notify(res.Error!.Message, Severity.Error);
             }
+            _gradeDialogOpen = false;
         }
 
-        private async Task SaveAbsences()
+        private void OpenAbsenceDialog(StudentViewModel s)
         {
-            foreach (var student in _students)
-            {
-                var ab = student.Absences.FirstOrDefault();
-                if (ab == null)
-                    continue;
+            _dialogStudent = s;
+            _newAbsenceLate = false;
+            _absenceDialogOpen = true;
+        }
 
-                var dto = ab.Adapt<AbsenceDto>();
-                if (ab.Id == Guid.Empty)
+        private void CloseAbsenceDialog()
+            => _absenceDialogOpen = false;
+
+        private async Task SaveAbsence()
+        {
+            if (_dialogStudent == null) return;
+            var existing = _dialogStudent.Absences.FirstOrDefault();
+            AbsenceDto dto;
+            if (existing == null)
+            {
+                dto = new AbsenceDto
                 {
-                    // Create new
-                    var res = await ApiAbsencesService.CreateAbsence(dto);
-                    if (!res.Succeeded)
-                        Notify(res.Error!.Message, Severity.Error);
+                    StudentId = _dialogStudent.Id,
+                    Date = DateTime.Now,
+                    Excused = false,
+                    IsLate = _newAbsenceLate,
+                    SchoolYearId = _schoolYearId,
+                    TimetableId = TimetableId
+                };
+                var res = await ApiAbsencesService.CreateAbsence(dto);
+                if (res.Succeeded)
+                {
+                    _dialogStudent.Absences.Add(res.Value!.Adapt<AbsenceViewModel>());
+                    Notify("Absence created.", Severity.Success);
                 }
                 else
-                {
-                    // Update existing
-                    var res = await ApiAbsencesService.UpdateAbsence(ab.Id, dto);
-                    if (!res.Succeeded)
-                        Notify(res.Error!.Message, Severity.Error);
-                }
+                    Notify(res.Error!.Message, Severity.Error);
             }
-
-            Notify("Absences saved.", Severity.Success);
+            else
+            {
+                existing.IsLate = _newAbsenceLate;
+                dto = existing.Adapt<AbsenceDto>();
+                var res = await ApiAbsencesService.UpdateAbsence(existing.Id, dto);
+                if (res.Succeeded)
+                    Notify("Absence updated.", Severity.Success);
+                else
+                    Notify(res.Error!.Message, Severity.Error);
+            }
+            _absenceDialogOpen = false;
         }
     }
 }
