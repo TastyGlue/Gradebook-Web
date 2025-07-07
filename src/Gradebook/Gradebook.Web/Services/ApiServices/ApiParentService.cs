@@ -38,7 +38,7 @@
             return CustomResultUtils.GetApiResponse<ParentDto>(response, content);
         }
 
-        public async Task<CustomResult<ParentDto>> EditParent(Guid id, ParentDto dto)
+        public async Task<CustomResult<ParentDto>> EditParent(Guid id, CreateUserRoleDto<ParentDto> dto)
         {
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);

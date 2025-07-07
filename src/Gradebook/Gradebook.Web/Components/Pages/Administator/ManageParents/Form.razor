@@ -1,61 +1,107 @@
-﻿@using Gradebook.Web.Models.ViewModels
-@inherits ExtendedComponentBase
+﻿@inherits CreateUserRoleBaseComponent<ParentViewModel>
 
 <PageTitle>@PageTitle</PageTitle>
 
-<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width:600px">
+<MudPaper Class="form-paper">
     <MudText Typo="Typo.h5" Class="mb-4">@PageTitle</MudText>
 
-    <EditForm Model="ViewModel" OnValidSubmit="ValidSubmitHandler">
-        <DataAnnotationsValidator />
+    <MudForm @ref="FormRef" Class="custom-form">
 
-        <MudTextField T="string"
-                      @bind-Value="ViewModel.User.FullName"
-                      Label="Full Name"
-                      For="@(() => ViewModel.User.FullName)"
-                      Required="true" />
-
-        <MudTextField T="string"
-                      @bind-Value="ViewModel.User.Email"
-                      Label="Email"
-                      For="@(() => ViewModel.User.Email)"
-                      Required="true" />
-
-        <MudTextField T="string"
-                      @bind-Value="ViewModel.User.PhoneNumber"
-                      Label="Phone Number"
-                      For="@(() => ViewModel.User.PhoneNumber)" />
-
-        <MudCheckBox T="bool"
-                     @bind-Checked="ViewModel.IsActive"
-                     Label="Is Active" />
-
-        @* only show chips when editing an existing parent *@
-@*         @if (ViewModel != null && ViewModel.Id != Guid.Empty)
+        <!-- Tabs -->
+        @if (IsCreate)
         {
-            <MudInputLabel>Students</MudInputLabel>
-            <div class="chip-list">
-                @foreach (var student in SelectedStudents)
+            <MudToggleGroup Value="SelectedCreationType"
+                            ValueChanged="@SelectedCreationTypeChanged"
+                            T="UserCreationType"
+                            CheckMark="false"
+                            Size="Size.Medium">
+                @foreach (UserCreationType creationType in Enum.GetValues(typeof(UserCreationType)))
                 {
-                    <MudChip T="string"
-                             Clickable="true"
-                             OnClick="() => StudentClickHandler(student)">
-                        @student.User.FullName
-                    </MudChip>
+                    <MudToggleItem Text="@creationType.GetEnumDisplayName()" Value="@creationType" />
                 }
-            </div>
-         *@}
+            </MudToggleGroup>
+        }
 
-        <MudButton ButtonType="ButtonType.Submit"
-                   Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   Class="mt-4">
-            Submit
+        <!-- Existing User Select -->
+        @if (SelectedCreationType == UserCreationType.Existing)
+        {
+            @if (IsCreate)
+            {
+                <MudAutocomplete T="UserViewModel"
+                                 Value="ViewModel.User"
+                                 ValueChanged="@UserChanged"
+                                 Label="User"
+                                 SearchFunc="SearchUsers"
+                                 ToStringFunc="@(args => (args is null) ? "" : args.ToString())"
+                                 CoerceText="true"
+                                 Variant="Variant.Text"
+                                 Clearable="false"
+                                 ShowProgressIndicator="true"
+                                 Validation="@(new Func<UserViewModel, IEnumerable<string>>(UserValidity))">
+                    <ProgressIndicatorTemplate>
+                        <MudProgressLinear Size="Size.Small" Indeterminate="true" Color="@Color.Info" />
+                    </ProgressIndicatorTemplate>
+
+                    <NoItemsTemplate>
+                        <p class="no-content">No data to display</p>
+                    </NoItemsTemplate>
+
+                    <ItemTemplate Context="user">
+                        <div class="dropdown-item-container">
+                            <p class="dropdown-item-title">@user.ToString()</p>
+                            <p class="dropdown-item-subtitle">@user.PhoneNumber</p>
+                            <p class="dropdown-item-subtitle">
+                                @{
+                                    string isActive = "Is Active: ";
+                                    string isActiveEmoji = user.IsActive ? "✅" : "❌";
+                                }
+                                <span>@($"{isActive}{isActiveEmoji}")</span>
+                            </p>
+                        </div>
+                    </ItemTemplate>
+                </MudAutocomplete>
+            }
+            else
+            {
+                <UserForm @bind-ViewModel="ViewModel.User" />
+            }
+        }
+        else
+        {
+            <UserForm @bind-ViewModel="ViewModel.User" />
+        }
+
+        <!-- Subject -->
+        <MudSelect @bind-SelectedValues="@SelectedStudents"
+                   ToStringFunc="@((args) => (args != null) ? args.User.ToString() : "")"
+                   Label="Students"
+                   MultiSelection="true"
+                   Clearable="true">
+            @foreach (var student in FilteredStudents)
+            {
+                <MudSelectItem T="StudentViewModel" Value="student">
+                    <div class="dropdown-item-container">
+                        <p class="dropdown-item-title">@student.User.ToString()</p>
+                        <p class="dropdown-item-subtitle">@student.School.Name</p>
+                        @if (student.ClassId is not null && student.Class is not null)
+                        {
+                            <p class="dropdown-item-subtitle">@student.Class.DisplayName</p>
+                        }
+                    </div>
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Is Active -->
+        <MudInputLabel>@("Is Active")</MudInputLabel>
+        <MudCheckBox @bind-Value="ViewModel.Role.IsActive" Color="Color.Primary" />
+
+        <MudButton OnClick="@SubmitHandler" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+            @("Submit")
         </MudButton>
-        <MudButton OnClick="CancelHandler"
-                   Variant="Variant.Text"
-                   Class="mt-4 ml-2">
-            Cancel
+        <MudButton OnClick="CancelHandler" Variant="Variant.Text" Class="mt-4 ml-2">
+            @("Cancel")
         </MudButton>
-    </EditForm>
+    </MudForm>
+
 </MudPaper>
