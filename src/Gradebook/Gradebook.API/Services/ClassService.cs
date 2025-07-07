@@ -23,6 +23,7 @@ namespace Gradebook.API.Services
                 .Include(c => c.School)
                 .Include(c => c.ClassTeacher)
                 .Include(c => c.Students)
+                .ThenInclude(c => c.User)
                 .Include(c => c.Timetables)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
@@ -38,6 +39,7 @@ namespace Gradebook.API.Services
                 .Include(c => c.School)
                 .Include(c => c.ClassTeacher)
                 .Include(c => c.Students)
+                .ThenInclude(c => c.User)
                 .Include(c => c.Timetables)
                 .ToListAsync();
 
