@@ -1,0 +1,20 @@
+﻿@inherits ExtendedComponentBase
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h5" Class="mb-4">Add Absence</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="FormRef" Class="custom-form">
+            @* Form Items Here *@
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@SubmitHandler" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+            @("Submit")
+        </MudButton>
+        <MudButton OnClick="CancelHandler" Variant="Variant.Text" Class="mt-4 ml-2">
+            @("Cancel")
+        </MudButton>
+    </DialogActions>
+</MudDialog>
