@@ -66,7 +66,6 @@
                         <span class="mud-badge mud-badge-dot mud-ml-1"
                               style="background-color:@(ab == null ? "transparent" : (ab.IsLate ? "green" : "red"));">
                         </span>
-                        ;
                     }
                 </MudTd>
 
@@ -75,7 +74,7 @@
                     <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="@(() => OpenGradeDialog(student))">
                         Add Grade
                     </MudButton>
-                    <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="@(() => OpenAbsenceDialog(student))">
+                    <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="@(() => ShowAbsenceDialog(student))">
                         Add Absence
                     </MudButton>
                 </MudTd>

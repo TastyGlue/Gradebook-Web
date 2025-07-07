@@ -2,16 +2,22 @@
 
 public partial class AbsenceDialogForm : ExtendedComponentBase
 {
-    [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Inject] protected IApiTimetableService ApiTimetableService { get; set; } = default!;
+    [Parameter] public StudentViewModel Student { get; set; } = default!;
+    [Parameter] public ClassViewModel Class { get; set; } = default!;
+    [Parameter] public SubjectViewModel Subject { get; set; } = default!;
 
-    [Parameter]
-    public TimetableViewModel Timetable { get; set; } = default!;
-
-    [Parameter]
-    public IEnumerable<StudentViewModel> Students { get; set; } = [];
+    protected IEnumerable<TimetableViewModel> Timetables { get; set; } = [];
 
     protected MudForm FormRef { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch timetables for the current Class and Subject using ApiTimetableService
+
+        await base.OnInitializedAsync();
+    }
 
     protected async Task SubmitHandler()
     {
