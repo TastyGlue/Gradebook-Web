@@ -6,9 +6,9 @@ namespace Gradebook.API.Interfaces
     {
         Task<CustomResult> GetStudent(Guid id);
         Task<CustomResult> GetAllStudentsAsync();
-        Task<CustomResult> CreateStudent(StudentDto studentDto);
+        Task<CustomResult> CreateStudent(CreateUserRoleDto<StudentDto> createUserRole);
         Task<CustomResult> UpdateStudent(Guid id, CreateUserRoleDto<StudentDto> createUserRole);
         Task<CustomResult> DeleteStudent(Guid id);
-        Task<CustomResult<IEnumerable<StudentDto>>> GetStudentsByClassIdAsync(Guid classId);
+        Task<CustomResult<IEnumerable<Student>>> GetStudentsByClassIdAsync(Guid classId);
     }
 }

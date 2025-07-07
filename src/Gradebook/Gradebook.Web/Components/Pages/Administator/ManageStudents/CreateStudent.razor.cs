@@ -4,11 +4,11 @@
     {
         [Inject] protected IApiStudentService ApiStudentService { get; set; } = default!;
 
-        protected StudentViewModel ViewModel { get; set; } = new();
+        protected CreateRoleUserViewModel<StudentViewModel> ViewModel { get; set; } = new();
 
         protected async Task ValidSubmitHandler()
         {
-            var dto = ViewModel.Adapt<StudentDto>();
+            var dto = ViewModel.Adapt<CreateUserRoleDto<StudentDto>>();
             var result = await ApiStudentService.CreateStudent(dto);
 
             if (result.Succeeded)

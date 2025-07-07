@@ -42,6 +42,8 @@ namespace Gradebook.API.Services
         public async Task<CustomResult> CreateUser(UserDto userDto)
         {
             var user = userDto.Adapt<User>();
+            if (string.IsNullOrWhiteSpace(user.UserName))
+                user.UserName = user.Email; // Ensure UserName is set if not provided
 
             var result = await _userManager.CreateAsync(user);
 
