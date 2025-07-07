@@ -7,6 +7,9 @@
         [Parameter] public Guid TimetableId { get; set; }
         [Parameter] public Guid SchoolYearId { get; set; }
 
+        protected ClassViewModel Class { get; set; } = new();
+        protected SubjectViewModel Subject { get; set; } = new();
+
 
         private bool _isLoading = true;
         private string _className = string.Empty;
@@ -31,12 +34,14 @@
             // class details
             var cls = await ApiClassService.GetClass(ClassId);
             if (!cls.Succeeded) { Notify(cls.Error!.Message, Severity.Error); return; }
-            _className = cls.Value!.Adapt<ClassViewModel>().DisplayName;
+            Class = cls.Value!.Adapt<ClassViewModel>();
+            _className = Class.DisplayName;
 
             // subject
             var sub = await ApiSubjectService.GetSubject(SubjectId);
             if (!sub.Succeeded) { Notify(sub.Error!.Message, Severity.Error); return; }
-            _subjectName = sub.Value!.Name;
+            Subject = sub.Value!.Adapt<SubjectViewModel>();
+            _subjectName = Subject.Name;
 
             // timetable → school year
             //var tt = await ApiTimetableService.GetTimetable(TimetableId);
@@ -94,6 +99,20 @@
                 Notify(res.Error!.Message, Severity.Error);
             }
             _gradeDialogOpen = false;
+        }
+
+        protected async Task ShowAbsenceDialog(StudentViewModel student)
+        {
+            var parameters = new DialogParameters<AbsenceDialogForm> { 
+                { x => x.Student, student },
+                { x => x.Class, Class },
+                { x => x.Subject, Subject }
+            };
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, BackdropClick = true, CloseOnEscapeKey = true, Position = DialogPosition.Center };
+
+            var dialog = await DialogService.ShowAsync<AbsenceDialogForm>(null, parameters, options);
+            var result = await dialog.Result;
         }
 
         private void OpenAbsenceDialog(StudentViewModel s)
