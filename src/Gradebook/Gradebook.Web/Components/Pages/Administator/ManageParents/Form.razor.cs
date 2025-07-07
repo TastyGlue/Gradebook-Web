@@ -1,34 +1,61 @@
-﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents;
+
+public partial class Form : CreateUserRoleBaseComponent<ParentViewModel>
 {
-    public partial class Form : ExtendedComponentBase
+    [Parameter] public bool IsCreate { get; init; } = true;
+    [Parameter] public new string PageTitle { get; set; } = default!;
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Inject] protected IApiStudentService ApiStudentService { get; set; } = default!;
+
+    protected IEnumerable<StudentViewModel> Students { get; set; } = [];
+    protected IEnumerable<StudentViewModel> FilteredStudents { get; set; } = [];
+    protected IEnumerable<StudentViewModel> SelectedStudents { get; set; } = [];
+
+    protected MudForm FormRef { get; set; } = default!;
+
+    protected string? _studentSearchString;
+
+    protected override async Task OnInitializedAsync()
     {
-        [Parameter] public ParentViewModel ViewModel { get; set; } = new ParentViewModel();
-        [Parameter] public string PageTitle { get; set; } = default!;
-        [Parameter] public EventCallback OnValidSubmit { get; set; }
-
-        protected IEnumerable<StudentViewModel> SelectedStudents { get; set; } = Array.Empty<StudentViewModel>();
-
-        protected override void OnInitialized()
+        if (IsCreate)
         {
-            // now we’re working with the correct ViewModel
-            //SelectedStudents = ViewModel.Parents ?
-              //  .SelectMany(p => p.Students).ToHashSet() ?? Array.Empty<StudentViewModel>();
-
-            if (ViewModel.Parents != null && ViewModel.Parents.Any())
-                SelectedStudents = ViewModel.Parents
-                    .SelectMany(p => p.Students)
-                    .ToHashSet();
-            else
-                SelectedStudents = new HashSet<StudentViewModel>();
+            await LoadUsers();
         }
 
-        protected async Task ValidSubmitHandler()
-            => await OnValidSubmit.InvokeAsync();
+        await LoadStudents();
 
-        protected void StudentClickHandler(StudentViewModel student)
-            => NavigationManager.NavigateTo($"manage-students/edit/{student.Id}");
-
-        protected void CancelHandler()
-            => NavigationManager.NavigateTo("manage-parents");
+        if (!IsCreate)
+        {
+            SelectedStudents = ViewModel.Role.Students.ToList();
+        }
     }
+
+    protected async Task SubmitHandler()
+    {
+        await FormRef.Validate();
+
+        if (FormRef.IsValid)
+        {
+            await OnValidSubmit.InvokeAsync();
+        }
+    }
+
+    protected async Task LoadStudents()
+    {
+        var result = await ApiStudentService.GetStudents();
+        if (result.Succeeded)
+        {
+            var students = result.Value!.Adapt<IEnumerable<StudentViewModel>>();
+            Students = students;
+            FilteredStudents = students;
+        }
+        else
+        {
+            Notify(result.Error!.Message, Severity.Error);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    protected void CancelHandler()
+        => NavigationManager.NavigateTo("manage-parents");
 }

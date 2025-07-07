@@ -3,7 +3,8 @@
 
 @if (IsLoadingComplete)
 {
-        <Form ViewModel="@ViewModel"
+    <Form ViewModel="@ViewModel"
+          IsCreate="false"
           PageTitle="Edit Student"
           OnValidSubmit="ValidSubmitHandler" />
 }

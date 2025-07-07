@@ -1,6 +1,6 @@
 ﻿namespace Gradebook.Web.Models.ViewModels
 {
-    public class ParentViewModel : StudentViewModel
+    public class ParentViewModel : ProfileViewModel
     {
         public ICollection<StudentViewModel> Students { get; set; } = [];
 

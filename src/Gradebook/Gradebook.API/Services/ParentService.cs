@@ -20,9 +20,9 @@ namespace Gradebook.API.Services
         public async Task<CustomResult> GetParent(Guid id)
         {
             var parent = await _context.Parents
+                .Include(p => p.User)
                 .Include(p => p.Students)
                 .ThenInclude(p => p.User)
-                .Include(p => p.User)
                 .Include(p => p.Students)
                 .ThenInclude(x => x.School)
                 .Include(p => p.Students)

@@ -1,50 +1,48 @@
-﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageParents;
+
+public partial class EditParent : ExtendedComponentBase
 {
-    public partial class EditParent : ExtendedComponentBase
+    [Parameter] public Guid Id { get; set; }
+    [Inject] protected IApiParentService ApiParentService { get; set; } = default!;
+    protected CreateRoleUserViewModel<ParentViewModel> ViewModel { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        [Parameter] public Guid Id { get; set; }
-        [Inject] protected IApiParentService ApiParentService { get; set; } = default!;
-        protected ParentViewModel ViewModel { get; set; } = new();
+        PageTitle = "Edit Parent";
 
-        protected override async Task OnInitializedAsync()
+        IsLoadingComplete = false;
+        LoaderService.ToggleLoading(true);
+
+        var result = await ApiParentService.GetParent(Id);
+        if (result.Succeeded)
         {
-            IsLoadingComplete = false;
-            LoaderService.ToggleLoading(true);
-
-            await LoadParentAsync();
-
-            IsLoadingComplete = true;
+            ViewModel.Role = result.Value!.Adapt<ParentViewModel>();
+            ViewModel.User = result.Value!.User.Adapt<UserViewModel>();
+        }
+        else
+        {
             LoaderService.ToggleLoading(false);
+            Notify(result.Error!.Message, Severity.Error);
+            NavigationManager.NavigateTo("/manage-parents");
         }
 
-        private async Task LoadParentAsync()
-        {
-            var result = await ApiParentService.GetParent(Id);
-            if (!result.Succeeded)
-            {
-                LoaderService.ToggleLoading(false);
-                Notify(result.Error!.Message, Severity.Error);
-                NavigationManager.NavigateTo("/manage-parents");
-                return;
-            }
+        LoaderService.ToggleLoading(false);
+        IsLoadingComplete = true;
+    }
 
-            ViewModel = result.Value!.Adapt<ParentViewModel>();
+    protected async Task ValidSubmitHandler()
+    {
+        var dto = ViewModel.Adapt<CreateUserRoleDto<ParentDto>>();
+        var result = await ApiParentService.EditParent(Id, dto);
+
+        if (result.Succeeded)
+        {
+            Notify("Parent edited successfully", Severity.Success);
+            NavigationManager.NavigateTo("/manage-parents");
         }
-
-        protected async Task ValidSubmitHandler()
+        else
         {
-            var dto = ViewModel.Adapt<ParentDto>();
-            var result = await ApiParentService.EditParent(Id, dto);
-
-            if (result.Succeeded)
-            {
-                Notify("Parent updated successfully.", Severity.Success);
-                NavigationManager.NavigateTo("/manage-parents");
-            }
-            else
-            {
-                Notify(result.Error!.Message, Severity.Error);
-            }
+            Notify(result.Error!.Message, Severity.Error);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using static MudBlazor.Colors;
-
-namespace Gradebook.Web.Components.Pages.Administator.ManageStudents;
+﻿namespace Gradebook.Web.Components.Pages.Administator.ManageStudents;
 
 public partial class Form : CreateUserRoleBaseComponent<StudentViewModel>
 {

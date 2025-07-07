@@ -135,3 +135,7 @@ h1:focus {
 .mud-checkbox .mud-icon-button {
     padding: 0;
 }
+
+.dropdown-item-subtitle {
+    font-size: .9rem;
+}
