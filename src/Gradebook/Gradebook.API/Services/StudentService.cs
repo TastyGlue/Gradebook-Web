@@ -1,18 +1,13 @@
-﻿using Gradebook.API.Interfaces;
-using MapsterMapper;
-
-namespace Gradebook.API.Services
+﻿namespace Gradebook.API.Services
 {
     public class StudentService : IStudentService
     {
         private readonly GradebookDbContext _context;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
-        public StudentService(GradebookDbContext context, IMapper mapper, IUserService userService)
+        public StudentService(GradebookDbContext context, IUserService userService)
         {
             _context = context;
-            _mapper = mapper;
             _userService = userService;
         }
 
@@ -49,13 +44,47 @@ namespace Gradebook.API.Services
             return new CustomResult<IEnumerable<Student>>(students);
         }
 
-        public async Task<CustomResult> CreateStudent(StudentDto studentDto)
+        public async Task<CustomResult> CreateStudent(CreateUserRoleDto<StudentDto> createUserRole)
         {
-            var student = _mapper.Map<Student>(studentDto);
-            student.Id = Guid.NewGuid();
+            Student student = new();
 
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+            if (createUserRole.FromNewUser)
+            {
+                var result = await _userService.CreateUser(createUserRole.User);
+
+                if (!result.Succeeded)
+                    return result;
+
+                var userId = (result as CustomResult<User>)!.Value!.Id;
+
+                AdaptStudentDto(ref student, createUserRole.Role);
+                student.UserId = userId;
+                _context.Students.Add(student);
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    _context.Entry(student).State = EntityState.Detached;
+
+                    Log.Error(Utils.GetFullExceptionMessage(ex));
+                    var errorResult = ex.GetErrorMessageFromException();
+
+                    await _userService.DeleteUser(userId);
+                    await _context.SaveChangesAsync();
+
+                    return new(errorResult);
+                }
+            }
+            else
+            {
+                AdaptStudentDto(ref student, createUserRole.Role);
+                _context.Students.Add(student);
+
+                await _context.SaveChangesAsync();
+            }
 
             return new CustomResult<Student>(student);
         }
@@ -91,15 +120,23 @@ namespace Gradebook.API.Services
             return new CustomResult<string>("Deleted successfully!");
         }
 
-        public async Task<CustomResult<IEnumerable<StudentDto>>> GetStudentsByClassIdAsync(Guid id)
+        public async Task<CustomResult<IEnumerable<Student>>> GetStudentsByClassIdAsync(Guid id)
         {
             var students = await _context.Students
                 .Include(s => s.User)
                 .Where(s => s.ClassId == id)
                 .ToListAsync();
 
-            var dtoList = _mapper.Map<IEnumerable<StudentDto>>(students);
-            return new CustomResult<IEnumerable<StudentDto>>(dtoList);
+            return new CustomResult<IEnumerable<Student>>(students);
+        }
+
+        private static void AdaptStudentDto(ref Student student, StudentDto dto)
+        {
+            var jsonString = JsonSerializer.Serialize(dto);
+            student = JsonSerializer.Deserialize<Student>(jsonString)!;
+
+            student.School = null!;
+            student.Class = null;
         }
     }
 }

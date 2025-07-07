@@ -48,7 +48,7 @@
                 var userId = (result as CustomResult<User>)!.Value!.Id;
 
                 AdaptHeadmasterDto(ref headmaster, createUserRole.Role);
-
+                headmaster.UserId = userId;
                 _context.Headmasters.Add(headmaster);
 
                 try
@@ -57,8 +57,9 @@
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(Utils.GetFullExceptionMessage(ex));
+                    _context.Entry(headmaster).State = EntityState.Detached;
 
+                    Log.Error(Utils.GetFullExceptionMessage(ex));
                     var errorResult = ex.GetErrorMessageFromException();
 
                     await _userService.DeleteUser(userId);

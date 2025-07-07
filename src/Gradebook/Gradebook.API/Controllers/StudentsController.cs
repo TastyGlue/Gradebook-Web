@@ -34,9 +34,9 @@ namespace Gradebook.API.Controllers
 
         // POST: api/Students
         [HttpPost]
-        public async Task<IActionResult> CreateStudent([FromBody] StudentDto studentDto)
+        public async Task<IActionResult> CreateStudent([FromBody] CreateUserRoleDto<StudentDto> createUserRole)
         {
-            var result = await _service.CreateStudent(studentDto);
+            var result = await _service.CreateStudent(createUserRole);
             return ApiResponseFactory.AdaptAndCreateResponse<Student, StudentDto>(result);
         }
 
@@ -61,9 +61,7 @@ namespace Gradebook.API.Controllers
         public async Task<IActionResult> GetStudentsByClass(Guid id)
         {
             var result = await _service.GetStudentsByClassIdAsync(id);
-            if (!result.Succeeded)
-                return BadRequest(result.Error);
-            return Ok(result.Value);
+            return ApiResponseFactory.AdaptAndCreateResponse<IEnumerable<Student>, IEnumerable<StudentDto>>(result);
         }
     }
 }
