@@ -7,6 +7,7 @@
 
         [Inject] private IApiClassService ApiClassService { get; set; } = default!;
         [Inject] private IApiSubjectService ApiSubjectService { get; set; } = default!;
+        [Inject] private IApiStudentService ApiStudentService { get; set; } = default!;
         [Inject] private IApiGradeService ApiGradeService { get; set; } = default!;
         [Inject] private IApiAbsencesService ApiAbsencesService { get; set; } = default!;
 
@@ -17,7 +18,9 @@
         private List<StudentViewModel> _students = new();
 
         protected override async Task OnInitializedAsync()
+
         {
+
             // 1) Load class and students
             var classRes = await ApiClassService.GetClass(ClassId);
             if (!classRes.Succeeded)
