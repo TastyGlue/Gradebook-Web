@@ -8,6 +8,8 @@ public class Absence
 
     public bool Excused { get; set; }
 
+    public bool IsLate { get; set; }
+
     [ForeignKey(nameof(SchoolYear))]
     public Guid SchoolYearId { get; set; }
 

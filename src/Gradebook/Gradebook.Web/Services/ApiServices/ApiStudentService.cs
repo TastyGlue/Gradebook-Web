@@ -46,5 +46,14 @@
             var content = await response.Content.ReadAsStringAsync();
             return CustomResultUtils.GetApiResponse<StudentDto>(response, content);
         }
+
+        public async Task<CustomResult<IEnumerable<StudentDto>>> GetStudentsByClassId(Guid id)
+        {
+            var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
+            var client = _httpClientService.CreateApiClient(token);
+            var response = await client.GetAsync($"api/students/class/{id}");
+            var content = await response.Content.ReadAsStringAsync();
+            return CustomResultUtils.GetApiResponse<IEnumerable<StudentDto>>(response, content);
+        }
     }
 }

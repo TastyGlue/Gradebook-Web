@@ -7,6 +7,7 @@ public class AbsenceDto
     public DateTime Date { get; set; }
 
     public bool Excused { get; set; }
+    public bool IsLate { get; set; }
 
     public Guid SchoolYearId { get; set; }
 

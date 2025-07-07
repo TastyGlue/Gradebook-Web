@@ -1,9 +1,5 @@
 ﻿@page "/timetable"
 @inherits ExtendedComponentBase
-@using Gradebook.Shared.Models.DTOs
-@using Gradebook.Web.Models.ViewModels
-
-@inject IApiGradeService ApiGradeService
 
 <PageTitle>My Weekly Timetable</PageTitle>
 
@@ -20,7 +16,8 @@
     }
     else
     {
-        <table class="mud-table mud-table-striped mud-elevation-1" style="width:100%; border-collapse:separate; border-spacing:0 1rem;">
+        <table class="mud-table mud-table-striped mud-elevation-1"
+               style="width:100%; border-collapse:separate; border-spacing:0 1rem;">
             <thead>
                 <tr>
                     <th class="mud-th mud-theme-primary mud-text-white">Time</th>
@@ -35,21 +32,31 @@
                 @foreach (var time in _times)
                 {
                     <tr>
-                        <td class="mud-td mud-font-monospaced mud-font-weight-bold" style="width:80px;">@time.ToString(@"hh\:mm")</td>
+                        <td class="mud-td mud-font-monospaced mud-font-weight-bold" style="width:80px;">
+                            @time.ToString(@"hh\:mm")
+                        </td>
+
                         @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
                         {
                             if (day < DayOfWeek.Monday || day > DayOfWeek.Friday)
                                 continue;
 
-                            var entry = _entries.FirstOrDefault(e => e.DayOfWeek == day && e.TimeOfDay.TimeOfDay == time);
+                            var entry = _entries
+                            .FirstOrDefault(e => e.DayOfWeek == day && e.TimeOfDay.TimeOfDay == time);
+
                             <td class="mud-td">
                                 @if (entry != null)
                                 {
-                                    <div class="mud-paper mud-elevation-2 pa-3" style="background-color:var(--mud-palette-info-light); border-radius:6px; cursor:pointer;" @onclick="() => OpenDialog(entry)">
-                                        <span class="mud-text mud-typography-subtitle2 mud-font-weight-semibold">@entry.Subject.Name</span>
-                                        <br />
-                                        <span class="mud-text mud-typography-caption mud-text-dark">@entry.Class?.DisplayName</span>
-                                    </div>
+                                    <MudLink Href="@($"/teacher/class-grades/{entry.Class?.Id}/{entry.Subject.Id}")"
+                                             Class="mud-paper mud-elevation-2 pa-3"
+                                             Style="background-color:var(--mud-palette-info-light); border-radius:6px; display:block;">
+                                        <MudText Typo="Typo.subtitle2" Class="mud-font-weight-semibold">
+                                            @entry.Subject.Name
+                                        </MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Dark">
+                                            @entry.Class?.DisplayName
+                                        </MudText>
+                                    </MudLink>
                                 }
                             </td>
                         }
@@ -58,80 +65,4 @@
             </tbody>
         </table>
     }
-
-    <!-- Add Grade Dialog -->
-    <MudDialog @bind-IsVisible="_dialogOpen" MaxWidth="MaxWidth.Small" FullWidth="true">
-        <DialogContent>
-            <MudText Typo="Typo.h6" Class="mb-4">Add Grade for @(_selectedEntry?.Subject.Name)</MudText>
-            <MudSelect T="Guid"
-                       Label="Student"
-                       @bind-Value="_selectedStudentId"
-                       Required="true"
-                       Class="mb-4">
-                @foreach (var st in _dialogStudents)
-                {
-                    <MudSelectItem T="Guid" Value="st.Id">@st.User.FullName</MudSelectItem>
-                }
-            </MudSelect>
-            <MudNumericField T="decimal"
-                             Label="Grade"
-                             @bind-Value="_newGradeValue"
-                             Min="2" Max="6"
-                             Class="mb-4" />
-        </DialogContent>
-        <DialogActions>
-            <MudButton OnClick="AddGrade" Color="Color.Primary">Add Grade</MudButton>
-            <MudButton OnClick="CloseDialog" Variant="Variant.Text">Back</MudButton>
-        </DialogActions>
-    </MudDialog>
-
 </MudPaper>
-
-@code {
-    private bool _dialogOpen;
-    private TimetableViewModel _selectedEntry = new();
-    private List<StudentViewModel> _dialogStudents = new();
-    private Guid _selectedStudentId;
-    private decimal _newGradeValue = 2;
-
-    void OpenDialog(TimetableViewModel entry)
-    {
-        _selectedEntry = entry;
-        var cls = entry.Class; // use the Class navigation directly
-        _dialogStudents = cls?.Students?.ToList() ?? new();
-        _selectedStudentId = Guid.Empty;
-        _newGradeValue = 2;
-        _dialogOpen = true;
-    }
-
-    async Task AddGrade()
-    {
-        if (_selectedStudentId == Guid.Empty)
-            return;
-
-        var dto = new GradeDto
-        {
-            StudentId = _selectedStudentId,
-            SubjectId = _selectedEntry.Subject.Id,
-            Value = _newGradeValue,
-            Date = DateTime.Today,
-            SchoolYearId = _selectedEntry.SchoolYearId
-        };
-
-        var res = await ApiGradeService.CreateGrade(dto);
-        if (res.Succeeded)
-        {
-            Notify("Grade added successfully!", Severity.Success);
-            _dialogOpen = false;
-        }
-        else
-        {
-            Notify(res.Error?.Message ?? "Error adding grade.", Severity.Error);
-        }
-    }
-
-    void CloseDialog()
-    {
-        _dialogOpen = false;
-    }
-}

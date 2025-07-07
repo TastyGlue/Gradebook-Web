@@ -90,5 +90,16 @@ namespace Gradebook.API.Services
 
             return new CustomResult<string>("Deleted successfully!");
         }
+
+        public async Task<CustomResult<IEnumerable<StudentDto>>> GetStudentsByClassIdAsync(Guid id)
+        {
+            var students = await _context.Students
+                .Include(s => s.User)
+                .Where(s => s.ClassId == id)
+                .ToListAsync();
+
+            var dtoList = _mapper.Map<IEnumerable<StudentDto>>(students);
+            return new CustomResult<IEnumerable<StudentDto>>(dtoList);
+        }
     }
 }

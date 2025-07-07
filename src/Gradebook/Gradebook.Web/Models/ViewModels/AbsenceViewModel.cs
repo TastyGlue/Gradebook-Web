@@ -8,6 +8,8 @@
 
         public bool Excused { get; set; }
 
+        public bool IsLate { get; set; }
+
         public Guid SchoolYearId { get; set; }
 
         public SchoolYearViewModel? SchoolYear { get; set; } = default!;

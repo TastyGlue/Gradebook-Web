@@ -32,6 +32,7 @@ public class AbsenceSeeder : IDataSeeder
                 Id = Guid.Parse("b4d3ea21-dcf9-4f6d-bd3e-82b8d1e3ac01"),
                 Date = new DateTime(2024, 9, 2),
                 Excused = true,
+                IsLate = false,
                 SchoolYearId = Guid.Parse(SCHOOL_YEAR_RIVERSIDE_2024_1_ID),
                 StudentId = Guid.Parse(STUDENT_JM_ID),
                 TimetableId = Guid.Parse(TIMETABLE_8A_CHEMISTRY_MONDAY_ID)
@@ -40,7 +41,8 @@ public class AbsenceSeeder : IDataSeeder
             {
                 Id = Guid.Parse("25f2a4f9-f3a9-413f-b524-d5db8a76eaa6"),
                 Date = new DateTime(2024, 9, 2),
-                Excused = true,
+                Excused = false,
+                IsLate = true,
                 SchoolYearId = Guid.Parse(SCHOOL_YEAR_RIVERSIDE_2024_1_ID),
                 StudentId = Guid.Parse(STUDENT_JM_ID),
                 TimetableId = Guid.Parse(TIMETABLE_8A_HISTORY_MONDAY_ID)
@@ -50,6 +52,7 @@ public class AbsenceSeeder : IDataSeeder
                 Id = Guid.Parse("8329a9bc-c6b7-4c0b-987e-c408f2f7fbc9"),
                 Date = new DateTime(2024, 9, 2),
                 Excused = true,
+                IsLate = false,
                 SchoolYearId = Guid.Parse(SCHOOL_YEAR_RIVERSIDE_2024_1_ID),
                 StudentId = Guid.Parse(STUDENT_JM_ID),
                 TimetableId = Guid.Parse(TIMETABLE_8A_LITERATURE_MONDAY_ID)

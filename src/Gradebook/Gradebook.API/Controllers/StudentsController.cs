@@ -1,4 +1,5 @@
 ﻿using Gradebook.API.Interfaces;
+using Gradebook.API.Services;
 using Gradebook.Shared.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +54,16 @@ namespace Gradebook.API.Controllers
         {
             var result = await _service.DeleteStudent(id);
             return ApiResponseFactory.CreateResponse<string>(result);
+        }
+
+        // GET: api/class/{id}
+        [HttpGet("class/{id}")]
+        public async Task<IActionResult> GetStudentsByClass(Guid id)
+        {
+            var result = await _service.GetStudentsByClassIdAsync(id);
+            if (!result.Succeeded)
+                return BadRequest(result.Error);
+            return Ok(result.Value);
         }
     }
 }
