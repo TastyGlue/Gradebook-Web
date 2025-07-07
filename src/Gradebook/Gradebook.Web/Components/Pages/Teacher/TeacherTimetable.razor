@@ -1,0 +1,68 @@
+﻿@page "/timetable"
+@inherits ExtendedComponentBase
+
+<PageTitle>My Weekly Timetable</PageTitle>
+
+<MudPaper Class="pa-6 mx-auto mt-6" Style="max-width:1000px;">
+    <MudText Typo="Typo.h5" Class="mb-4 text-center">My Weekly Timetable</MudText>
+
+    @if (_isLoading)
+    {
+        <MudProgressCircular Indeterminate="true" Class="mx-auto my-6" />
+    }
+    else if (!_entries.Any())
+    {
+        <MudText Align="Align.Center" Class="mt-4">No timetable entries found.</MudText>
+    }
+    else
+    {
+        <table class="mud-table mud-table-striped mud-elevation-1"
+               style="width:100%; border-collapse:separate; border-spacing:0 1rem;">
+            <thead>
+                <tr>
+                    <th class="mud-th mud-theme-primary mud-text-white">Time</th>
+                    <th class="mud-th mud-theme-info mud-text-white">Monday</th>
+                    <th class="mud-th mud-theme-info mud-text-white">Tuesday</th>
+                    <th class="mud-th mud-theme-info mud-text-white">Wednesday</th>
+                    <th class="mud-th mud-theme-info mud-text-white">Thursday</th>
+                    <th class="mud-th mud-theme-info mud-text-white">Friday</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var time in _times)
+                {
+                    <tr>
+                        <td class="mud-td mud-font-monospaced mud-font-weight-bold" style="width:80px;">
+                            @time.ToString(@"hh\:mm")
+                        </td>
+
+                        @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
+                        {
+                            if (day < DayOfWeek.Monday || day > DayOfWeek.Friday)
+                                continue;
+
+                            var entry = _entries
+                            .FirstOrDefault(e => e.DayOfWeek == day && e.TimeOfDay.TimeOfDay == time);
+
+                            <td class="mud-td">
+                                @if (entry != null)
+                                {
+                                    <MudLink Href="@($"/teacher/class-grades/{entry.Class?.Id}/{entry.Subject.Id}")"
+                                             Class="mud-paper mud-elevation-2 pa-3"
+                                             Style="background-color:var(--mud-palette-info-light); border-radius:6px; display:block;">
+                                        <MudText Typo="Typo.subtitle2" Class="mud-font-weight-semibold">
+                                            @entry.Subject.Name
+                                        </MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Dark">
+                                            @entry.Class?.DisplayName
+                                        </MudText>
+                                    </MudLink>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</MudPaper>

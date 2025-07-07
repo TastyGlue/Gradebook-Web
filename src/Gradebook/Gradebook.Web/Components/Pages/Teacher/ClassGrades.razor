@@ -1,0 +1,95 @@
+﻿@page "/teacher/class-grades/{ClassId:guid}/{SubjectId:guid}"
+@inherits ExtendedComponentBase
+
+<PageTitle>Class Grades</PageTitle>
+
+<MudPaper Class="pa-6 mx-auto mt-6" Style="max-width:800px;">
+  <MudText Typo="Typo.h5" Class="mb-4">Grades & Absences</MudText>
+
+  <!-- Info Bar: Class, Subject, Date -->
+  <div class="mud-paper mud-elevation-0 pa-3 mb-4"
+       style="display:flex; justify-content:space-between; align-items:center;
+              background-color:var(--mud-palette-background);
+              border-radius:4px;">
+    <div>
+      <MudText Typo="Typo.subtitle1">
+        <strong>Class:</strong> @_className
+      </MudText>
+      <MudText Typo="Typo.subtitle1">
+        <strong>Subject:</strong> @_subjectName
+      </MudText>
+    </div>
+    <MudText Typo="Typo.subtitle1">
+      <strong>Date:</strong> @_currentDate
+    </MudText>
+  </div>
+
+  @if (_isLoading)
+  {
+    <MudProgressCircular Indeterminate="true" Class="mx-auto my-6" />
+  }
+  else
+  {
+    <MudTable Items="_students" Hover="true" Dense="true">
+      <HeaderContent>
+        <MudTh>Student</MudTh>
+        <MudTh>Grades</MudTh>
+        <MudTh>Absent</MudTh>
+        <MudTh>Actions</MudTh>
+      </HeaderContent>
+      <RowTemplate Context="context">
+        <!-- Student Name -->
+        <MudTd>@(context.User?.FullName ?? "-")</MudTd>
+
+        <!-- Grades List -->
+        <MudTd>
+          @{
+            var vals = context.Grades?
+                          .Where(g => g.Subject?.Id == SubjectId)
+                          .Select(g => g.Value)
+                          .ToList()
+                        ?? new List<decimal>();
+          }
+          @if (vals.Any())
+          {
+            @string.Join(", ", vals)
+          }
+          else
+          {
+            <em>No grades</em>
+          }
+        </MudTd>
+
+        <!-- Absence Indicator (hidden) -->
+        <MudTd></MudTd>
+
+        <!-- Actions: Toggle Absence -->
+        <MudTd>
+          @{
+            var ab = context.Absences?.FirstOrDefault();
+            var color = ab == null
+              ? Color.Default
+              : ab.IsLate
+                ? Color.Success
+                : Color.Error;
+          }
+          <MudButton Variant="Variant.Outlined"
+                     Size="Size.Small"
+                     Color="@color"
+                     OnClick="@(() => ToggleAbsence(context))">
+            +
+          </MudButton>
+        </MudTd>
+      </RowTemplate>
+    </MudTable>
+
+    <!-- Save Absences Button -->
+    <div class="mt-4" style="text-align:right;">
+      <MudButton Variant="Variant.Filled"
+                 Color="Color.Primary"
+                 OnClick="SaveAbsences">
+        Save Changes
+      </MudButton>
+    </div>
+  }
+</MudPaper>

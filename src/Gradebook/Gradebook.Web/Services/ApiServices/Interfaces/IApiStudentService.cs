@@ -6,5 +6,6 @@
         Task<CustomResult<StudentDto>> GetStudent(Guid id);
         Task<CustomResult<StudentDto>> CreateStudent(CreateUserRoleDto<StudentDto> dto);
         Task<CustomResult<StudentDto>> EditStudent(Guid id, CreateUserRoleDto<StudentDto> dto);
+        Task<CustomResult<IEnumerable<StudentDto>>> GetStudentsByClassId(Guid classId);
     }
 }

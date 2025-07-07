@@ -120,6 +120,16 @@
             return new CustomResult<string>("Deleted successfully!");
         }
 
+        public async Task<CustomResult<IEnumerable<Student>>> GetStudentsByClassIdAsync(Guid id)
+        {
+            var students = await _context.Students
+                .Include(s => s.User)
+                .Where(s => s.ClassId == id)
+                .ToListAsync();
+
+            return new CustomResult<IEnumerable<Student>>(students);
+        }
+
         private static void AdaptStudentDto(ref Student student, StudentDto dto)
         {
             var jsonString = JsonSerializer.Serialize(dto);
