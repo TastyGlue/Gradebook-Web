@@ -24,5 +24,7 @@
 
         public SubjectViewModel Subject { get; set; } = default!;
 
+        public string DisplayName => $"{Subject.Name} - {DayOfWeek.ToString()} ({TimeOfDay:hh\\:mm})";
+
     }
 }

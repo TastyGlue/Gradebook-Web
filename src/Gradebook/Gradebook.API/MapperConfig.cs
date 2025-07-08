@@ -32,7 +32,7 @@ namespace Gradebook.API
             TypeAdapterConfig<Teacher, TeacherDto>.NewConfig()
                 .MaxDepth(3);
             TypeAdapterConfig<Timetable, TimetableDto>.NewConfig()
-                .MaxDepth(3);
+                .MaxDepth(4);
             TypeAdapterConfig<User, UserDto>.NewConfig()
                 .MaxDepth(3);
             TypeAdapterConfig<UserDto, User>.NewConfig()

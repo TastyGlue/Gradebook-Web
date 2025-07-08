@@ -17,9 +17,9 @@ namespace Gradebook.API.Controllers
 
         // GET: api/Timetables
         [HttpGet]
-        public async Task<IActionResult> GetTimetables()
+        public async Task<IActionResult> GetTimetables([FromQuery] Guid? teacherId = null)
         {
-            var result = await _service.GetAllTimetablesAsync();
+            var result = await _service.GetAllTimetablesAsync(teacherId);
             return ApiResponseFactory.AdaptAndCreateResponse<IEnumerable<Timetable>, IEnumerable<TimetableDto>>(result);
         }
 

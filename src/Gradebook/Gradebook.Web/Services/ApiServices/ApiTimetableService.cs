@@ -11,11 +11,16 @@
             _tokenService = tokenService;
         }
 
-        public async Task<CustomResult<IEnumerable<TimetableDto>>> GetTimetables()
+        public async Task<CustomResult<IEnumerable<TimetableDto>>> GetTimetables(Guid? teacherId = null)
         {
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);
-            var response = await client.GetAsync("api/timetables");
+
+            string apiEndpoint = "api/timetables";
+            if (teacherId.HasValue)
+                apiEndpoint += $"?teacherId={teacherId.Value}";
+
+            var response = await client.GetAsync(apiEndpoint);
             var content = await response.Content.ReadAsStringAsync();
             return CustomResultUtils.GetApiResponse<IEnumerable<TimetableDto>>(response, content);
         }

@@ -1,8 +1,4 @@
-﻿using Gradebook.API.Interfaces;
-using Gradebook.Data.Models;
-using Gradebook.Shared.Models.DTOs;
-using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using MapsterMapper;
 
 namespace Gradebook.API.Services
 {
@@ -24,6 +20,11 @@ namespace Gradebook.API.Services
                 .ThenInclude(t => t.School)
                 .Include(t => t.Subject)
                 .Include(t => t.Class)
+                    .ThenInclude(t => t.Students)
+                        .ThenInclude(t => t.Absences)
+                .Include(t => t.Class)
+                    .ThenInclude(t => t.Students)
+                        .ThenInclude(t => t.User)
                 .Include(t => t.Teacher)
                 .ThenInclude(t => t.User)
                 .FirstOrDefaultAsync(t => t.Id == id);
@@ -34,16 +35,21 @@ namespace Gradebook.API.Services
             return new CustomResult<Timetable>(timetable);
         }
 
-        public async Task<CustomResult> GetAllTimetablesAsync()
+        public async Task<CustomResult> GetAllTimetablesAsync(Guid? teacherId = null)
         {
-            var timetables = await _context.Timetables
+            var timetablesQuery = _context.Timetables
                 .Include(t => t.SchoolYear)
                 .ThenInclude(t => t.School)
                 .Include(t => t.Subject)
                 .Include(t => t.Class)
                 .Include(t => t.Teacher)
                 .ThenInclude(t => t.User)
-                .ToListAsync();
+                .AsNoTracking();
+
+            if (teacherId.HasValue)
+                timetablesQuery = timetablesQuery.Where(t => t.TeacherId == teacherId.Value);
+
+            var timetables = await timetablesQuery.ToListAsync();
 
             return new CustomResult<IEnumerable<Timetable>>(timetables);
         }

@@ -45,8 +45,7 @@ namespace Gradebook.API.Services
         public async Task<CustomResult> CreateAbsence(AbsenceDto absenceDto)
         {
             var absence = _mapper.Map<Absence>(absenceDto);
-            absence.Id = Guid.NewGuid();
-
+            absence.Date = DateTime.SpecifyKind(absence.Date, DateTimeKind.Utc);
             _context.Absences.Add(absence);
             await _context.SaveChangesAsync();
 

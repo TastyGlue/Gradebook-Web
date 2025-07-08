@@ -1,4 +1,4 @@
-﻿@page "/timetable"
+﻿@page "/teacher-timetable"
 @inherits ExtendedComponentBase
 
 <PageTitle>My Weekly Timetable</PageTitle>
@@ -16,6 +16,8 @@
     }
     else
     {
+        <MudText Typo="Typo.h6" Class="mb-4 text-center">@SchoolYear.DisplayName</MudText>
+
         <table class="mud-table mud-table-striped mud-elevation-1"
                style="width:100%; border-collapse:separate; border-spacing:0 1rem;">
             <thead>
@@ -44,12 +46,12 @@
                             var entry = _entries
                             .FirstOrDefault(e => e.DayOfWeek == day && e.TimeOfDay.TimeOfDay == time);
 
-                            <td class="mud-td">
+                            <td class="@(entry != null ? "tt-entry" : "") mud-td">
                                 @if (entry != null)
                                 {
-                                    <MudLink Href="@($"/teacher/class-grades/{entry.Class?.Id}/{entry.Subject.Id}")"
+                                    <MudLink Href="@($"/teacher-timetable/{entry.Id}")"
                                              Class="mud-paper mud-elevation-2 pa-3"
-                                             Style="background-color:var(--mud-palette-info-light); border-radius:6px; display:block;">
+                                             Style="background-color:var(--mud-palette-info-light); border-radius:6px; display:block; text-decoration:none;">
                                         <MudText Typo="Typo.subtitle2" Class="mud-font-weight-semibold">
                                             @entry.Subject.Name
                                         </MudText>

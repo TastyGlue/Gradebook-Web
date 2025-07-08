@@ -1,4 +1,4 @@
-﻿@page "/teacher/class-grades/{ClassId:guid}/{SubjectId:guid}"
+﻿@page "/teacher-timetable/{TimetableId:guid}"
 @inherits ExtendedComponentBase
 @using Gradebook.Web.Models.ViewModels
 
@@ -8,7 +8,7 @@
 @inject IApiGradeService ApiGradeService
 @inject IApiAbsencesService ApiAbsencesService
 
-<PageTitle>Class Grades</PageTitle>
+<PageTitle>Timetable Entry</PageTitle>
 
 <MudPaper Class="pa-6 mx-auto mt-6" Style="max-width:900px;">
     <MudText Typo="Typo.h5" Class="mb-4">Grades & Absences</MudText>
@@ -19,6 +19,7 @@
         <div>
             <MudText Typo="Typo.subtitle1"><strong>Class:</strong> @_className</MudText>
             <MudText Typo="Typo.subtitle1"><strong>Subject:</strong> @_subjectName</MudText>
+            <MudText Typo="Typo.subtitle1"><strong>Day & Time:</strong> @_dayAndTime</MudText>
         </div>
         <MudText Typo="Typo.subtitle1"><strong>Date:</strong> @_currentDate</MudText>
     </div>
@@ -30,6 +31,7 @@
     else
     {
         <MudTable Items="_students" Hover="true" Dense="true">
+            <ToolBarContent></ToolBarContent>
             <HeaderContent>
                 <MudTh>Student</MudTh>
                 <MudTh>Grades</MudTh>
@@ -44,7 +46,7 @@
                 <MudTd>
                     @{
                         var vals = student.Grades
-                        .Where(g => g.Subject?.Id == SubjectId)
+                        .Where(g => g.Subject?.Id == Timetable.SubjectId)
                         .Select(g => g.Value)
                         .OrderBy(v => v)
                         .ToList();
@@ -62,10 +64,13 @@
                 <!-- Absence indicator (count hidden) -->
                 <MudTd>
                     @{
-                        var ab = student.Absences.FirstOrDefault();
-                        <span class="mud-badge mud-badge-dot mud-ml-1"
-                              style="background-color:@(ab == null ? "transparent" : (ab.IsLate ? "green" : "red"));">
-                        </span>
+                        int count = student.Absences.Count;
+                        <div style="display: inline-flex; align-items: center; gap: .2rem;">
+                            <span class="mud-badge mud-badge-dot mud-ml-1"
+                                  style="background-color:@(count == 0 ? "green" : "red");">
+                            </span>
+                            <span>@count</span>
+                        </div>
                     }
                 </MudTd>
 
@@ -74,7 +79,7 @@
                     <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="@(() => OpenGradeDialog(student))">
                         Add Grade
                     </MudButton>
-                    <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="@(() => ShowAbsenceDialog(student))">
+                    <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="@(() => OpenAbsenceDialog(student))">
                         Add Absence
                     </MudButton>
                 </MudTd>
@@ -84,9 +89,11 @@
 </MudPaper>
 
 <!-- Grade Dialog -->
-<MudDialog @bind-IsVisible="_gradeDialogOpen" MaxWidth="MaxWidth.Small" FullWidth="true">
-    <DialogContent>
+<MudDialog @bind-Visible="_gradeDialogOpen" Options="FormDialogOptions">
+    <TitleContent>
         <MudText Typo="Typo.h6" Class="mb-4">Add Grade for @(_dialogStudent?.User?.FullName)</MudText>
+    </TitleContent>
+    <DialogContent>
         <MudNumericField T="decimal"
                          Label="Grade (2.0–6.0)"
                          @bind-Value="_newGradeValue"
@@ -101,15 +108,36 @@
 </MudDialog>
 
 <!-- Absence Dialog -->
-<MudDialog @bind-IsVisible="_absenceDialogOpen" MaxWidth="MaxWidth.Small" FullWidth="true">
+<MudDialog @bind-Visible="_absenceDialogOpen" Options="FormDialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6" Class="mb-4" Style="padding-right: 24px;">Add Absence for @(_dialogStudent?.User?.FullName)</MudText>
+    </TitleContent>
     <DialogContent>
-        <MudText Typo="Typo.h6" Class="mb-4">Add Absence for @(_dialogStudent?.User?.FullName)</MudText>
-        <MudCheckBox T="bool"
-                     Label="Late?"
-                     @bind-Checked="_newAbsenceLate" />
+        <MudForm @ref="AbsenceForm" Class="custom-form">
+            <!-- Is Late -->
+            <MudCheckBox @bind-Value="_newAbsenceLate"
+                         Label="Is Late"
+                         LabelPlacement="Placement.Top"/>
+
+            <!-- Date -->
+            <MudDatePicker @bind-Date="_newAbsenceDate" 
+                           Label="Absence Date"
+                           DateFormat="dd.MM.yyyy"
+                           Validation="@(new Func<DateTime?, IEnumerable<string>>(AbsenceDateValidity))" />
+        </MudForm>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAbsence">Save</MudButton>
         <MudButton Variant="Variant.Text" OnClick="CloseAbsenceDialog">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
+
+<style>
+    .mud-dialog .mud-dialog-content{
+        overflow: inherit;
+    }
+
+    .mud-badge {
+        position: relative;
+    }
+</style>

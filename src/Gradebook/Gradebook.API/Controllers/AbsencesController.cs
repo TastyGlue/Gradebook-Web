@@ -1,16 +1,14 @@
-﻿using Gradebook.API.Interfaces;
-using Gradebook.Shared.Models.DTOs;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Gradebook.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AbsenceController : ControllerBase
+    public class AbsencesController : ControllerBase
     {
         private readonly IAbsenceService _service;
 
-        public AbsenceController(IAbsenceService service)
+        public AbsencesController(IAbsenceService service)
         {
             _service = service;
         }
