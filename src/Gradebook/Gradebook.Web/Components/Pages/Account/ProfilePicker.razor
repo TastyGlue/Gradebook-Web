@@ -1,9 +1,8 @@
 ﻿@inherits ExtendedComponentBase
 
 <MudPaper Elevation="4">
+    <h1 style="text-align: center;">@("Choose profile")</h1>
     <div class="profile-picker">
-        <h1 style="text-align: center;">@("Choose profile")</h1>
-
         @foreach (var profile in Profiles)
         {
             <div class="profile" @onclick="@(_ => ProfileSelectedHandler(profile))">

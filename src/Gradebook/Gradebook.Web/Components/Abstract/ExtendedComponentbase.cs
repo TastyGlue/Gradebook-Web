@@ -20,4 +20,7 @@ public class ExtendedComponentBase : ComponentBase
 
     public async Task ConsoleLog(string message)
             => await Js.InvokeVoidAsync("console.log", message);
+
+    public async Task CopyToClipboard(string text)
+        => await Js.InvokeVoidAsync("navigator.clipboard.writeText", text);
 }

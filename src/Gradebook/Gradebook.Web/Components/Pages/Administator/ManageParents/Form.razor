@@ -104,12 +104,43 @@
         <MudInputLabel>@("Is Active")</MudInputLabel>
         <MudCheckBox @bind-Value="ViewModel.Role.IsActive" Color="Color.Primary" />
 
+        @if (!string.IsNullOrWhiteSpace(_newPassword))
+        {
+            <div class="reset-pass-container">
+                <MudPasswordField Label="New Password" Value="_newPassword" @bind-PasswordMode="_passwordMode" ReadOnly="true" />
+                <MudTooltip Text="Copy">
+                    <MudIconButton Icon="@Icons.Material.Sharp.ContentCopy" Style="color: dimgrey !important;"
+                                   OnClick="@((args) => CopyToClipboard(_newPassword))" />
+                </MudTooltip>
+            </div>
+        }
+
         <MudButton OnClick="@SubmitHandler" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
             @("Submit")
         </MudButton>
         <MudButton OnClick="CancelHandler" Variant="Variant.Text" Class="mt-4 ml-2">
             @("Cancel")
         </MudButton>
+        @if (!IsCreate)
+        {
+            <MudButton OnClick="ResetPasswordHandler" Variant="Variant.Outlined" Class="mt-4">
+                @("Reset Password")
+            </MudButton>
+        }
     </MudForm>
 
 </MudPaper>
+
+<!-- Reset Password Dialog -->
+<MudDialog @bind-Visible="_dialogOpen" Options="DialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6" Class="mb-4" Style="padding-right: 24px;">Reset User's Password</MudText>
+    </TitleContent>
+    <DialogContent>
+        <span>Are you sure you want to reset this User's password?</span>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ResetPassword">Yes</MudButton>
+        <MudButton Variant="Variant.Text" OnClick="CloseDialog">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

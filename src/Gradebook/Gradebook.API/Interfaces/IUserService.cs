@@ -1,6 +1,4 @@
-﻿using Gradebook.Shared.Models.DTOs;
-
-namespace Gradebook.API.Interfaces
+﻿namespace Gradebook.API.Interfaces
 {
     public interface IUserService
     {
@@ -9,5 +7,6 @@ namespace Gradebook.API.Interfaces
         Task<CustomResult> CreateUser(UserDto userDto);
         Task<CustomResult> UpdateUser(Guid id, UserDto userDto);
         Task<CustomResult> DeleteUser(Guid id);
+        Task<CustomResult> ResetPassword(Guid id);
     }
 }

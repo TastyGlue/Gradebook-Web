@@ -39,14 +39,17 @@
             }
             var allEntries = ttRes.Value!.Adapt<List<TimetableViewModel>>();
 
-            var schoolYears = allEntries.Select(e => e.SchoolYear).DistinctBy(x => x.Id).ToList();
-            SchoolYear = schoolYears.OrderByDescending(sy => sy.Year).ThenByDescending(sy => sy.Semester).First();
+            if (allEntries.Count > 0)
+            {
+                var schoolYears = allEntries.Select(e => e.SchoolYear).DistinctBy(x => x.Id).ToList();
+                SchoolYear = schoolYears.OrderByDescending(sy => sy.Year).ThenByDescending(sy => sy.Semester).First();
 
-            _entries = allEntries.Where(e => e.SchoolYearId == SchoolYear.Id).ToList();
-            _times = _entries.Select(e => e.TimeOfDay.TimeOfDay)
-                                .Distinct()
-                                .OrderBy(t => t)
-                                .ToList();
+                _entries = allEntries.Where(e => e.SchoolYearId == SchoolYear.Id).ToList();
+                _times = _entries.Select(e => e.TimeOfDay.TimeOfDay)
+                                    .Distinct()
+                                    .OrderBy(t => t)
+                                    .ToList();
+            }
 
             _isLoading = false;
         }

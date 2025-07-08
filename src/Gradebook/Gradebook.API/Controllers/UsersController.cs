@@ -54,5 +54,13 @@ namespace Gradebook.API.Controllers
             var result = await _service.DeleteUser(id);
             return ApiResponseFactory.CreateResponse<string>(result);
         }
+
+        // POST: api/Users/{id}/resetPassword
+        [HttpPost("{id}/resetPassword")]
+        public async Task<IActionResult> ResetPassword(Guid id)
+        {
+            var result = await _service.ResetPassword(id);
+            return ApiResponseFactory.CreateResponse<string>(result);
+        }
     }
 }

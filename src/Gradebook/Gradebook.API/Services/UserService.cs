@@ -92,5 +92,49 @@ namespace Gradebook.API.Services
 
             return new CustomResult<string>("Deleted successfully!");
         }
+
+        public async Task<CustomResult> ResetPassword(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return new CustomResult(new ErrorResult("User not found", ErrorCodes.ENTITY_NOT_FOUND));
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            string password = GeneratePassword();
+
+            var resetResult = await _userManager.ResetPasswordAsync(user, token, password);
+            if (!resetResult.Succeeded)
+            {
+                var details = resetResult.Errors.Select(x => x.Description).ToList();
+                return new CustomResult(new ErrorResult("Password reset failed.", ErrorCodes.USER_UPDATE_FAILED, details));
+            }
+
+            return new CustomResult<string>(password);
+        }
+
+        private string GeneratePassword()
+        {
+            const string lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string digits = "0123456789";
+            const string allChars = lowercase + uppercase + digits;
+
+            Random rand = new Random();
+
+            // Ensure at least one of each required character type
+            char[] password = new char[10];
+            password[0] = lowercase[rand.Next(lowercase.Length)];
+            password[1] = uppercase[rand.Next(uppercase.Length)];
+            password[2] = digits[rand.Next(digits.Length)];
+
+            // Fill the rest with random characters from all available characters
+            for (int i = 3; i < 10; i++)
+            {
+                password[i] = allChars[rand.Next(allChars.Length)];
+            }
+
+            // Shuffle the password so required characters are not in fixed positions
+            return new string(password.OrderBy(x => rand.Next()).ToArray());
+        }
     }
 }
