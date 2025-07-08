@@ -42,7 +42,7 @@
             var token = await _tokenService.GetToken(Constants.ACCESS_TOKEN_KEY);
             var client = _httpClientService.CreateApiClient(token);
 
-            string apiEndpoint = $"api/absence/student/{id}";
+            string apiEndpoint = $"api/absences/student/{id}";
 
             var response = await client.GetAsync(apiEndpoint);
             var content = await response.Content.ReadAsStringAsync();

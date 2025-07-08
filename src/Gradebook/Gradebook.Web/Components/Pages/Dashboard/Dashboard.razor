@@ -23,27 +23,30 @@
     <MudContainer MaxWidth="MaxWidth.False" Class="p-4">
         <MudGrid GutterSize="4">
             <MudItem xs="12" sm="6" md="3">
-                <MudPaper Class="pa-4" Elevation="3">
+                <MudPaper Style="margin-left:1.5rem;height:35rem;" Class="pa-4" Elevation="3">
                     <MudText Typo="Typo.h6">Courses</MudText>
                     <MudText Typo="Typo.subtitle1">5 Enrolled</MudText>
                 </MudPaper>
             </MudItem>
             <MudItem xs="12" sm="6" md="3">
-                <MudPaper Class="pa-4" Elevation="3">
+                <MudPaper Style="height:35rem;" Class="pa-4" Elevation="3">
                     <MudText Typo="Typo.h6">Absences</MudText>
                     <MudText Style="@($"color:{Colors.LightGreen.Default};")" Typo="Typo.subtitle1">Excused: @excusedAbsencesCount</MudText>
                     <MudText Style="@($"color:{Colors.Red.Default};")" Typo="Typo.subtitle1">Inexcused: @inexcusedAbsencesCount</MudText>
                     <MudText Typo="Typo.subtitle1">Total: @(excusedAbsencesCount + inexcusedAbsencesCount)</MudText>
+                    <MudPaper Class="pa-4">
+                        <MudChart style="margin-left:1.75rem;" ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="Index" InputLabels="@labels" Width="20rem" Height="20rem" />
+                    </MudPaper>                                
                 </MudPaper>
             </MudItem>
             <MudItem xs="12" sm="6" md="3">
-                <MudPaper Class="pa-4" Elevation="3">
+                <MudPaper Style="height:35rem;" Class="pa-4" Elevation="3">
                     <MudText Typo="Typo.h6">Grades</MudText>
                     <MudText Style="@(averageGrade == 2 ? $"color:{Colors.Red.Default}" : averageGrade > 4 ? $"color:{Colors.Green.Default}" : $"color:{Colors.Orange.Default}")" Typo="Typo.subtitle1">Average: @avgGradeString</MudText>
                 </MudPaper>
             </MudItem>
             <MudItem xs="12" sm="6" md="3">
-                <MudPaper Class="pa-4" Elevation="3">
+                <MudPaper Style="height:35rem;" Class="pa-4" Elevation="3">
                     <MudText Typo="Typo.h6">Messages</MudText>
                     <MudText Typo="Typo.subtitle1">1 Unread</MudText>
                 </MudPaper>
