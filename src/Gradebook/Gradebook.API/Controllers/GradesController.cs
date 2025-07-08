@@ -25,6 +25,14 @@ namespace Gradebook.API.Controllers
             _service = service;
         }
 
+        // POST: api/Grades
+        [HttpPost]
+        public async Task<IActionResult> CreateGrade([FromBody] GradeDto gradeDto)
+        {
+            var result = await _service.CreateGrade(gradeDto);
+            return ApiResponseFactory.AdaptAndCreateResponse<Grade, GradeDto>(result);
+        }
+
         // GET: api/Grades
         [HttpGet]
         public async Task<IActionResult> GetGrades()

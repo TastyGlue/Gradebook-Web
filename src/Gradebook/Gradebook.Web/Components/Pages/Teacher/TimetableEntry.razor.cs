@@ -96,15 +96,21 @@
             {
                 StudentId = _dialogStudent.Id,
                 SubjectId = Timetable.SubjectId,
+                TeacherId = Timetable.TeacherId,
                 Value = _newGradeValue,
-                Date = DateTime.Today,
-                SchoolYearId = _schoolYearId
+                Date = DateTime.UtcNow,
+                SchoolYearId = Timetable.SchoolYearId
             };
             var res = await ApiGradeService.CreateGrade(dto);
             if (res.Succeeded)
             {
                 _dialogStudent.Grades.Add(res.Value!.Adapt<GradeViewModel>());
+                //_dialogStudent.Grades = _dialogStudent.Grades.Concat([res.Value!.Adapt<GradeViewModel>()]).ToList();
                 Notify("Grade added successfully.", Severity.Success);
+                NavigationManager.NavigateTo(
+                    NavigationManager.Uri,
+                    forceLoad: true    // ← true forces a full browser reload
+                );
             }
             else
             {
