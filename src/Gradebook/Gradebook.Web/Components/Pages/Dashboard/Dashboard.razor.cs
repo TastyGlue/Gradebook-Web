@@ -2,6 +2,15 @@
 {
     public partial class Dashboard : ExtendedComponentBase
     {
+                        private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
+        int dataSize = 2;
+        double[] data = { 77 };
+        string[] labels = { "Excused" ,"Inexcused" };
+
+        Random random = new Random();
+
+
+                    
         IEnumerable<GradeDto> _grades = new List<GradeDto>();
         [Inject] IApiStudentGradeService ApiStudentGradeService { get; set; } = default!;
         [Inject] IApiAbsencesService ApiAbsencesService { get; set; } = default!;
@@ -18,6 +27,7 @@
         {
             await LoadGradesAsync();
             await LoadAbsencesAsync();
+            await LoadAbsencesPieAsync();
 
         }
         protected async Task LoadGradesAsync()
@@ -54,6 +64,15 @@
                 inexcusedAbsencesCount = absences.Count(a => !a.Excused);
                 totalAbsencesCount = absences.Count();
             }
+        }
+        protected async Task LoadAbsencesPieAsync()
+        {
+            var new_data = new double[dataSize];
+            new_data[0] = excusedAbsencesCount;
+            new_data[1] = inexcusedAbsencesCount;
+            data = new_data;
+            
+            StateHasChanged();
         }        
     }
 }
